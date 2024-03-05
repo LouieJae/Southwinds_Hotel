@@ -1,6 +1,7 @@
 <!-- /.content -->
+</section>
 </div>
-</div>
+
 <!-- /.content-wrapper -->
 
 <!-- Control Sidebar -->
@@ -42,6 +43,25 @@
 <script src="<?php echo base_url('assets/dist/js/adminlte.js'); ?>"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?php echo base_url('assets/dist/js/pages/dashboard.js'); ?>"></script>
+<link rel="stylesheet" href="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js'); ?>">
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
 </body>
 
 </html>
+<script>
+    // Your DataTable initialization scripts
+    $(document).ready(function() {
+        $('#user-datatables').dataTable({
+            "lengthMenu": [5, 10, 25, 50, 75, 100]
+        });
+    });
+</script>
