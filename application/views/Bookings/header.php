@@ -4,152 +4,294 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    <title>Southwinds Hotel</title>
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/fontawesome-free/css/all.min.css'); ?>">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'); ?>">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css'); ?>">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/jqvmap/jqvmap.min.css'); ?>">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/dist/css/adminlte.min.css'); ?>">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css'); ?>">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.css'); ?>">
-    <!-- summernote -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/summernote/summernote-bs4.min.css'); ?>">
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/southwinds_logo.png" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome CSS (version 5.15.4) from CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+
+    <!-- DataTables Bootstrap 5 CSS (version 1.13.6) from CDN -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <!-- Toastr CSS (latest version) from CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+    <!-- jQuery (version 3.6.0) from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Toastr JavaScript (latest version) from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            background-color: #F3EDC8;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'IBM Plex Sans';
+            font-weight: 700;
+        }
+
+        html {
+            font-size: 100%;
+        }
+
+        /* 16px */
+
+        h1 {
+            font-size: 4.210rem;
+            color: #fff;
+            /* 67.36px */
+        }
+
+        h2 {
+            font-size: 3.158rem;
+            /* 50.56px */
+        }
+
+        h3 {
+            font-size: 2.369rem;
+            color: #000;
+            /* 37.92px */
+        }
+
+        h4 {
+            font-size: 1.777rem;
+            color: #fff;
+            /* 28.48px */
+        }
+
+        h5 {
+            font-size: 1.333rem;
+            /* 21.28px */
+        }
+
+        small {
+            font-size: 0.750rem;
+            /* 12px */
+        }
+
+        /* For Webkit-based browsers (Chrome, Safari) */
+        ::-webkit-scrollbar {
+            width: 12px;
+            /* Width of the scrollbar */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fff;
+            /* Color of the track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            /* Color of the thumb */
+            border-radius: 6px;
+            /* Rounded corners */
+        }
+
+        /* Top Navbar Styles */
+        .top-navbar {
+            background-color: #7D0A0A;
+            padding: 15px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+            /* Add shadow to the top navbar */
+            z-index: 2;
+            /* Ensure the toggle button is above the sidebar */
+        }
+
+        .top-navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .toggle-btn {
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            margin-left: 260px;
+            z-index: 2;
+            /* Ensure the toggle button is above the sidebar */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Adjusted to initially show the sidebar */
+            background-color: #EAD196;
+            padding-top: 5px;
+            /* Adjusted to accommodate the navbar */
+            transition: left 0.3s ease;
+            /* Add smooth transition effect */
+            z-index: 1;
+            /* Ensure the sidebar is below the toggle button */
+            box-shadow: 10px 0 6px rgba(0, 0, 0, 0.1);
+            /* Add shadow to the sidebar */
+        }
+
+        .sidebar a {
+            padding: 10px;
+            padding-left: 20px;
+            text-decoration: none;
+            font-size: 17px;
+            color: black;
+            display: block;
+            font-weight: bolder;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            /* Adjust the margin as needed */
+        }
+
+        .content {
+            margin-left: 250px;
+            /* Adjusted to match the initial state of the sidebar */
+            padding: 16px;
+            transition: margin-left 0.3s ease;
+            /* Add smooth transition effect */
+        }
+
+        .sidebar-divider {
+            border-top: 3px solid #384042;
+            /* Line color */
+            margin: 1px;
+            /* Adjust as needed for spacing */
+        }
+
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .custom-dropdown a.dropdown-toggle::after {
+            display: none;
+            /* Hide the default Bootstrap caret */
+        }
+
+        .custom-dropdown .custom-caret {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            vertical-align: middle;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid #000;
+            /* Adjust color and size as needed */
+            margin-left: 85px;
+            /* Adjust the margin to increase the distance */
+            transition: transform 0.3s ease;
+            /* Add transition for arrow effect */
+        }
+
+        .custom-dropdown.open .custom-caret {
+            transform: rotate(90deg);
+            /* Rotate arrow for open state */
+        }
+
+        .custom-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #28282B;
+            /* Adjust background color as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            width: 250px;
+            /* Set the width to match the sidebar */
+        }
+
+        .custom-dropdown.open .custom-dropdown-content {
+            display: block;
+        }
+
+        .custom-dropdown-content a.dropdown-item:hover {
+            background-color: transparent !important;
+            color: inherit !important;
+        }
+
+        .custom-dropdown.open .custom-dropdown-content {
+            display: block;
+        }
+
+        .sidebar a.active {
+            color: #ffffff;
+            /* Active link text color */
+            background-color: #7D0A0A;
+            /* Active link background color */
+        }
+    </style>
 </head>
-<style>
-    .content-wrapper {
-        background-color: #F3EDC8;
-    }
 
-    .navbar {
-        background-color: #BF3131;
-    }
-</style>
+<body>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-            </ul>
-
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <!-- /.navbar -->
-
-        <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="<?php echo base_url('assets/dist/img/southwinds_logo.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-                <span class="brand-text font-weight-light">SOUTHWINDS HOTEL</span>
-            </a>
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <br>
-                <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search" />
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="toggle-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div>
+            <div class="dropdowns">
+                <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <span class="user-greeting">Hi, User! &nbsp &nbsp</span>
+                    <i class="fa fa-user"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item text-dark" href="#">User Profile</a>
+                    <a class="dropdown-item text-dark" href="#">Settings</a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item text-dark" href="<?= base_url('bookings/logout') ?>">Logout</a>
                 </div>
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
-                                <i class="nav-icon fas fa-bed"></i>
-                                <p>
-                                    Room Accomodations
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
-                                <i class="nav-icon fas fa-archive"></i>
-                                <p>
-                                    Inventory
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
-                                <i class="nav-icon fas fa-chart-bar"></i>
-                                <p>
-                                    Reports
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
             </div>
-            <!-- /.sidebar -->
-        </aside>
+        </div>
+    </div>
+    </div>
+    </div>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard</li>
-                            </ol>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
+    <div class="sidebar">
+        <a href="<?= base_url('bookings/dashboard') ?>"
+            class="brand-link d-flex align-items-center exclude-from-highlight">
+            <img src="<?php echo base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo"
+                class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
+        </a>
+        <hr class="sidebar-divider">
+        <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="<?= base_url('bookings/room_accommodations') ?>"><i class="fas fa-bed"></i> Room Accomodations</a>
+        <a href="<?= base_url('bookings/inventory') ?>"><i class="fas fa-archive"></i> Inventory</a>
+        <a href="<?= base_url('bookings/reports') ?>"><i class="fas fa-chart-line"></i> Reports</a>
+        <hr>
+    </div>
+
+    <div class="content">
