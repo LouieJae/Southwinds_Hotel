@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Southwinds Hotel</title>
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/southwinds_logo.png" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <style>
@@ -18,7 +19,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url(<?php echo base_url('assets/dist/img/HOTEL.jpeg'); ?>);
+            background-image: url(<?php echo base_url('assets/images/HOTEL.jpeg'); ?>);
             background-color: rgba(0, 0, 0, 0.5);
             /* White color with 50% opacity */
             background-blend-mode: overlay;
@@ -202,6 +203,7 @@
             /* Adjust size as needed */
             height: auto;
             /* Maintain aspect ratio */
+
         }
     </style>
 </head>
@@ -209,23 +211,38 @@
 <body>
     <div class="wrapper">
         <div class="h2">
-            <img src="<?php echo base_url('assets/dist/img/southwinds_logo.png'); ?>" alt="Southwinds Hotel Logo" class="logo">
+            <img src="<?php echo base_url('assets/images/southwinds_logo.png'); ?>" alt="Southwinds Hotel Logo"
+                class="logo">
             Southwinds Hotel
         </div>
-        <form>
+        <form method="post" autocomplete="on" action="<?= base_url('bookings/login_submit') ?>">
             <div class="form-group py-2">
-                <div class="input-field"> <span class="far fa-user p-2"></span> <input type="text" placeholder="Username" required class=""> </div>
+                <div class="input-field"> <span class="far fa-user p-2"></span>
+                    <input type="text" name="username" placeholder="Username" required class="">
+                </div>
             </div>
             <div class="form-group py-1 pb-2">
-                <div class="input-field"> <span class="fas fa-lock p-2"></span> <input id="passwordInput" type="password" placeholder="Password" required class=""> <button type="button" id="togglePassword" class="btn bg-white text-muted"> <span id="eyeIcon" class="far fa-eye-slash"></span> </button> </div>
+                <div class="input-field"> <span class="fas fa-lock p-2"></span>
+                    <input id="passwordInput" type="password" placeholder="Password" name="password" required class="">
+                    <button type="button" id="togglePassword" class="btn bg-white text-muted"> <span id="eyeIcon"
+                            class="far fa-eye-slash"></span> </button>
+                </div>
             </div>
             <div class="d-flex align-items-start">
-            </div> <button href="" class="btn btn-block text-center my-3">Log in</button>
+            </div>
+            <!-- Changed button to anchor tag -->
+            <button type="submit" class="btn btn-block text-center my-3">Log in</button>
+            <?php
+            if ($this->session->flashdata('error')) { ?>
+                <p class="text-danger text-center" style="margin-top: 10px;">
+                    <?= $this->session->flashdata('error') ?>
+                </p>
+            <?php } ?>
         </form>
     </div>
 
     <script>
-        document.getElementById('togglePassword').addEventListener('click', function() {
+        document.getElementById('togglePassword').addEventListener('click', function () {
             var passwordInput = document.getElementById('passwordInput');
             var eyeIcon = document.getElementById('eyeIcon');
 
@@ -241,6 +258,5 @@
         });
     </script>
 </body>
-
 
 </html>
