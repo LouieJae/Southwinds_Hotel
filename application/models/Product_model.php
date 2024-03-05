@@ -2,6 +2,7 @@
 
 class Product_model extends CI_Model
 {
+
     function product_code()
     {
         $year = date('Y');
