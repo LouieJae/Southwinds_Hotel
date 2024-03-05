@@ -96,7 +96,7 @@
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a id="addReceivedQuantitiesBtn" style="color:green; padding-left:6px;" title="Click here to add product quantity" data-bs-toggle="modal" data-bs-target="#staticBackdropReceiving"><i class="fas fa-plus-circle"></i></a>
+                                    <a href="#" class="addReceivedQuantitiesBtn" data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;" title="Click here to add product quantity" data-bs-toggle="modal"><i class="fas fa-plus-circle"></i></a>
                                     <a style="color:orange; padding-left:6px;" title="Click here to edit product details"><i class="fas fa-edit"></i></a>
                                     <a style="color:red; padding-left:6px;" title="Click here to delete product"><i class="fas fa-trash"></i></a>
                                 </td>
@@ -112,34 +112,38 @@
     </div>
 
     <div id="modalContainer"></div>
+    <?php include('add_product.php') ?>
+    <?php include('add_product_category.php') ?>
+    <?php include('add_uom.php') ?>
+
 </div>
 
 
 <script>
-    function loadModalContent(url) {
+    document.addEventListener('DOMContentLoaded', function() {
+        function handleReceiveButtonClick(event) {
+            event.preventDefault();
+            var productId = this.getAttribute('data-productid');
+            console.log("Clicked button product ID:", productId);
+            loadModalContent('<?php echo base_url('Bookings/receive_quantity/'); ?>' + productId, productId);
+        }
+        var receiveButtons = document.querySelectorAll('.addReceivedQuantitiesBtn');
+        receiveButtons.forEach(function(button) {
+            button.addEventListener('click', handleReceiveButtonClick);
+        });
+    });
+
+    function loadModalContent(url, productId) {
+        console.log("loadModalContent function called with product ID:", productId);
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 document.getElementById('modalContainer').innerHTML = data;
+                document.querySelector('#modalContainer input[name="product_id"]').value = productId;
+                $('#staticBackdropReceiving').modal('show');
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
-
-    document.getElementById('addProductModalBtn').addEventListener('click', function() {
-        loadModalContent('<?php echo base_url('Bookings/add_product_submit'); ?>');
-    });
-
-    document.getElementById('addProductCategoryModalBtn').addEventListener('click', function() {
-        loadModalContent('<?php echo base_url('Bookings/add_product_category_submit'); ?>');
-    });
-
-    document.getElementById('addUomModalBtn').addEventListener('click', function() {
-        loadModalContent('<?php echo base_url('Bookings/add_uom_submit'); ?>');
-    });
-
-    document.getElementById('addReceivedQuantitiesBtn').addEventListener('click', function() {
-        loadModalContent('<?php echo base_url('Bookings/receive_quantity/' . $pro->product_id); ?>');
-    });
 </script>

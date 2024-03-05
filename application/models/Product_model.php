@@ -103,17 +103,35 @@ class Product_model extends CI_Model
     }
     public function insert_received_quantity()
     {
+        $product_id = (int) $this->input->post('product_id');
+        $product_quantity = (int) $this->input->post('product_quantity');
 
-        $product_quantity = (string) $this->input->post('product_quantity');
-        var_dump($product_quantity);
-        $data = array(
-            'product_quantity' => $product_quantity,
-        );
+        $this->db->select('product_quantity, beginning_quantity');
+        $this->db->where('product_id', $product_id);
+        $query = $this->db->get('product');
+        $row = $query->row();
 
-        $response = $this->db->insert('product_category', $data);
+        $current_quantity = $row->product_quantity;
+        $beginning_quantity = $row->beginning_quantity;
+
+
+        $new_quantity = $current_quantity + $product_quantity;
+
+
+        if ($new_quantity > $beginning_quantity) {
+
+            $this->db->set('product_quantity', $new_quantity);
+            $this->db->set('beginning_quantity', $new_quantity);
+        } else {
+
+            $this->db->set('product_quantity', $new_quantity);
+        }
+
+        $this->db->where('product_id', $product_id);
+        $response = $this->db->update('product');
 
         if ($response) {
-            return $this->db->insert_id();
+            return $new_quantity;
         } else {
             return FALSE;
         }

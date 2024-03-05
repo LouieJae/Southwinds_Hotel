@@ -23,6 +23,8 @@ class Bookings extends CI_Controller
     {
         $this->load->model('product_model');
         $this->data['products'] = $this->product_model->get_all_product();
+        $this->data['product_code'] = $this->product_model->product_code();
+        $this->data['procat'] = $this->product_model->get_all_product_category();
         $this->load->model('uom_model');
         $this->data['uom'] = $this->uom_model->get_all_uom();
         $this->load->view('Bookings/header');
@@ -136,13 +138,13 @@ class Bookings extends CI_Controller
             $this->form_validation->set_rules('product_quantity', 'Product Quantity', 'trim|required');
 
             if ($this->form_validation->run() != FALSE) {
-                $this->load->model('uom_model');
-                $response = $this->uom_model->insert_added_uom();
+                $this->load->model('product_model');
+                $response = $this->product_model->insert_received_quantity();
                 if ($response) {
-                    $success_message = 'Unit of Measure added successfully.';
+                    $success_message = 'Quantity added successfully.';
                     $this->session->set_flashdata('success', $success_message);
                 } else {
-                    $error_message = 'Unit of Measure was not added successfully.';
+                    $error_message = 'Quantity was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
                 redirect('Bookings/product');
