@@ -32,6 +32,7 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
 
 
     <style>
@@ -156,8 +157,6 @@
             /* Add smooth transition effect */
             z-index: 1;
             /* Ensure the sidebar is below the toggle button */
-            box-shadow: 10px 0 6px rgba(0, 0, 0, 0.1);
-            /* Add shadow to the sidebar */
         }
 
         .sidebar a {
@@ -266,7 +265,9 @@
             <div class="dropdowns">
                 <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <span class="user-greeting">Hi, User! &nbsp &nbsp</span>
+                    <span class="user-greeting">Hi,
+                        <?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>! &nbsp;&nbsp;
+                    </span>
                     <i class="fa fa-user"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -290,10 +291,9 @@
         <hr class="sidebar-divider">
         <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="<?= base_url('bookings/room_accommodations') ?>"><i class="fas fa-bed"></i> Room Accomodations</a>
-        <a href="<?= base_url('bookings/inventory') ?>"><i class="fas fa-archive"></i> Inventory</a>
+        <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
         <a href="<?= base_url('bookings/reports') ?>"><i class="fas fa-chart-line"></i> Reports</a>
         <hr>
     </div>
 
     <div class="content">
-

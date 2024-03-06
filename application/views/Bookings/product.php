@@ -1,33 +1,18 @@
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">Inventory</h1>
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Inventory</li>
-                </ol>
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</div>
+<h3>Inventory</h3>
 <div class="card card-outline card-danger">
     <div class="card-header">
-        <button id="addProductModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button id="addProductModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
             Add Product
         </button>
 
-        <button id="addProductCategoryModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+        <button id="addProductCategoryModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop1">
             Add Product Category
         </button>
 
-        <button id="addUomModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+        <button id="addUomModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop2">
             Add UoM
         </button>
 
@@ -75,15 +60,30 @@
                     if (isset($products) && !empty($products)) {
                         foreach ($products as $key => $pro) {
                             $product_id = $pro->product_id;
-                    ?>
+                            ?>
                             <tr class="text-center">
-                                <td class="text-center"><?php echo $pro->product_code; ?></td>
-                                <td class="text-center"><?php echo $pro->product_name; ?></td>
-                                <td class="text-center"><?php echo $pro->product_category; ?></td>
-                                <td class="text-center"><?php echo $pro->product_quantity; ?>/<?php echo $pro->beginning_quantity; ?></td>
-                                <td class="text-center"><?php echo $pro->product_uom; ?></td>
-                                <td class="text-center">₱<?php echo $pro->product_price; ?></td>
-                                <td class="text-center"><?php echo $pro->minimum_quantity; ?></td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_code; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_name; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_category; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_quantity; ?>/
+                                    <?php echo $pro->beginning_quantity; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_uom; ?>
+                                </td>
+                                <td class="text-center">₱
+                                    <?php echo $pro->product_price; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->minimum_quantity; ?>
+                                </td>
 
 
                                 <td class="text-center">
@@ -96,12 +96,17 @@
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="addReceivedQuantitiesBtn" data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;" title="Click here to add product quantity" data-bs-toggle="modal"><i class="fas fa-plus-circle"></i></a>
-                                    <a style="color:orange; padding-left:6px;" title="Click here to edit product details"><i class="fas fa-edit"></i></a>
-                                    <a style="color:red; padding-left:6px;" title="Click here to delete product"><i class="fas fa-trash"></i></a>
+                                    <a href="#" class="addReceivedQuantitiesBtn"
+                                        data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;"
+                                        title="Click here to add product quantity" data-bs-toggle="modal"><i
+                                            class="fas fa-plus-circle"></i></a>
+                                    <a style="color:orange; padding-left:6px;" title="Click here to edit product details"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a style="color:red; padding-left:6px;" title="Click here to delete product"><i
+                                            class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
-                    <?php
+                            <?php
                         }
                     }
 
@@ -120,7 +125,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         function handleReceiveButtonClick(event) {
             event.preventDefault();
             var productId = this.getAttribute('data-productid');
@@ -128,7 +133,7 @@
             loadModalContent('<?php echo base_url('Bookings/receive_quantity/'); ?>' + productId, productId);
         }
         var receiveButtons = document.querySelectorAll('.addReceivedQuantitiesBtn');
-        receiveButtons.forEach(function(button) {
+        receiveButtons.forEach(function (button) {
             button.addEventListener('click', handleReceiveButtonClick);
         });
     });
