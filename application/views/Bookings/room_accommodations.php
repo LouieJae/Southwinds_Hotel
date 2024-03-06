@@ -117,8 +117,8 @@
     /* Custom CSS for smaller buttons */
     .modal-content .btn-price {
         padding: 2px 5px;
-        font-size: 10px;
-        width: 100px;
+        font-size: 15px;
+        width: 130px;
         margin-right: 2px;
         /* Adjust the margin between buttons */
         display: inline-block;
@@ -225,6 +225,65 @@
     .modal-title {
         font-size: 30px;
     }
+
+    .product-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 5px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: left;
+        position: relative;
+    }
+
+    .product-button span {
+        pointer-events: none;
+        /* Allow clicks to pass through the span */
+    }
+
+    .product-button:hover {
+        background-color: #e0e0e0;
+    }
+
+    .product-name {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .product-price {
+        color: #888;
+        font-size: 14px;
+        /* Adjust font size if needed */
+        position: absolute;
+        top: 5px;
+        right: 10px;
+    }
+
+    /* CSS for cart layout */
+    .cart-selected-price {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .added-products {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .added-products p {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: bolder;
+    }
+
+    hr {
+        margin-top: 1px;
+    }
 </style>
 
 <div class="card-container">
@@ -301,22 +360,29 @@
                             <?php echo $room->{"24hr_price"}; ?>
                         </button>
 
-                        <!-- Add other pricing buttons similarly -->
-
-
-                        <!-- Container for product selection and cart -->
                         <div class="product-cart-container">
                             <!-- Cart and total transaction card -->
-
                             <div class="product-card">
                                 <h5>Add Ons</h5>
                                 <!-- Search bar -->
-                                <input type="text" class="form-control" placeholder="Search Product">
+                                <input type="text" class="form-control search-input" placeholder="Search Product">
                                 <!-- Empty content for search results -->
                                 <div class="search-results">
                                     <!-- Content will be populated dynamically -->
+                                    <?php foreach ($products as $product): ?>
+                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>"
+                                            data-price="<?php echo $product->product_price; ?>">
+                                            <span class="product-name">
+                                                <?php echo $product->product_name; ?>
+                                            </span>
+                                            <span class="product-price">Price: ₱
+                                                <?php echo $product->product_price; ?>
+                                            </span>
+                                        </button>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
+
 
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
@@ -326,6 +392,12 @@
                                         <p class="cart-room-number">Room Number:
                                             <?php echo $room->room_no; ?>
                                         </p>
+                                        <!-- Add your cart items list here -->
+                                        <div class="added-products">
+                                            <hr>
+                                            <p class="fs-20 fw-bolder">Add Ons</p>
+                                            <!-- Dynamically add products here -->
+                                        </div>
                                     </div>
                                     <!-- Selected Price -->
                                     <div class="cart-selected-price">
@@ -333,7 +405,7 @@
                                                 ₱
                                                 <?php echo $room->{"2hr_price"}; ?>
                                             </span></p>
-                                        <!-- Add your cart items list and total transaction calculation here -->
+                                        <!-- Total transaction calculation here -->
                                     </div>
                                 </div>
                                 <!-- Total Amount -->
@@ -352,6 +424,32 @@
         </div>
     <?php endforeach; ?>
 </div>
+<script>
+    // Event delegation for product buttons
+    document.addEventListener('click', function (event) {
+        if (event.target && event.target.matches('.product-button')) {
+            const productName = event.target.dataset.name;
+            const productPrice = parseFloat(event.target.dataset.price);
+
+            // Find the closest cart for the clicked product
+            const cart = event.target.closest('.product-cart-container').querySelector('.cart-card');
+            const addedProducts = cart.querySelector('.added-products');
+            const cartPriceElement = cart.querySelector('.cart-selected-price');
+
+            // Create a new product element
+            const newProduct = document.createElement('p');
+            newProduct.textContent = `${productName}: ₱${productPrice.toFixed(2)}`;
+            newProduct.classList.add('product-item');
+
+            // Append the new product to the added products list
+            addedProducts.appendChild(newProduct);
+
+            // Update total amount
+            updateTotalAmount(cart);
+        }
+    });
+</script>
+
 
 <div id="addOnsModals">
     <?php foreach ($get_all_room as $room): ?>
@@ -414,7 +512,6 @@
                                     <div class="cart-selected-price">
                                         <p>Price:<span class="price-value">
                                                 ₱
-
                                             </span></p>
                                         <!-- Add your cart items list and total transaction calculation here -->
                                     </div>
@@ -530,11 +627,17 @@
     });
 
     // Function to update total amount
-    function updateTotalAmount() {
-        document.querySelectorAll('.cart-total p').forEach(item => {
-            item.textContent = 'Total: ₱' + totalAmount.toFixed(2); // Set total amount with 2 decimal places
+    function updateTotalAmount(cart) {
+        const roomPrice = parseFloat(cart.querySelector('.price-value').textContent.trim().substring(1));
+        const addedProductPrices = Array.from(cart.querySelectorAll('.product-item')).map(item => {
+            return parseFloat(item.textContent.trim().split('₱')[1]);
         });
+        const totalPrice = roomPrice + addedProductPrices.reduce((acc, curr) => acc + curr, 0);
+
+        // Update total amount in the cart
+        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + totalPrice.toFixed(2);
     }
+
 </script>
 
 <script>
@@ -722,5 +825,20 @@
     $('.modal').on('hidden.bs.modal', function (e) {
         $(this).data('bs.modal', null); // Reset modal data to prevent caching
         $('.modal-backdrop').remove(); // Remove modal backdrop
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.search-input').keyup(function () {
+            var searchText = $(this).val().toLowerCase();
+            $('.product-button').each(function () {
+                var productName = $(this).find('.product-name').text().toLowerCase();
+                if (productName.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
     });
 </script>

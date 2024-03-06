@@ -89,18 +89,13 @@ class Bookings extends CI_Controller
     {
         $this->load->model('room_model');
         $this->data['get_all_room'] = $this->room_model->get_all_room();
+        $this->load->model('product_model');
+        $this->data['products'] = $this->product_model->get_all_product();
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/room_accommodations', $this->data);
         $this->load->view('Bookings/footer');
     }
-    public function inventory()
-    {
-        $this->load->model('product_model');
-        $this->data['product_code'] = $this->product_model->product_code();
-        $this->load->view('Bookings/header');
-        $this->load->view('Bookings/inventory', $this->data);
-        $this->load->view('Bookings/footer');
-    }
+
     public function reports()
     {
         $this->load->view('Bookings/header');
