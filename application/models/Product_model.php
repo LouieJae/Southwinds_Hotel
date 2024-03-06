@@ -137,4 +137,56 @@ class Product_model extends CI_Model
             return FALSE;
         }
     }
+
+    public function update_product($product_id)
+    {
+        // Debugging statement to check if the method is being called
+        echo "editproduct method is called.";
+
+        $product_code = (string) $this->input->post('product_code');
+        $product_name = (string) $this->input->post('product_name');
+        $product_category = (string) $this->input->post('product_category');
+        $product_price = $this->input->post('product_price');
+        $product_uom = (string) $this->input->post('product_uom');
+        $product_status = $this->input->post('product_status');
+        $minimum_quantity = $this->input->post('minimum_quantity');
+        $beginning_quantity = $this->input->post('beginning_quantity');
+
+        // Debugging statement to check the data being received
+        // var_dump($product_code, $product_name, $product_category, $product_price, $product_uom, $minimum_quantity, $maximum_quantity);
+
+        $data = array(
+            'product_code' => $product_code,
+            'product_name' => $product_name,
+            'product_category' => $product_category,
+            'product_price' => $product_price,
+            'product_uom' => $product_uom,
+            'product_status' => $product_status,
+            'minimum_quantity' => $minimum_quantity,
+            'beginning_quantity' => $beginning_quantity,
+        );
+
+        $this->db->where('product_id', $product_id);
+        $response = $this->db->update('product', $data);
+
+        if ($response) {
+            return $product_id;
+        } else {
+            return FALSE;
+        }
+    }
+
+    function delete_product($product_id)
+    {
+        $data = array(
+            'isDelete' => 'yes'
+        );
+        $this->db->where('product_id', $product_id);
+        $response = $this->db->update('product', $data);
+        if ($response) {
+            return $product_id;
+        } else {
+            return false;
+        }
+    }
 }

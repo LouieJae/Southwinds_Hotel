@@ -12,8 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome CSS (version 5.15.4) from CDN -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 
     <!-- DataTables Bootstrap 5 CSS (version 1.13.6) from CDN -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -28,11 +27,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https:////cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -51,7 +49,7 @@
         h3,
         h4,
         h5 {
-            font-family: 'IBM Plex Sans';
+            font-family: 'Raleway', sans-serif;
             font-weight: 700;
         }
 
@@ -258,14 +256,13 @@
 <body>
 
     <!-- Top Navbar -->
-    <div class="top-navbar">
+    <div class=" top-navbar">
         <div class="toggle-btn" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </div>
         <div>
             <div class="dropdowns">
-                <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
+                <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="user-greeting">Hi, User! &nbsp &nbsp</span>
                     <i class="fa fa-user"></i>
                 </a>
@@ -282,18 +279,15 @@
     </div>
 
     <div class="sidebar">
-        <a href="<?= base_url('bookings/dashboard') ?>"
-            class="brand-link d-flex align-items-center exclude-from-highlight">
-            <img src="<?php echo base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo"
-                class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
+        <a href="<?= base_url('bookings/dashboard') ?>" class="brand-link d-flex align-items-center exclude-from-highlight">
+            <img src="<?php echo base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
         </a>
         <hr class="sidebar-divider">
         <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="<?= base_url('bookings/room_accommodations') ?>"><i class="fas fa-bed"></i> Room Accomodations</a>
-        <a href="<?= base_url('bookings/inventory') ?>"><i class="fas fa-archive"></i> Inventory</a>
+        <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
         <a href="<?= base_url('bookings/reports') ?>"><i class="fas fa-chart-line"></i> Reports</a>
         <hr>
     </div>
 
     <div class="content">
-
