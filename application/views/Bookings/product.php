@@ -59,13 +59,28 @@
                             $product_id = $pro->product_id;
                     ?>
                             <tr class="text-center">
-                                <td class="text-center"><?php echo $pro->product_code; ?></td>
-                                <td class="text-center"><?php echo $pro->product_name; ?></td>
-                                <td class="text-center"><?php echo $pro->product_category; ?></td>
-                                <td class="text-center"><?php echo $pro->product_quantity; ?>/<?php echo $pro->beginning_quantity; ?></td>
-                                <td class="text-center"><?php echo $pro->product_uom; ?></td>
-                                <td class="text-center">₱<?php echo $pro->product_price; ?></td>
-                                <td class="text-center"><?php echo $pro->minimum_quantity; ?></td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_code; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_name; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_category; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_quantity; ?>/
+                                    <?php echo $pro->beginning_quantity; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->product_uom; ?>
+                                </td>
+                                <td class="text-center">₱
+                                    <?php echo $pro->product_price; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $pro->minimum_quantity; ?>
+                                </td>
 
 
                                 <td class="text-center">
@@ -78,6 +93,7 @@
                                     ?>
                                 </td>
                                 <td class="text-center">
+
                                     <a href="#" class="addReceivedQuantitiesBtn" data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;" title="Click here to add product quantity" data-bs-toggle="modal"><i class="fas fa-plus-circle"></i></a>
                                     <a href="#" class="editProductBtn" data-product-id="<?php echo $pro->product_id; ?>" style=" color:orange; padding-left:6px;" title="Click here to edit product details" data-bs-toggle="modal"><i class="fas fa-edit"></i></a>
                                     <a href="<?php echo site_url('Bookings/delete_product/' . $pro->product_id); ?>" onclick="return confirm('Are you sure you want to delete this product?')" style="color:red; padding-left:6px;" title="Click here to delete product"><i class="fas fa-trash"></i></a>
