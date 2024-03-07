@@ -58,7 +58,6 @@ class Bookings extends CI_Controller
                     $this->session->set_flashdata('error', 'Username or Password is Wrong');
                     redirect(base_url('bookings/'));
                 }
-
             } else {
                 $this->session->set_flashdata('error', 'Fill all the required fields');
                 redirect(base_url('bookings/'));

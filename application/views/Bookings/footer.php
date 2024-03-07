@@ -5,20 +5,14 @@
 
 </html>
 <!-- Bootstrap JS from CDN -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 <!-- Include DataTables JavaScript (version 1.13.6) from CDN -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
@@ -31,7 +25,7 @@
 
 <script>
     // Your DataTable initialization scripts
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#user-datatables').dataTable({
             "lengthMenu": [5, 10, 25, 50, 75, 100]
         });
@@ -84,7 +78,6 @@
 
 </html>
 <script>
-
     var sidebarOpen = true; // Initial state of the sidebar
     var toggleBtn = document.querySelector('.toggle-btn');
 
@@ -105,16 +98,16 @@
         }
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Toggle dropdown when clicking on it
-        $('.custom-dropdown').on('click', function (event) {
+        $('.custom-dropdown').on('click', function(event) {
             $('.custom-dropdown').not($(this)).removeClass('open'); // Close other dropdowns
             $(this).toggleClass('open');
             event.stopPropagation(); // Prevent the click event from propagating to the document
         });
 
         // Close dropdown when clicking outside of it
-        $(document).on('click', function (event) {
+        $(document).on('click', function(event) {
             if (!$(event.target).closest('.custom-dropdown').length) {
                 $('.custom-dropdown').removeClass('open');
             }
@@ -157,7 +150,7 @@
         }
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Function to highlight the active link in the sidebar
         function highlightActiveLink() {
             var currentUrl = window.location.href;
@@ -166,7 +159,7 @@
             $('.sidebar a').removeClass('active');
 
             // Iterate through each sidebar link
-            $('.sidebar a').each(function () {
+            $('.sidebar a').each(function() {
                 // Check if the link should be excluded from highlighting
                 if (!$(this).hasClass('exclude-from-highlight')) {
                     var linkUrl = $(this).attr('href');

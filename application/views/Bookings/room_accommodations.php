@@ -206,17 +206,6 @@
         flex: 1;
     }
 
-    .cart-selected-price {
-        width: 100px;
-        /* Fix the width of the price container */
-        text-align: right;
-    }
-
-    .cart-selected-price p {
-        margin: 0;
-        /* Remove default margin */
-    }
-
     .cart-total {
         text-align: right;
         font-weight: bold;
@@ -256,18 +245,13 @@
 
     .product-price {
         color: #888;
-        font-size: 14px;
+        font-size: 12px;
         /* Adjust font size if needed */
         position: absolute;
         top: 5px;
         right: 10px;
     }
 
-    /* CSS for cart layout */
-    .cart-selected-price {
-        display: flex;
-        flex-direction: column;
-    }
 
     .added-products {
         display: flex;
@@ -287,20 +271,18 @@
 </style>
 
 <div class="card-container">
-    <?php foreach ($get_all_room as $room): ?>
-        <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal"
-            data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
+    <?php foreach ($get_all_room as $room) : ?>
+        <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
             Room
             <?php echo $room->room_no; ?>
             <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
             <div class="card-footer">
-                <?php if ($room->status === 'occupied'): ?>
+                <?php if ($room->status === 'occupied') : ?>
                     <button class="add-ons-button">Add-ons</button>
                     <button class="checkout-button">Checkout</button>
                 <?php endif; ?>
             </div>
-            <div class="status"
-                style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
+            <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
                 <?php echo ucfirst($room->status); ?>
             </div>
         </div>
@@ -309,10 +291,9 @@
 </div>
 
 <div id="roomModals">
-    <?php foreach ($get_all_room as $room): ?>
+    <?php foreach ($get_all_room as $room) : ?>
         <!-- Modal for Room <?php echo $room->room_no; ?> -->
-        <div class="modal fade" id="roomModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog"
-            aria-labelledby="roomModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">
+        <div class="modal fade" id="roomModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -331,31 +312,26 @@
                             </span>
                         </p>
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button"
-                            data-price="<?php echo $room->{"2hr_price"}; ?>">2 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"2hr_price"}; ?>">2 Hours: $
                             <?php echo $room->{"2hr_price"}; ?>
                         </button>
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button"
-                            data-price="<?php echo $room->{"3hr_price"}; ?>">3 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"3hr_price"}; ?>">3 Hours: $
                             <?php echo $room->{"3hr_price"}; ?>
                         </button>
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button"
-                            data-price="<?php echo $room->{"6hr_price"}; ?>">6 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"6hr_price"}; ?>">6 Hours: $
                             <?php echo $room->{"6hr_price"}; ?>
                         </button>
 
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button"
-                            data-price="<?php echo $room->{"12hr_price"}; ?>">12 Hours:
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"12hr_price"}; ?>">12 Hours:
                             $
                             <?php echo $room->{"12hr_price"}; ?>
                         </button>
 
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button"
-                            data-price="<?php echo $room->{"24hr_price"}; ?>">24 Hours:
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"24hr_price"}; ?>">24 Hours:
                             $
                             <?php echo $room->{"24hr_price"}; ?>
                         </button>
@@ -369,9 +345,8 @@
                                 <!-- Empty content for search results -->
                                 <div class="search-results">
                                     <!-- Content will be populated dynamically -->
-                                    <?php foreach ($products as $product): ?>
-                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>"
-                                            data-price="<?php echo $product->product_price; ?>">
+                                    <?php foreach ($products as $product) : ?>
+                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>" data-price="<?php echo $product->product_price; ?>">
                                             <span class="product-name">
                                                 <?php echo $product->product_name; ?>
                                             </span>
@@ -383,7 +358,6 @@
                                 </div>
                             </div>
 
-
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
                                 <div class="cart-content">
@@ -392,6 +366,11 @@
                                         <p class="cart-room-number">Room Number:
                                             <?php echo $room->room_no; ?>
                                         </p>
+
+                                        <p>Price:<span class="price-value">
+                                                ₱
+                                                <?php echo $room->{"2hr_price"}; ?>
+                                            </span></p>
                                         <!-- Add your cart items list here -->
                                         <div class="added-products">
                                             <hr>
@@ -399,14 +378,7 @@
                                             <!-- Dynamically add products here -->
                                         </div>
                                     </div>
-                                    <!-- Selected Price -->
-                                    <div class="cart-selected-price">
-                                        <p>Price:<span class="price-value">
-                                                ₱
-                                                <?php echo $room->{"2hr_price"}; ?>
-                                            </span></p>
-                                        <!-- Total transaction calculation here -->
-                                    </div>
+
                                 </div>
                                 <!-- Total Amount -->
                                 <div class="cart-total">
@@ -424,9 +396,46 @@
         </div>
     <?php endforeach; ?>
 </div>
+
+<?php include('addOnsModals.php') ?>
+<?php include('checkoutModal.php') ?>
+
+
 <script>
+    // Initialize total amount variable
+    let totalAmount = 0;
+
+    // Initialize previous price variable
+    let previousPrice = 0;
+
+    // Function to update total amount
+    function updateTotalAmount(cart) {
+        const roomPrice = parseFloat(cart.querySelector('.price-value').textContent.trim().substring(1));
+        const addedProductPrices = Array.from(cart.querySelectorAll('.product-item')).map(item => {
+            return parseFloat(item.textContent.trim().split('₱')[1]);
+        });
+        const totalPrice = roomPrice + addedProductPrices.reduce((acc, curr) => acc + curr, 0);
+
+        // Update total amount in the cart
+        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + totalPrice.toFixed(2);
+    }
+
+    // Add event listener to all pricing buttons
+    document.querySelectorAll('.price-button').forEach(item => {
+        item.addEventListener('click', event => {
+            const price = parseFloat(event.currentTarget.dataset.price); // Parse price to float
+            const cartContent = event.currentTarget.closest('.modal-content');
+            const cartPriceElement = cartContent.querySelector('.cart-selected-price');
+            cartPriceElement.querySelector('.price-value').textContent = '₱' + price.toFixed(2); // Set price with 2 decimal places
+            totalAmount -= previousPrice; // Subtract previous price
+            totalAmount += price; // Add new price
+            previousPrice = price; // Update previous price
+            updateTotalAmount(cartContent); // Update displayed total amount
+        });
+    });
+
     // Event delegation for product buttons
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', function(event) {
         if (event.target && event.target.matches('.product-button')) {
             const productName = event.target.dataset.name;
             const productPrice = parseFloat(event.target.dataset.price);
@@ -450,198 +459,7 @@
     });
 </script>
 
-
-<div id="addOnsModals">
-    <?php foreach ($get_all_room as $room): ?>
-        <div class="modal fade" id="addOnsModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog"
-            aria-labelledby="addOnsModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addOnsModalLabel_<?php echo $room->room_id; ?>">Add-Ons
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Room Number and ID -->
-                        <p class="room-number">
-                            Room Number:
-                            <?php echo $room->room_no; ?>
-                            <br>
-                            Status:
-                            <?php echo ucfirst($room->status); ?>
-                        </p>
-                        <!-- Check-in, Check-out, and Remaining Time -->
-                        <div class="time-info">
-                            <p>Check-In Time: <span id="checkInTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <p>Check-Out Time: <span id="checkOutTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <p>Remaining Time: <span id="remainingTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <!-- Input field to add hours -->
-                            <input type="number" class="form-control col-md-3 d-inline-block"
-                                id="addHours_<?php echo $room->room_id; ?>" min="1" step="1" placeholder="Add hours">
-                            <!-- Button to add hours -->
-                            <button class="btn btn-primary" onclick="addHours(<?php echo $room->room_id; ?>)">Add
-                                Hours</button>
-                        </div>
-
-                        <!-- Container for product selection and cart -->
-                        <div class="product-cart-container">
-                            <!-- Cart and total transaction card -->
-
-                            <div class="product-card">
-                                <h5>Add Ons</h5>
-                                <!-- Search bar -->
-                                <input type="text" class="form-control" placeholder="Search Product">
-                                <!-- Empty content for search results -->
-                                <div class="search-results">
-                                    <!-- Content will be populated dynamically -->
-                                </div>
-                            </div>
-
-                            <div class="cart-card">
-                                <!-- Room Number and Selected Price -->
-                                <div class="cart-content">
-                                    <!-- Room Number -->
-                                    <div class="cart-room-info">
-                                        <p class="cart-room-number">Room Number:
-                                            <?php echo $room->room_no; ?>
-                                        </p>
-                                    </div>
-                                    <!-- Selected Price -->
-                                    <div class="cart-selected-price">
-                                        <p>Price:<span class="price-value">
-                                                ₱
-                                            </span></p>
-                                        <!-- Add your cart items list and total transaction calculation here -->
-                                    </div>
-                                </div>
-                                <!-- Total Amount -->
-                                <div class="cart-total">
-                                    <p>Total: <!-- Calculate and display total amount here --></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-
-<div id="checkoutModal">
-    <?php foreach ($get_all_room as $room): ?>
-        <div class="modal fade" id="checkoutModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog"
-            aria-labelledby="checkoutModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="checkoutModalLabel_<?php echo $room->room_id; ?>">Checkout
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Room Number and ID -->
-                        <p class="room-number">
-                            Room Number:
-                            <?php echo $room->room_no; ?>
-                            <br>
-                            Status:
-                            <?php echo ucfirst($room->status); ?>
-                        </p>
-                        <!-- Check-in, Check-out, and Remaining Time -->
-                        <div class="time-info">
-                            <p>Check-In Time: <span id="checkInTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <p>Check-Out Time: <span id="checkOutTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <p>Remaining Time: <span id="remainingTime_<?php echo $room->room_id; ?>">00:00:00</span></p>
-                            <p>Extend: <span id="remainingTime_<?php echo $room->room_id; ?>">2hr</span></p>
-                        </div>
-
-                        <!-- Container for product selection and cart -->
-                        <div class="product-cart-container">
-                            <!-- Cart and total transaction card -->
-
-                            <div class="product-card">
-                                <h5>Add Ons</h5>
-                            </div>
-
-                            <div class="cart-card">
-                                <!-- Room Number and Selected Price -->
-                                <div class="cart-content">
-                                    <!-- Room Number -->
-                                    <div class="cart-room-info">
-                                        <p class="cart-room-number">Room Number:
-                                            <?php echo $room->room_no; ?>
-                                        </p>
-                                    </div>
-                                    <!-- Selected Price -->
-                                    <div class="cart-selected-price">
-                                        <p>Price:<span class="price-value">
-                                                ₱
-
-                                            </span></p>
-                                        <!-- Add your cart items list and total transaction calculation here -->
-                                    </div>
-                                </div>
-                                <!-- Total Amount -->
-                                <div class="cart-total">
-                                    <p>Total: <!-- Calculate and display total amount here --></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary"
-                            id="confirmCheckoutBtn_<?php echo $room->room_id; ?>">Confirm Checkout</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-
-
 <script>
-    // Initialize total amount variable
-    let totalAmount = 0;
-
-    // Initialize previous price variable
-    let previousPrice = 0;
-
-    // Add event listener to all pricing buttons
-    document.querySelectorAll('.price-button').forEach(item => {
-        item.addEventListener('click', event => {
-            const price = parseFloat(event.currentTarget.dataset.price); // Parse price to float
-            const cartPriceElement = event.currentTarget.closest('.modal-content').querySelector('.cart-selected-price');
-            cartPriceElement.querySelector('.price-value').textContent = '₱' + price.toFixed(2); // Set price with 2 decimal places
-            totalAmount -= previousPrice; // Subtract previous price
-            totalAmount += price; // Add new price
-            previousPrice = price; // Update previous price
-            updateTotalAmount(); // Update displayed total amount
-        });
-    });
-
-    // Function to update total amount
-    function updateTotalAmount(cart) {
-        const roomPrice = parseFloat(cart.querySelector('.price-value').textContent.trim().substring(1));
-        const addedProductPrices = Array.from(cart.querySelectorAll('.product-item')).map(item => {
-            return parseFloat(item.textContent.trim().split('₱')[1]);
-        });
-        const totalPrice = roomPrice + addedProductPrices.reduce((acc, curr) => acc + curr, 0);
-
-        // Update total amount in the cart
-        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + totalPrice.toFixed(2);
-    }
-
-</script>
-
-<script>
-
     // Add event listener to all room cards
     document.querySelectorAll('.card').forEach(item => {
         item.addEventListener('click', event => {
@@ -742,8 +560,8 @@
     });
 
     // Add event listener to the confirm checkout buttons in the checkout modals
-    <?php foreach ($get_all_room as $room): ?>
-        document.getElementById('confirmCheckoutBtn_<?php echo $room->room_id; ?>').addEventListener('click', function () {
+    <?php foreach ($get_all_room as $room) : ?>
+        document.getElementById('confirmCheckoutBtn_<?php echo $room->room_id; ?>').addEventListener('click', function() {
             // Perform checkout operation for room <?php echo $room->room_id; ?> here
             console.log('Checkout confirmed for room <?php echo $room->room_id; ?>'); // For demonstration purposes
             // Close the corresponding checkout modal
@@ -758,7 +576,9 @@
     // Function to update time every second
     function updateTime() {
         // Get the current time in Philippine time
-        const currentTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+        const currentTime = new Date(new Date().toLocaleString("en-US", {
+            timeZone: "Asia/Manila"
+        }));
 
         // Set the check-in time to the current time
         const checkInTime = new Date(currentTime);
@@ -785,7 +605,7 @@
         const formattedRemainingTime = remainingHours + 'hrs ' + remainingMinutes + 'mins ' + remainingSeconds + 'secs';
 
         // Update the time for each room
-        <?php foreach ($get_all_room as $room): ?>
+        <?php foreach ($get_all_room as $room) : ?>
             document.getElementById('checkInTime_<?php echo $room->room_id; ?>').textContent = formatDate(checkInTime);
             document.getElementById('checkOutTime_<?php echo $room->room_id; ?>').textContent = formatDate(checkoutTime);
             document.getElementById('remainingTime_<?php echo $room->room_id; ?>').textContent = formattedRemainingTime;
@@ -822,16 +642,16 @@
 
 <script>
     // Add event listener to remove modal backdrop after modal is hidden
-    $('.modal').on('hidden.bs.modal', function (e) {
+    $('.modal').on('hidden.bs.modal', function(e) {
         $(this).data('bs.modal', null); // Reset modal data to prevent caching
         $('.modal-backdrop').remove(); // Remove modal backdrop
     });
 </script>
 <script>
-    $(document).ready(function () {
-        $('.search-input').keyup(function () {
+    $(document).ready(function() {
+        $('.search-input').keyup(function() {
             var searchText = $(this).val().toLowerCase();
-            $('.product-button').each(function () {
+            $('.product-button').each(function() {
                 var productName = $(this).find('.product-name').text().toLowerCase();
                 if (productName.includes(searchText)) {
                     $(this).show();
