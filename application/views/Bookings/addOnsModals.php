@@ -37,12 +37,24 @@
                             <div class="product-card">
                                 <h5>Add Ons</h5>
                                 <!-- Search bar -->
-                                <input type="text" class="form-control" placeholder="Search Product">
+                                <input type="text" class="form-control search-input" placeholder="Search Product">
                                 <!-- Empty content for search results -->
                                 <div class="search-results">
                                     <!-- Content will be populated dynamically -->
+                                    <?php foreach ($products as $product) : ?>
+                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>" data-price="<?php echo $product->product_price; ?>">
+                                            <span class="product-name">
+                                                <?php echo $product->product_name; ?>
+                                            </span>
+                                            <span class="product-price">Price: ₱
+                                                <?php echo $product->product_price; ?>
+                                            </span>
+                                        </button>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
+
+
 
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
@@ -52,14 +64,25 @@
                                         <p class="cart-room-number">Room Number:
                                             <?php echo $room->room_no; ?>
                                         </p>
+
+                                        <!-- Add your cart items list here -->
+                                        <div class="added-products">
+                                            <hr>
+                                            <p class="fs-20 fw-bolder">Add Ons</p>
+                                            <!-- Dynamically add products here -->
+                                        </div>
+
                                     </div>
                                     <!-- Selected Price -->
                                     <div class="cart-selected-price">
                                         <p>Price:<span class="price-value">
                                                 ₱
 
+                                                <?php echo $room->{"2hr_price"}; ?>
                                             </span></p>
+                                        <!-- Total transaction calculation here -->
                                         <!-- Add your cart items list and total transaction calculation here -->
+
                                     </div>
                                 </div>
                                 <!-- Total Amount -->
