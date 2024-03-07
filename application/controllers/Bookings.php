@@ -95,12 +95,7 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
-    public function reports()
-    {
-        $this->load->view('Bookings/header');
-        $this->load->view('Bookings/reports');
-        $this->load->view('Bookings/footer');
-    }
+
 
 
     public function product()
@@ -300,5 +295,50 @@ class Bookings extends CI_Controller
         }
 
         redirect('bookings/product');
+    }
+
+    public function reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get the values from the form
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            // Pass the values to the model and retrieve the sales data
+            $this->data['sales_data'] = $this->report_model->get_sales_by_day_of_week($date_from, $date_to);
+        } else {
+            // If the form is not submitted, set default values or handle accordingly
+            $date_from = ''; // Set default or handle as needed
+            $date_to = ''; // Set default or handle as needed
+            $this->data['sales_data'] = array(); // Initialize sales data array
+        }
+
+        // Load the view with the necessary data
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function daily_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/daily_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function weekly_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/weekly_reports', $this->data);
+        $this->load->view('Bookings/footer');
     }
 }
