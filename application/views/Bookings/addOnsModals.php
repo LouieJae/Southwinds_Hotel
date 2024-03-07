@@ -54,35 +54,28 @@
                                 </div>
                             </div>
 
-
-
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
                                 <div class="cart-content">
                                     <!-- Room Number -->
                                     <div class="cart-room-info">
-                                        <p class="cart-room-number">Room Number:
-                                            <?php echo $room->room_no; ?>
-                                        </p>
-
-                                        <!-- Add your cart items list here -->
-                                        <div class="added-products">
-                                            <hr>
-                                            <p class="fs-20 fw-bolder">Add Ons</p>
-                                            <!-- Dynamically add products here -->
+                                        <div class="room-price-container">
+                                            <!-- Room Number -->
+                                            <p class="cart-room-number">Room Number: <?php echo $room->room_no; ?></p>
+                                            <!-- Selected Price -->
+                                            <p class="cart-selected-price">Price: <span class="price-value" name="room_price">₱<?php echo $room->{"2hr_price"}; ?></span></p>
                                         </div>
-
-                                    </div>
-                                    <!-- Selected Price -->
-                                    <div class="cart-selected-price">
-                                        <p>Price:<span class="price-value">
-                                                ₱
-
-                                                <?php echo $room->{"2hr_price"}; ?>
-                                            </span></p>
-                                        <!-- Total transaction calculation here -->
-                                        <!-- Add your cart items list and total transaction calculation here -->
-
+                                        <!-- Add your cart items list here -->
+                                        <div class="products-container">
+                                            <div class="add-ons-label">
+                                                <hr>
+                                                <p class="fs-20 fw-bolder">Add Ons</p>
+                                            </div>
+                                            <div class="added-products" name="add_ons">
+                                                <input type="hidden" name="add_ons" value="">
+                                                <!-- Dynamically add products here -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Total Amount -->

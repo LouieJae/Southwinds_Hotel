@@ -268,6 +268,36 @@
     hr {
         margin-top: 1px;
     }
+
+    /* CSS to style the room number and price container */
+    .room-price-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-room-number {
+        margin: 0;
+    }
+
+    .cart-selected-price {
+        margin: 0;
+    }
+
+    /* CSS to control overflow and show/hide scroll button */
+    .products-container {
+        max-height: 200px;
+        /* Adjust the height as needed */
+        overflow-y: auto;
+    }
+
+    .scroll-button {
+        display: none;
+    }
+
+    .products-container.overflow .scroll-button {
+        display: block;
+    }
 </style>
 
 <div class="card-container">
@@ -289,116 +319,10 @@
 
     <?php endforeach; ?>
 </div>
-
-<div id="roomModals">
-    <?php foreach ($get_all_room as $room) : ?>
-        <!-- Modal for Room <?php echo $room->room_no; ?> -->
-        <div class="modal fade" id="roomModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="roomModalLabel_<?php echo $room->room_id; ?>">Check-In:</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Room Number -->
-                        <p class="room-number">
-                            Room Number:
-                            <?php echo $room->room_no; ?>
-                            <br>
-                            <span class="room-info">Status:
-                                <?php echo ucfirst($room->status); ?>
-                            </span>
-                        </p>
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"2hr_price"}; ?>">2 Hours: $
-                            <?php echo $room->{"2hr_price"}; ?>
-                        </button>
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"3hr_price"}; ?>">3 Hours: $
-                            <?php echo $room->{"3hr_price"}; ?>
-                        </button>
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"6hr_price"}; ?>">6 Hours: $
-                            <?php echo $room->{"6hr_price"}; ?>
-                        </button>
-
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"12hr_price"}; ?>">12 Hours:
-                            $
-                            <?php echo $room->{"12hr_price"}; ?>
-                        </button>
-
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->{"24hr_price"}; ?>">24 Hours:
-                            $
-                            <?php echo $room->{"24hr_price"}; ?>
-                        </button>
-
-                        <div class="product-cart-container">
-                            <!-- Cart and total transaction card -->
-                            <div class="product-card">
-                                <h5>Add Ons</h5>
-                                <!-- Search bar -->
-                                <input type="text" class="form-control search-input" placeholder="Search Product">
-                                <!-- Empty content for search results -->
-                                <div class="search-results">
-                                    <!-- Content will be populated dynamically -->
-                                    <?php foreach ($products as $product) : ?>
-                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>" data-price="<?php echo $product->product_price; ?>">
-                                            <span class="product-name">
-                                                <?php echo $product->product_name; ?>
-                                            </span>
-                                            <span class="product-price">Price: ₱
-                                                <?php echo $product->product_price; ?>
-                                            </span>
-                                        </button>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-
-                            <div class="cart-card">
-                                <!-- Room Number and Selected Price -->
-                                <div class="cart-content">
-                                    <!-- Room Number -->
-                                    <div class="cart-room-info">
-                                        <p class="cart-room-number">Room Number:
-                                            <?php echo $room->room_no; ?>
-                                        </p>
-
-                                        <p>Price:<span class="price-value">
-                                                ₱
-                                                <?php echo $room->{"2hr_price"}; ?>
-                                            </span></p>
-                                        <!-- Add your cart items list here -->
-                                        <div class="added-products">
-                                            <hr>
-                                            <p class="fs-20 fw-bolder">Add Ons</p>
-                                            <!-- Dynamically add products here -->
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Total Amount -->
-                                <div class="cart-total">
-                                    <p>Total: <!-- Calculate and display total amount here --></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Check-In</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-
+<?php include('roomModals.php') ?>
 <?php include('addOnsModals.php') ?>
 <?php include('checkoutModal.php') ?>
+
 
 <script>
     // Initialize total amount variable
@@ -439,7 +363,6 @@
             const productName = event.target.dataset.name;
             const productPrice = parseFloat(event.target.dataset.price);
 
-
             // Find the closest cart for the clicked product
             const cart = event.target.closest('.product-cart-container').querySelector('.cart-card');
             const addedProducts = cart.querySelector('.added-products');
@@ -457,7 +380,6 @@
             updateTotalAmount(cart);
         }
     });
-
 </script>
 
 <script>
