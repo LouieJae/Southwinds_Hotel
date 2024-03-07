@@ -112,7 +112,7 @@ class Bookings extends CI_Controller
         $this->load->model('uom_model');
         $this->data['uom'] = $this->uom_model->get_all_uom();
         $this->load->view('Bookings/header');
-        $this->load->view('Bookings/product', $this->data);
+        $this->load->view('bookings/product', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -148,7 +148,7 @@ class Bookings extends CI_Controller
                     $error_message = 'Product was not added.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('Bookings/product');
+                redirect('bookings/product');
             } else {
                 // Form validation failed, set session flashdata for debugging
                 $debug_info = array(
@@ -156,7 +156,7 @@ class Bookings extends CI_Controller
                     'validation_errors' => validation_errors()
                 );
                 $this->session->set_flashdata('debug_info', $debug_info);
-                redirect('Bookings/product');
+                redirect('bookings/product');
             }
         }
     }
@@ -179,7 +179,7 @@ class Bookings extends CI_Controller
                     $error_message = 'Product category was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('Bookings/product');
+                redirect('bookings/product');
             }
         }
     }
@@ -202,7 +202,7 @@ class Bookings extends CI_Controller
                     $error_message = 'Unit of Measure was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('Bookings/product');
+                redirect('bookings/product');
             }
         }
     }
@@ -212,7 +212,7 @@ class Bookings extends CI_Controller
         $this->receive_quantity_submit();
         $this->load->model('product_model');
         $this->data['product'] = $this->product_model->get_product($product_id);
-        $this->load->view('Bookings/receiving', $this->data);
+        $this->load->view('bookings/receiving', $this->data);
     }
 
     function receive_quantity_submit()
@@ -231,8 +231,74 @@ class Bookings extends CI_Controller
                     $error_message = 'Quantity was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('Bookings/product');
+                redirect('bookings/product');
             }
         }
+    }
+
+    function edit_product($product_id)
+    {
+        $this->edit_product_submit($product_id);
+        $this->load->model('product_model');
+        $this->data['product'] = $this->product_model->get_product($product_id);
+        $this->data['product_code'] = $this->product_model->product_code();
+        $this->data['procat'] = $this->product_model->get_all_product_category();
+        $this->load->model('uom_model');
+        $this->data['uom'] = $this->uom_model->get_all_uom();
+        $this->load->view('Bookings/edit_product', $this->data);
+    }
+
+    function edit_product_submit($product_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->form_validation->set_rules('product_code', 'Product Code', 'trim|required');
+            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required');
+            $this->form_validation->set_rules('product_category', 'Product Category', 'trim|required');
+            $this->form_validation->set_rules('product_uom', 'Product UoM', 'trim|required');
+            $this->form_validation->set_rules('product_price', 'Product Price', 'trim|required');
+            $this->form_validation->set_rules('beginning_quantity', 'Beginning Quantity', 'trim|required');
+            $this->form_validation->set_rules('product_status', 'Product Status', 'trim');
+            $this->form_validation->set_rules('minimum_quantity', 'Minimum Quantity', 'trim|required');
+
+
+            if ($this->form_validation->run() != FALSE) {
+                // Form validation successful, proceed with insertion
+                $this->load->model('product_model');
+                $response = $this->product_model->update_product($product_id);
+
+                if ($response) {
+                    $success_message = 'Product updated successfully.';
+                    $this->session->set_flashdata('success', $success_message);
+                } else {
+                    $error_message = 'Product was not updated.';
+                    $this->session->set_flashdata('error', $error_message);
+                }
+                redirect('bookings/product');
+            } else {
+                // Form validation failed, set session flashdata for debugging
+                $debug_info = array(
+                    'form_data' => $this->input->post(),
+                    'validation_errors' => validation_errors()
+                );
+                $this->session->set_flashdata('debug_info', $debug_info);
+                redirect('bookings/product');
+            }
+        }
+    }
+
+    function delete_product($product_id)
+    {
+        $this->load->model('product_model');
+        $response = $this->product_model->delete_product($product_id);
+
+        if ($response) {
+            $success_message = 'Product deleted successfully.';
+            $this->session->set_flashdata('success', $success_message);
+        } else {
+            $error_message = 'Product was not deleted successfully.';
+            $this->session->set_flashdata('error', $error_message);
+        }
+
+        redirect('bookings/product');
     }
 }

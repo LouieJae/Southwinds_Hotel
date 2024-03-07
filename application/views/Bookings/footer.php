@@ -18,8 +18,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+
+
 
 
 
@@ -72,6 +75,7 @@
         });
     });
 </script>
+
 
 
 </body>
@@ -176,6 +180,7 @@
         // Call the function when the page loads
         highlightActiveLink();
     });
+
 
     // Chart.js code
     const ctx = document.getElementById('roomChart').getContext('2d');

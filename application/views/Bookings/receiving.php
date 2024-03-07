@@ -32,7 +32,7 @@
                     </div>
                     <input type="hidden" name="product_id" class="form-control form-control text" placeholder="Enter Quantity" required>
                     <div class="modal-footer">
-                        <button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+                        <button type="submit" onclick="return confirm('Are you sure you want to add quantity to this product?')" name="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
                         <button type="reset" class="btn btn-danger"><i class="fas fa-trash"></i> Clear</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>

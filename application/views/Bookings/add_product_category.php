@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+                    <button type="submit" onclick="return confirm('Are you sure you want to add this product category?')" name="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
                     <button type="reset" class="btn btn-danger"><i class="fas fa-trash"></i> Clear</button>
 
                 </div>

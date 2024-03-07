@@ -33,6 +33,7 @@
                         <!-- Container for product selection and cart -->
                         <div class="product-cart-container">
                             <!-- Cart and total transaction card -->
+
                             <div class="product-card">
                                 <h5>Add Ons</h5>
                                 <!-- Search bar -->
@@ -54,6 +55,7 @@
                             </div>
 
 
+
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
                                 <div class="cart-content">
@@ -62,20 +64,25 @@
                                         <p class="cart-room-number">Room Number:
                                             <?php echo $room->room_no; ?>
                                         </p>
+
                                         <!-- Add your cart items list here -->
                                         <div class="added-products">
                                             <hr>
                                             <p class="fs-20 fw-bolder">Add Ons</p>
                                             <!-- Dynamically add products here -->
                                         </div>
+
                                     </div>
                                     <!-- Selected Price -->
                                     <div class="cart-selected-price">
                                         <p>Price:<span class="price-value">
                                                 ₱
+
                                                 <?php echo $room->{"2hr_price"}; ?>
                                             </span></p>
                                         <!-- Total transaction calculation here -->
+                                        <!-- Add your cart items list and total transaction calculation here -->
+
                                     </div>
                                 </div>
                                 <!-- Total Amount -->

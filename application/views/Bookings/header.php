@@ -30,8 +30,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
-
+    <link rel="stylesheet" href="https:////cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -50,7 +49,7 @@
         h3,
         h4,
         h5 {
-            font-family: 'IBM Plex Sans';
+            font-family: 'Raleway', sans-serif;
             font-weight: 700;
         }
 
@@ -255,7 +254,7 @@
 <body>
 
     <!-- Top Navbar -->
-    <div class="top-navbar">
+    <div class=" top-navbar">
         <div class="toggle-btn" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </div>

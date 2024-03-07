@@ -400,7 +400,6 @@
 <?php include('addOnsModals.php') ?>
 <?php include('checkoutModal.php') ?>
 
-
 <script>
     // Initialize total amount variable
     let totalAmount = 0;
@@ -440,6 +439,7 @@
             const productName = event.target.dataset.name;
             const productPrice = parseFloat(event.target.dataset.price);
 
+
             // Find the closest cart for the clicked product
             const cart = event.target.closest('.product-cart-container').querySelector('.cart-card');
             const addedProducts = cart.querySelector('.added-products');
@@ -457,6 +457,7 @@
             updateTotalAmount(cart);
         }
     });
+
 </script>
 
 <script>

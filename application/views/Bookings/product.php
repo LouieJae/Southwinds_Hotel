@@ -1,18 +1,15 @@
 <h3>Inventory</h3>
 <div class="card card-outline card-danger">
     <div class="card-header">
-        <button id="addProductModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop">
+        <button id="addProductModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Add Product
         </button>
 
-        <button id="addProductCategoryModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop1">
+        <button id="addProductCategoryModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
             Add Product Category
         </button>
 
-        <button id="addUomModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop2">
+        <button id="addUomModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
             Add UoM
         </button>
 
@@ -60,7 +57,7 @@
                     if (isset($products) && !empty($products)) {
                         foreach ($products as $key => $pro) {
                             $product_id = $pro->product_id;
-                            ?>
+                    ?>
                             <tr class="text-center">
                                 <td class="text-center">
                                     <?php echo $pro->product_code; ?>
@@ -96,17 +93,13 @@
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="addReceivedQuantitiesBtn"
-                                        data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;"
-                                        title="Click here to add product quantity" data-bs-toggle="modal"><i
-                                            class="fas fa-plus-circle"></i></a>
-                                    <a style="color:orange; padding-left:6px;" title="Click here to edit product details"><i
-                                            class="fas fa-edit"></i></a>
-                                    <a style="color:red; padding-left:6px;" title="Click here to delete product"><i
-                                            class="fas fa-trash"></i></a>
+
+                                    <a href="#" class="addReceivedQuantitiesBtn" data-productid="<?php echo $pro->product_id; ?>" style="color:green; padding-left:6px;" title="Click here to add product quantity" data-bs-toggle="modal"><i class="fas fa-plus-circle"></i></a>
+                                    <a href="#" class="editProductBtn" data-product-id="<?php echo $pro->product_id; ?>" style=" color:orange; padding-left:6px;" title="Click here to edit product details" data-bs-toggle="modal"><i class="fas fa-edit"></i></a>
+                                    <a href="<?php echo site_url('Bookings/delete_product/' . $pro->product_id); ?>" onclick="return confirm('Are you sure you want to delete this product?')" style="color:red; padding-left:6px;" title="Click here to delete product"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
-                            <?php
+                    <?php
                         }
                     }
 
@@ -117,6 +110,9 @@
     </div>
 
     <div id="modalContainer"></div>
+    <div id="modalContainer2"></div>
+
+
     <?php include('add_product.php') ?>
     <?php include('add_product_category.php') ?>
     <?php include('add_uom.php') ?>
@@ -125,7 +121,8 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    // Add Quantity Modal
+    document.addEventListener('DOMContentLoaded', function() {
         function handleReceiveButtonClick(event) {
             event.preventDefault();
             var productId = this.getAttribute('data-productid');
@@ -133,7 +130,7 @@
             loadModalContent('<?php echo base_url('Bookings/receive_quantity/'); ?>' + productId, productId);
         }
         var receiveButtons = document.querySelectorAll('.addReceivedQuantitiesBtn');
-        receiveButtons.forEach(function (button) {
+        receiveButtons.forEach(function(button) {
             button.addEventListener('click', handleReceiveButtonClick);
         });
     });
@@ -151,4 +148,51 @@
                 console.error('Error:', error);
             });
     }
+
+    // Edit Product Modal
+    document.addEventListener('DOMContentLoaded', function() {
+
+        function handleEditButtonClick(event) {
+            event.preventDefault();
+            var productIds = this.getAttribute('data-product-id');
+            console.log("Clicked Edit Button Product ID:", productIds);
+            loadEditProductModalContent('<?php echo base_url('Bookings/edit_product/'); ?>' + productIds, productIds);
+        }
+        var editButtons = document.querySelectorAll('.editProductBtn');
+        editButtons.forEach(function(button) {
+            button.addEventListener('click', handleEditButtonClick);
+        });
+    });
+
+    function loadEditProductModalContent(url, productIds) {
+        console.log("loadModalContent function called for Edit Product with product Id:", productIds);
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                var modalContainer = document.getElementById('modalContainer2');
+                if (modalContainer) {
+                    modalContainer.innerHTML = data;
+                    var productInput = modalContainer.querySelector('input[name="product_id"]');
+                    if (productInput) {
+                        productInput.value = productIds;
+                        $('#staticBackdropEdit').modal('show');
+                    } else {
+                        console.error('Input field for product ID not found.');
+                    }
+                } else {
+                    console.error('Modal container not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    $(document).ready(function() {
+        <?php if ($this->session->flashdata('success')) { ?>
+            toastr.success('<?php echo $this->session->flashdata('success'); ?>');
+        <?php } elseif ($this->session->flashdata('error')) { ?>
+            toastr.error('<?php echo $this->session->flashdata('error'); ?>');
+        <?php } ?>
+    });
 </script>
