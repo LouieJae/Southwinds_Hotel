@@ -14,4 +14,13 @@ class Report_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+
+    function get_sales_by_room()
+    {
+        $this->db->select('room_id, SUM(amount) as total_sales');
+        $this->db->from('room_sales');
+        $this->db->group_by('room_id'); // Group by room_id to get total sales for each room
+        $query = $this->db->get()->result();
+        return $query;
+    }
 }

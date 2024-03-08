@@ -302,6 +302,7 @@ class Bookings extends CI_Controller
         $this->load->model('room_model');
         $this->data['room'] = $this->room_model->get_all_room();
         $this->load->model('report_model');
+        $this->data['report'] = $this->report_model->get_sales_by_room(); // Change to get_sales_by_room()
 
         // Check if the form is submitted
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -333,12 +334,22 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
-    public function weekly_reports()
+    function check_in_submit()
     {
         $this->load->model('room_model');
-        $this->data['room'] = $this->room_model->get_all_room();
-        $this->load->view('Bookings/header');
-        $this->load->view('bookings/weekly_reports', $this->data);
-        $this->load->view('Bookings/footer');
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+
+        $this->load->model('check_in_model');
+        $response = $this->check_in_model->insert_checkin();
+
+        if ($response) {
+            $success_message = 'CheckIn updated successfully.';
+            $this->session->set_flashdata('success', $success_message);
+            redirect('bookings/room_accommodations');
+        } else {
+            $error_message = 'Product was not updated.';
+            $this->session->set_flashdata('error', $error_message);
+            redirect('bookings/product');
+        }
     }
 }

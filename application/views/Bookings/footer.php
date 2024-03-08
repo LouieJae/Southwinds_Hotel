@@ -56,6 +56,12 @@
         $('#user-datatables-module5').DataTable({
             "lengthMenu": [5, 10, 25, 50, 75, 100]
         });
+        $('#daily-datatables').dataTable({
+            "lengthMenu": [8, 25, 50, 75, 100]
+        });
+        $('#total-datatables').dataTable({
+            "lengthMenu": [8, 25, 50, 75, 100]
+        });
 
         // Additional DataTable configurations
         $('#ledger-table').DataTable({

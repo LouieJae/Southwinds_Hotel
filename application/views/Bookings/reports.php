@@ -20,6 +20,7 @@ $grand_total_sales = 0;
     </div>
 </form>
 <ul class="nav nav-tabs" id="moduleTabs">
+
     <li class="nav-item">
         <a class="nav-link active" data-toggle="tab" href="#module1">Daily</a>
     </li>
@@ -32,21 +33,67 @@ $grand_total_sales = 0;
     <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#module4">Yearly</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link " data-toggle="tab" href="#module7">Total</a>
+    </li>
 </ul>
 
 <!-- Tab Content -->
 <div class="tab-content" id="moduleTabContent">
-    <!-- Daily Report -->
+    <!-- Room Report -->
+    <?php
+    $grand_total_sales = 0; // Initialize grand total sales
+    ?>
+
+    <div class="tab-pane fade" id="module7">
+        <div class="card-header">
+            <div class="card-body">
+                <table class="table display cell-border" id="total-datatables">
+                    <thead>
+                        <tr>
+                            <th style="width: 100%">Room No.</th>
+                            <th style="width: 100%">Total Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($room as $rm) {
+                            // Fetch total sales for the current room from the $report data
+                            $total_sales = 0;
+                            foreach ($report as $sales) {
+                                if ($sales->room_id == $rm->room_id) {
+                                    $total_sales = $sales->total_sales;
+                                    break;
+                                }
+                            }
+                        ?>
+                            <tr>
+                                <td><?= $rm->room_no ?></td>
+                                <td>₱ <?= $total_sales ?></td>
+                            </tr>
+                        <?php $grand_total_sales += $total_sales;
+                        } ?>
+                    </tbody>
+                    <tf>
+                        <td colspan="2"></td>
+                        <td><strong>Grand Total Sales:</strong></td>
+                        <td><strong>₱ <?= $grand_total_sales ?></strong></td>
+                    </tf>
+                </table>
+            </div>
+        </div>
+    </div>
+    <?php
+    $grand_total_sales = 0; // Initialize grand total sales
+    ?>
     <div class="tab-pane fade show active" id="module1">
         <?php if (isset($_POST['date_from']) && isset($_POST['date_to'])) : ?>
             <?php
             $date_from = $_POST['date_from'];
             $date_to = $_POST['date_to'];
-            $ledger = $this->report_model->get_sales_by_day_of_week($date_from, $date_to);
             ?>
             <div class="card-header">
                 <div class="card-body" style="color: dark;">
-                    <table class="table" id="user-datatables">
+                    <table class="table display" id="daily-datatables">
                         <thead>
                             <tr>
                                 <th>Room No.</th>
@@ -198,4 +245,6 @@ $grand_total_sales = 0;
     <div class="tab-pane fade" id="module4">
         <!-- Yearly Report content here -->
     </div>
+
+
 </div>
