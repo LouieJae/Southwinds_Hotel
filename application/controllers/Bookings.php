@@ -90,6 +90,8 @@ class Bookings extends CI_Controller
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->model('product_model');
         $this->data['products'] = $this->product_model->get_all_product();
+        $this->load->model('checkin_model');
+        $this->data['add_ons_no'] = $this->checkin_model->add_ons_no();
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/room_accommodations', $this->data);
         $this->load->view('Bookings/footer');
