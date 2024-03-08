@@ -144,7 +144,7 @@
     }
 
     .product-card {
-        flex: 0 0 calc(60% - 10px);
+        flex: 0 0 calc(50% - 10px);
         /* Adjust width as needed */
         background-color: #f9f9f9;
         padding: 10px;
@@ -154,7 +154,7 @@
     }
 
     .cart-card {
-        flex: 0 0 calc(40% - 10px);
+        flex: 0 0 calc(50% - 10px);
         /* Adjust width as needed */
         background-color: #f9f9f9;
         padding: 10px;
@@ -328,36 +328,39 @@
     // Initialize total amount variable
     let totalAmount = 0;
 
-    // Initialize previous price variable
-    let previousPrice = 0;
-
-    // Function to update total amount
     function updateTotalAmount(cart) {
+        // Get the room price
         const roomPrice = parseFloat(cart.querySelector('.price-value').textContent.trim().substring(1));
-        const addedProductPrices = Array.from(cart.querySelectorAll('.product-item')).map(item => {
-            return parseFloat(item.textContent.trim().split('₱')[1]);
+
+        // Calculate total price of added products
+        let totalPrice = 0;
+        const addedProductRows = cart.querySelectorAll('.added-products table tbody tr');
+        addedProductRows.forEach(row => {
+            const priceCell = row.querySelector('td:nth-child(2)');
+            const quantityInput = row.querySelector('input[type="number"]');
+            const price = parseFloat(priceCell.textContent.trim().substring(1));
+            const quantity = parseInt(quantityInput.value);
+            totalPrice += price * quantity;
         });
-        const totalPrice = roomPrice + addedProductPrices.reduce((acc, curr) => acc + curr, 0);
 
         // Update total amount in the cart
-        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + totalPrice.toFixed(2);
+        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + (roomPrice + totalPrice).toFixed(2);
     }
+
 
     // Add event listener to all pricing buttons
     document.querySelectorAll('.price-button').forEach(item => {
         item.addEventListener('click', event => {
             const price = parseFloat(event.currentTarget.dataset.price); // Parse price to float
             const cartContent = event.currentTarget.closest('.modal-content');
+            const cartPriceInput = cartContent.querySelector('input[name="room_price"]');
+            cartPriceInput.value = price; // Update input value with the clicked price
             const cartPriceElement = cartContent.querySelector('.cart-selected-price');
             cartPriceElement.querySelector('.price-value').textContent = '₱' + price.toFixed(2); // Set price with 2 decimal places
-            totalAmount -= previousPrice; // Subtract previous price
-            totalAmount += price; // Add new price
-            previousPrice = price; // Update previous price
             updateTotalAmount(cartContent); // Update displayed total amount
         });
     });
 
-    // Event delegation for product buttons
     document.addEventListener('click', function(event) {
         if (event.target && event.target.matches('.product-button')) {
             const productName = event.target.dataset.name;
@@ -365,19 +368,77 @@
 
             // Find the closest cart for the clicked product
             const cart = event.target.closest('.product-cart-container').querySelector('.cart-card');
-            const addedProducts = cart.querySelector('.added-products');
+            const addedProductsTable = cart.querySelector('.added-products table tbody');
             const cartPriceElement = cart.querySelector('.cart-selected-price');
 
-            // Create a new product element
-            const newProduct = document.createElement('p');
-            newProduct.textContent = `${productName}: ₱${productPrice.toFixed(2)}`;
-            newProduct.classList.add('product-item');
+            // Create a new row for the product
+            const newRow = document.createElement('tr');
 
-            // Append the new product to the added products list
-            addedProducts.appendChild(newProduct);
+            // Create cells for product name, price, quantity, and delete button
+            const productNameCell = document.createElement('td');
+            productNameCell.textContent = productName;
+
+            const productPriceCell = document.createElement('td');
+            productPriceCell.textContent = `₱${productPrice.toFixed(2)}`;
+
+            const productQuantityCell = document.createElement('td');
+            const quantityInput = document.createElement('input');
+            quantityInput.type = 'number';
+            quantityInput.value = 1; // Default quantity is 1
+            quantityInput.style.width = '50px'; // Set width of quantity input
+            productQuantityCell.appendChild(quantityInput);
+
+            const deleteButtonCell = document.createElement('td');
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button'); // Add a class for styling
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Set delete icon
+            deleteButton.addEventListener('click', function() {
+                newRow.remove(); // Remove the row when delete button is clicked
+                updateTotalAmount(cart); // Update total amount after deletion
+            });
+            deleteButtonCell.appendChild(deleteButton);
+
+            // Append cells to the row
+            newRow.appendChild(productNameCell);
+            newRow.appendChild(productPriceCell);
+            newRow.appendChild(productQuantityCell);
+            newRow.appendChild(deleteButtonCell);
+
+            // Append the new row to the table body
+            addedProductsTable.appendChild(newRow);
 
             // Update total amount
             updateTotalAmount(cart);
+
+            // Add product name, price, and quantity to hidden inputs for form submission
+            const productNamesInput = cart.querySelector('input[name="product_names[]"]');
+            const productPricesInput = cart.querySelector('input[name="product_prices[]"]');
+            const productQuantitiesInput = cart.querySelector('input[name="product_quantities[]"]');
+
+            // Append each product name, price, and quantity as separate values
+            const productNameInput = document.createElement('input');
+            productNameInput.type = 'hidden';
+            productNameInput.name = 'product_names[]';
+            productNameInput.value = productName;
+            productNamesInput.parentNode.appendChild(productNameInput);
+
+            const productPriceInput = document.createElement('input');
+            productPriceInput.type = 'hidden';
+            productPriceInput.name = 'product_prices[]';
+            productPriceInput.value = productPrice.toFixed(2);
+            productPricesInput.parentNode.appendChild(productPriceInput);
+
+            const productQuantityInput = document.createElement('input');
+            productQuantityInput.type = 'hidden';
+            productQuantityInput.name = 'product_quantities[]';
+            productQuantityInput.value = quantityInput.value;
+            productQuantitiesInput.parentNode.appendChild(productQuantityInput);
+
+            // Update product quantity when the input changes
+            quantityInput.addEventListener('change', function() {
+                productQuantityInput.value = quantityInput.value;
+                updateTotalAmount(cart); // Update total amount after quantity change
+            });
         }
     });
 </script>
@@ -569,8 +630,7 @@
         $(this).data('bs.modal', null); // Reset modal data to prevent caching
         $('.modal-backdrop').remove(); // Remove modal backdrop
     });
-</script>
-<script>
+
     $(document).ready(function() {
         $('.search-input').keyup(function() {
             var searchText = $(this).val().toLowerCase();
