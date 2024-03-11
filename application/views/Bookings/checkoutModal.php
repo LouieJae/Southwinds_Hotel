@@ -29,27 +29,61 @@
                         <!-- Container for product selection and cart -->
                         <div class="product-cart-container">
                             <!-- Cart and total transaction card -->
-
                             <div class="product-card">
                                 <h5>Add Ons</h5>
+                                <!-- Search bar -->
+                                <input type="text" class="form-control search-input" placeholder="Search Product">
+                                <!-- Empty content for search results -->
+                                <div class="search-results">
+                                    <!-- Content will be populated dynamically -->
+                                    <?php foreach ($products as $product) : ?>
+                                        <button class="product-button" data-name="<?php echo $product->product_name; ?>" data-price="<?php echo $product->product_price; ?>">
+                                            <span class="product-name">
+                                                <?php echo $product->product_name; ?>
+                                            </span>
+                                            <span class="product-price">Price: ₱
+                                                <?php echo $product->product_price; ?>
+                                            </span>
+                                        </button>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
 
                             <div class="cart-card">
                                 <!-- Room Number and Selected Price -->
                                 <div class="cart-content">
-                                    <!-- Room Number -->
+                                    <!-- Room Number and Selected Price Container -->
                                     <div class="cart-room-info">
-                                        <p class="cart-room-number">Room Number:
-                                            <?php echo $room->room_no; ?>
-                                        </p>
-                                    </div>
-                                    <!-- Selected Price -->
-                                    <div class="cart-selected-price">
-                                        <p>Price:<span class="price-value">
-                                                ₱
-
-                                            </span></p>
-                                        <!-- Add your cart items list and total transaction calculation here -->
+                                        <div class="room-price-container">
+                                            <!-- Room Number -->
+                                            <p class="cart-room-number">Room Number: <?php echo $room->room_no; ?></p>
+                                            <!-- Selected Price -->
+                                            <p class="cart-selected-price">Price: <span class="price-value" name="room_price">₱<?php echo $room->twohr_price; ?></span></p>
+                                        </div>
+                                        <!-- Add your cart items list here -->
+                                        <div class="products-container">
+                                            <div class="add-ons-label">
+                                                <hr>
+                                                <p class="fs-20 fw-bolder">Add Ons</p>
+                                            </div>
+                                            <div class="added-products" name="add_ons">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product Name</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <input type="hidden" name="product_names[]" value="">
+                                                        <input type="hidden" name="product_quantities[]" value="">
+                                                        <input type="hidden" name="product_prices[]" value="">
+                                                        <!-- Dynamically add products here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Total Amount -->

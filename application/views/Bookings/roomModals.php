@@ -100,6 +100,7 @@
                                                     <tbody>
                                                         <input type="hidden" name="add_ons" value="<?= $add_ons_no ?>">
                                                         <input type="hidden" name="product_names[]" value="">
+                                                        <input type="hidden" name="product_quantities[]" value="">
                                                         <input type="hidden" name="product_prices[]" value="">
                                                         <!-- Dynamically add products here -->
                                                     </tbody>

@@ -23,12 +23,14 @@ class Checkin_model extends CI_Model
     {
         // Get the product names and prices from the form
         $product_names = $this->input->post('product_names');
+        $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
 
         // Check if the first row is empty
         if (empty($product_names[0]) || empty($product_prices[0])) {
             // If the first row is empty, remove it from the arrays
             array_shift($product_names);
+            array_shift($product_quantities);
             array_shift($product_prices);
         }
 
@@ -60,6 +62,7 @@ class Checkin_model extends CI_Model
                 'add_ons_no' => $check_in_id,
                 'product_name' => $product_name,
                 'product_price' => $product_prices[$index],
+                'product_quantity' => $product_quantities[$index],
             ];
             $this->db->insert('add_ons', $data);
         }
@@ -75,5 +78,29 @@ class Checkin_model extends CI_Model
 
         $this->db->where('room_no', $room_no);
         $this->db->update('room', $data);
+    }
+    function get_checkin($check_in_id)
+    {
+        $this->db->where('check_in_id', $check_in_id);
+        $query = $this->db->get('check_in');
+        $row = $query->row();
+
+        return $row;
+    }
+    public function get_all_checkin()
+    {
+        $query = $this->db->get('check_in');
+        return $query->result();
+    }
+
+    function view_all_addons($check_in_id)
+    {
+        $this->db->select('AO.*, P.product_price, AO.product_quantity'); // Select only necessary fields
+        $this->db->from('check_in AS che');
+        $this->db->join('add_ons AS AO', 'che.check_in_id = AO.add_ons_no'); // Correct join condition
+        $this->db->join('product AS P', 'AO.product_name = P.product_name');
+        $this->db->where('che.check_in_id', $check_in_id); // Ensure correct filtering
+        $query = $this->db->get();
+        return $query->result();
     }
 }

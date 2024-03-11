@@ -186,7 +186,31 @@ class Bookings extends CI_Controller
             redirect('bookings/room_accommodations');
         }
     }
+    function add_on()
+    {
+        $this->load->model('checkin_model');
+        $this->load->model('product_model');
+        $this->load->model('room_model');
+        $this->data['checkin'] = $this->checkin_model->get_all_checkin();
+        $this->data['products'] = $this->product_model->get_all_product();
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+        $this->load->view('bookings/header');
+        $this->load->view('bookings/add_on', $this->data);
+        $this->load->view('bookings/footer');
+    }
 
+    public function add_ons($check_in_id)
+    {
+        $this->load->model('product_model');
+        $this->load->model('room_model');
+        $this->load->model('checkin_model');
+        $this->data['checkin'] = $this->checkin_model->get_checkin($check_in_id);
+        $this->data['view'] = $this->checkin_model->view_all_addons($check_in_id);
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+        $this->data['products'] = $this->product_model->get_all_product();
+        // Load view for adding add-ons
+        $this->load->view('Bookings/addOnsModals', $this->data);
+    }
 
     function add_product_category_submit()
     {

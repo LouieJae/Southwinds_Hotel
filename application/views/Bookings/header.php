@@ -158,7 +158,7 @@
         }
 
         .sidebar a i {
-            margin-right: 10px;
+            margin-right: 5px;
             /* Adjust the margin as needed */
         }
 
@@ -196,9 +196,10 @@
             vertical-align: middle;
             border-top: 5px solid transparent;
             border-bottom: 5px solid transparent;
-            border-left: 8px solid #000;
+            border-left: 7px solid #000;
+
+            margin-left: 5px;
             /* Adjust color and size as needed */
-            margin-left: 85px;
             /* Adjust the margin to increase the distance */
             transition: transform 0.3s ease;
             /* Add transition for arrow effect */
@@ -212,7 +213,7 @@
         .custom-dropdown-content {
             display: none;
             position: absolute;
-            background-color: #28282B;
+            background-color: #BF3131;
             /* Adjust background color as needed */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             z-index: 1;
@@ -225,8 +226,8 @@
         }
 
         .custom-dropdown-content a.dropdown-item:hover {
-            background-color: transparent !important;
-            color: inherit !important;
+            background-color: gray;
+            color: #fff;
         }
 
         .custom-dropdown.open .custom-dropdown-content {
@@ -275,7 +276,17 @@
         </a>
         <hr class="sidebar-divider">
         <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="<?= base_url('bookings/room_accommodations') ?>"><i class="fas fa-bed"></i> Room Accomodations</a>
+
+        <div class="custom-dropdown" id="inventoryDropdown">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
+                <i class="fas fa-bed"></i> Room Accomodations
+                <div class="custom-caret"></div>
+            </a>
+            <div class="custom-dropdown-content">
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Check In</a>
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Add Ons</a>
+            </div>
+        </div>
         <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
         <a href="<?= base_url('bookings/reports') ?>"><i class="fas fa-chart-line"></i> Reports</a>
         <hr>

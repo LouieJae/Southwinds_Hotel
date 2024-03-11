@@ -1,119 +1,4 @@
 <style>
-    /* Style for the card container */
-    .card-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        /* Distribute space between cards */
-        align-items: flex-start;
-        /* Align items to the top */
-        /* spacing between cards */
-        max-width: 100%;
-        /* Ensure it doesn't overflow */
-        overflow: auto;
-        /* Add scrollbar if needed */
-        padding: 14px;
-        /* Add some padding */
-    }
-
-    /* Style for each card */
-    .card {
-        width: 200px;
-        /* Set width to 200px */
-        height: 178px;
-        /* Set height to 240px */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 5px;
-        box-sizing: border-box;
-        background-color: #f9f9f9;
-        /* Center text */
-        text-align: center;
-        /* Add some margin */
-        margin-bottom: 19px;
-        position: relative;
-        font-size: x-large;
-        font-weight: bolder;
-        color: #BF3131;
-        cursor: pointer;
-    }
-
-    /* Style for the available sign */
-    .status {
-        /* Position the "Available" text absolutely */
-        position: absolute;
-        /* Position under the room number text */
-        bottom: 0;
-        /* Position at the bottom */
-        left: 0;
-        /* Align to the left */
-        width: 100%;
-        height: 12%;
-        /* Make it span the whole width */
-        font-size: 14px;
-        color: white;
-        background-color: green;
-        /* Background color for "Available" */
-        padding: 1px;
-        /* Add padding */
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-    }
-
-    /* Adjust image size */
-    .card img {
-        max-width: 100%;
-        max-height: 45%;
-        /* Ensure the image doesn't overflow */
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-    }
-
-    /* Style for the card footer */
-    .card-footer {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        text-align: center;
-    }
-
-    .card-footer button {
-        margin: 0 5px;
-        margin-bottom: 4px;
-        /* Adjust spacing between buttons */
-        padding: 2px 2px;
-        font-size: 13px;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        display: inline-block;
-        /* Display buttons inline */
-    }
-
-    /* Style for the add-ons button */
-    .add-ons-button {
-        background-color: blue;
-    }
-
-    .add-ons-button:hover {
-        background-color: darkblue;
-    }
-
-    /* Style for the checkout button */
-    .checkout-button {
-        background-color: darkgray;
-    }
-
-    .checkout-button:hover {
-        background-color: gray;
-    }
-
     /* Custom CSS for smaller buttons */
     .modal-content .btn-price {
         padding: 2px 5px;
@@ -299,28 +184,95 @@
         display: block;
     }
 </style>
-<div class="card-container">
-    <?php foreach ($get_all_room as $room) : ?>
-        <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
-            Room
-            <?php echo $room->room_no; ?>
-            <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
-            <div class="card-footer">
-                <?php if ($room->status === 'occupied') : ?>
-                    <button class="checkout-button">Checkout</button>
-                <?php endif; ?>
-            </div>
-            <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
-                <?php echo ucfirst($room->status); ?>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-<?php include('roomModals.php') ?>
-<?php include('addOnsModals.php') ?>
-<?php include('checkoutModal.php') ?>
+<h3>Check Ins</h3>
+<div class="card card-outline card-danger">
+    <div class="card-header">
 
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-stripped table-sm" id="user-datatables">
+                <thead>
+                    <tr class="text-center">
+                        <th class="text-center">Room No</th>
+                        <th class="text-center">Room Price</th>
+                        <th class="text-center">Total Amount</th>
+                        <th class="text-center">Check In Time</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php
+                    if (isset($checkin) && !empty($checkin)) {
+                        foreach ($checkin as $key => $check) {
+                            $check_in_id = $check->check_in_id;
+                    ?>
+                            <tr class="text-center">
+                                <td class="text-center">
+                                    <?php echo $check->room_no; ?>
+                                </td>
+                                <td class="text-center">
+                                    ₱<?php echo $check->room_price; ?>
+                                </td>
+                                <td class="text-center">
+                                    ₱<?php echo $check->total_amount; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo date('h:i A', strtotime($check->check_in_time)); ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo ucfirst($check->status); ?>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-secondary checkinBtn" data-checkinid="<?php echo $check->check_in_id; ?>" title="Click here to add product quantity" data-bs-toggle="modal">Add Ons</a>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="modalContainer"></div>
+
+    <?php include('addOnsModals.php') ?>
+</div>
 <script>
+    // Function to handle "Add Ons" button click
+    function handleAddOnsButtonClick(event) {
+        event.preventDefault();
+        var checkinId = this.getAttribute('data-checkinid');
+        console.log("Clicked button check in ID:", checkinId);
+        loadModalContent('<?php echo base_url('Bookings/add_ons/'); ?>' + checkinId, checkinId);
+    }
+
+    // Function to load modal content
+    function loadModalContent(url, checkinId) {
+        console.log("loadModalContent function called with check In ID:", checkinId);
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('modalContainer').innerHTML = data;
+                $('#addOnsModal').modal('show');
+                // Add event listeners for product buttons after modal content is loaded
+                addProductButtonListeners();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Function to add event listeners for product buttons
+    function addProductButtonListeners() {
+        document.querySelectorAll('.product-button').forEach(item => {
+            item.addEventListener('click', handleProductButtonClick);
+        });
+    }
     // Initialize total amount variable
     let totalAmount = 0;
 
@@ -375,9 +327,18 @@
         const productName = event.currentTarget.dataset.name;
         const productPrice = parseFloat(event.currentTarget.dataset.price);
 
+        // Log the product details to ensure they are retrieved correctly
+        console.log("Product Name:", productName);
+        console.log("Product Price:", productPrice);
+
         // Find the closest cart for the clicked product
         const cart = event.currentTarget.closest('.product-cart-container').querySelector('.cart-card');
+        console.log("Cart:", cart);
+
         const addedProductsTable = cart.querySelector('.added-products table tbody');
+
+        // Log the addedProductsTable to ensure it's retrieved correctly
+        console.log("Added Products Table:", addedProductsTable);
 
         // Check if the product is already in the cart
         const existingProductRow = addedProductsTable.querySelector(`tr[data-product-name="${productName}"]`);
@@ -386,6 +347,9 @@
             toastr.warning('This product is already on the cart.');
             return; // Stop execution
         }
+
+        // Log that a new row will be created
+        console.log("Creating a new row for the product...");
 
         // Create a new row for the product
         const newRow = document.createElement('tr');
@@ -462,8 +426,12 @@
     document.querySelectorAll('.product-button').forEach(item => {
         item.addEventListener('click', handleProductButtonClick);
     });
-</script>
 
+    // Add event listeners for "Add Ons" buttons
+    document.querySelectorAll('.checkinBtn').forEach(function(button) {
+        button.addEventListener('click', handleAddOnsButtonClick);
+    });
+</script>
 <script>
     // Add event listener to all room cards
     document.querySelectorAll('.card').forEach(item => {
@@ -574,75 +542,6 @@
     <?php endforeach; ?>
 </script>
 <script>
-    // Define an object to store added hours for each room
-    const addedHours = {};
-
-    // Function to update time every second
-    function updateTime() {
-        // Get the current time in Philippine time
-        const currentTime = new Date(new Date().toLocaleString("en-US", {
-            timeZone: "Asia/Manila"
-        }));
-
-        // Set the check-in time to the current time
-        const checkInTime = new Date(currentTime);
-
-        // Specify the checkout time (e.g., 5:00 PM)
-        const checkoutTime = new Date(currentTime);
-        checkoutTime.setHours(17, 0, 0); // Set checkout time to 5:00 PM
-
-        // Calculate the difference between checkout time and current time
-        let remainingTime = checkoutTime - currentTime;
-
-        // Add previously added hours for each room
-        for (const roomId in addedHours) {
-            if (addedHours.hasOwnProperty(roomId)) {
-                // Add hours to remaining time
-                remainingTime += addedHours[roomId] * 60 * 60 * 1000; // Convert hours to milliseconds
-            }
-        }
-
-        // Format remaining time
-        const remainingHours = Math.floor(remainingTime / (1000 * 60 * 60));
-        const remainingMinutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        const remainingSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-        const formattedRemainingTime = remainingHours + 'hrs ' + remainingMinutes + 'mins ' + remainingSeconds + 'secs';
-
-        // Update the time for each room
-        <?php foreach ($get_all_room as $room) : ?>
-            document.getElementById('checkInTime_<?php echo $room->room_id; ?>').textContent = formatDate(checkInTime);
-            document.getElementById('checkOutTime_<?php echo $room->room_id; ?>').textContent = formatDate(checkoutTime);
-            document.getElementById('remainingTime_<?php echo $room->room_id; ?>').textContent = formattedRemainingTime;
-        <?php endforeach; ?>
-    }
-
-    // Call updateTime function every second
-    setInterval(updateTime, 1000);
-
-    // Function to format date to 'HH:MM:SS AM/PM' format
-    function formatDate(date) {
-        const hours = date.getHours() % 12 || 12;
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-        return hours + ':' + minutes + ' ' + ampm;
-    }
-
-    // Function to add hours to remaining time
-    function addHours(roomId) {
-        // Get the number of hours to add from the input field
-        const hoursToAdd = parseInt(document.getElementById('addHours_' + roomId).value);
-
-        // Update the added hours for the room
-        if (addedHours.hasOwnProperty(roomId)) {
-            addedHours[roomId] += hoursToAdd;
-        } else {
-            addedHours[roomId] = hoursToAdd;
-        }
-
-        // Update the displayed remaining time
-        updateTime();
-    }
-
     // Add event listener to remove modal backdrop after modal is hidden
     $('.modal').on('hidden.bs.modal', function(e) {
         $(this).data('bs.modal', null); // Reset modal data to prevent caching
