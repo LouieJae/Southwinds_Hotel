@@ -1,49 +1,66 @@
-<!-- Daily Report -->
+<h3>Daily Report</h3>
 
-<div class="tab-content" id="moduleTabContent">
-    <!-- Module 1 Content -->
-    <div class="tab-pane fade show active" id="module1">
+<div class="card card-outline card-danger">
+    <!-- Room Report -->
+    <div class="card" id="daily_reports">
+
         <div class="card-header">
-
             <div class="card-body" style="color: dark;">
-
-                <table class="table" id="user-datatables-module1">
-
+                <table class="table display" id="daily-datatables">
                     <thead>
                         <tr>
-                            <th>Room No.</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Saturday</th>
-                            <th>Sunday</th>
-                            <th>Total Sales</th>
+                            <th>Date</th>
+                            <th>Daily Total Sales</th>
+                            <th>Views</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php
+                        $total_sales_by_date = array();
+                        foreach ($daily_sales as $date => $sales) :
+                            foreach ($sales as $sale) :
+                                if (!isset($total_sales_by_date[$date])) {
+                                    $total_sales_by_date[$date] = $sale->daily_total_sales;
+                                } else {
+                                    $total_sales_by_date[$date] += $sale->daily_total_sales;
+                                }
+                            endforeach;
+                        endforeach;
 
-                        <?php foreach ($room as $rm) {
-                            $room_id = $rm->room_id;
+                        $start_date = new DateTime('2024-03-01');
+                        $end_date = new DateTime();
+                        $interval = new DateInterval('P1D');
+                        $date_range = new DatePeriod($start_date, $interval, $end_date);
+
+                        // Loop through each date and display sales or 0 if no sales recorded
+                        foreach ($date_range as $date) {
+                            $date_str = $date->format('Y-m-d');
+                            $total_sales = isset($total_sales_by_date[$date_str]) ? $total_sales_by_date[$date_str] : 0;
                         ?>
-                            <!-- Replace the following rows with dynamic data from your backend -->
                             <tr>
-                                <td>Room <?= $rm->room_no ?> </td>
-                                <td>₱ <?= $room_id ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-                                <td>₱ <?= $rm->room_no ?></td>
-
+                                <?php
+                                // Convert the date string to a DateTime object
+                                $dateObj = new DateTime($date_str);
+                                // Get the day name
+                                $dayName = $dateObj->format('l');
+                                ?>
+                                <td><?= $date_str ?> (<?= $dayName ?>)</td>
+                                <?php if ($total_sales == 0) { ?>
+                                    <td>₱ <?= $total_sales ?></td>
+                                <?php } else { ?>
+                                    <td><strong>₱ <?= $total_sales ?></strong></td>
+                                <?php } ?>
+                                <td>
+                                    <div class="col-sm-6">
+                                        <a href="<?php echo site_url('bookings/view_daily_reports/' . $date_str); ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>

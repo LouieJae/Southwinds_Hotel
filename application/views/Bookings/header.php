@@ -286,7 +286,17 @@
         <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="<?= base_url('bookings/room_accommodations') ?>"><i class="fas fa-bed"></i> Room Accomodations</a>
         <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
-        <a href="<?= base_url('bookings/reports') ?>"><i class="fas fa-chart-line"></i> Reports</a>
+        <div class="custom-dropdown" id="purchaseDropdown">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
+                <i class="fas fa-chart-line"></i> Reports
+                <div class="custom-caret"></div>
+            </a>
+            <div class="custom-dropdown-content">
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+            </div>
+        </div>
         <hr>
     </div>
 

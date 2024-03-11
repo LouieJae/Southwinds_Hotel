@@ -302,7 +302,6 @@ class Bookings extends CI_Controller
         $this->load->model('room_model');
         $this->data['room'] = $this->room_model->get_all_room();
         $this->load->model('report_model');
-        $this->data['report'] = $this->report_model->get_sales_by_room(); // Change to get_sales_by_room()
 
         // Check if the form is submitted
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -312,11 +311,15 @@ class Bookings extends CI_Controller
 
             // Pass the values to the model and retrieve the sales data
             $this->data['sales_data'] = $this->report_model->get_sales_by_day_of_week($date_from, $date_to);
+            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
+            $this->data['month_data'] = $this->report_model->get_sales_by_month($date_from, $date_to);
         } else {
             // If the form is not submitted, set default values or handle accordingly
             $date_from = ''; // Set default or handle as needed
             $date_to = ''; // Set default or handle as needed
             $this->data['sales_data'] = array(); // Initialize sales data array
+            $this->data['total'] = array();
+            $this->data['month_data'] = array();
         }
 
         // Load the view with the necessary data
@@ -325,12 +328,117 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
+    /*public function total_reports()
+    {
+        $this->load->model('report_model');
+        $this->data['room'] = $this->report_model->get_all_room();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            $this->data['total'] = $this->report_model->get_sales_by_date_range($date_from, $date_to);
+        } else {
+            $date_from = '';
+            $date_to = '';
+            $this->data['total'] = array();
+        }
+    }*/
+
     public function daily_reports()
     {
         $this->load->model('room_model');
         $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Set the start date to March 1, 2024
+        $start_date = new DateTime('2024-03-01'); // Change this depending on the starting day of operations
+        $end_date = new DateTime(); // Current date
+
+        // Array to store daily sales
+        $daily_sales = array();
+
+        // Loop through each day from start date until today
+        while ($start_date <= $end_date) {
+            $date = $start_date->format('Y-m-d');
+
+            // Fetch daily sales for the current date
+            $daily_sales[$date] = $this->report_model->get_daily_sales($date);
+
+            // Move to the next day
+            $start_date->modify('+1 day');
+        }
+
+        // Pass daily sales data to the view
+        $this->data['daily_sales'] = $daily_sales;
+
         $this->load->view('Bookings/header');
         $this->load->view('bookings/daily_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function view_daily_reports($date)
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+        $this->data['daily_room'] = $this->report_model->get_daily_sales_per_room($date);
+        $this->data['date'] = $date;
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/room_daily_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function per_room_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get the values from the form
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
+        } else {
+            // If the form is not submitted, set default values or handle accordingly
+            $date_from = ''; // Set default or handle as needed
+            $date_to = ''; // Set default or handle as needed
+
+            $this->data['total'] = array();
+        }
+
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/per_room_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function monthly_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get the values from the form
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
+        } else {
+            // If the form is not submitted, set default values or handle accordingly
+            $date_from = ''; // Set default or handle as needed
+            $date_to = ''; // Set default or handle as needed
+
+            $this->data['total'] = array();
+        }
+
+        // Load the view with the necessary data
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/monthly_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 

@@ -49,15 +49,15 @@
         });
 
         // Initialize DataTable for Module 4
-        $('#user-datatables-module4').DataTable({
-            "lengthMenu": [5, 10, 25, 50, 75, 100]
+        $('#per_room_daily-datatables').DataTable({
+            "lengthMenu": [10, 20]
         });
         // Initialize DataTable for Module 4
-        $('#user-datatables-module5').DataTable({
-            "lengthMenu": [5, 10, 25, 50, 75, 100]
+        $('#monthly-datatables').DataTable({
+            "lengthMenu": [6]
         });
         $('#daily-datatables').dataTable({
-            "lengthMenu": [8, 25, 50, 75, 100]
+            "lengthMenu": [7]
         });
         $('#total-datatables').dataTable({
             "lengthMenu": [8, 25, 50, 75, 100]
