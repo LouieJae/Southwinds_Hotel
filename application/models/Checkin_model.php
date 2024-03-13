@@ -21,7 +21,7 @@ class Checkin_model extends CI_Model
 
     function checkin_room()
     {
-        // Get the product names and prices from the form
+        // Get the product names, quantities, and prices from the form
         $product_names = $this->input->post('product_names');
         $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
@@ -34,14 +34,19 @@ class Checkin_model extends CI_Model
             array_shift($product_prices);
         }
 
-        // Calculate total amount by summing room price and product prices
+        // Calculate total amount by summing room price and product prices considering quantities
         $room_price = $this->input->post('room_price');
-        $total_amount = $room_price + array_sum($product_prices);
+        $product_total = 0;
+        foreach ($product_prices as $index => $price) {
+            $product_total += $price * $product_quantities[$index];
+        }
+        $total_amount = $room_price + $product_total;
 
         // Insert check-in data including total amount
         $check_in_data = [
             'add_ons' => $this->input->post('add_ons'),
             'room_no' => $this->input->post('room_no'),
+            'room_hour' => $this->input->post('room_hour'),
             'room_price' => $room_price,
             'prepared_by' => $this->input->post('prepared_by'),
             'date' => $this->input->post('date'),
@@ -69,6 +74,7 @@ class Checkin_model extends CI_Model
 
         return $check_in_id;
     }
+
 
     private function update_room_status($room_no)
     {

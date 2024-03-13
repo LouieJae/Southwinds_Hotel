@@ -243,6 +243,20 @@
     <?php include('addOnsModals.php') ?>
 </div>
 <script>
+    // Add event listener to search input
+    $(document).ready(function() {
+        $('.search-input').keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+            $('.product-button').each(function() {
+                var productName = $(this).find('.product-name').text().toLowerCase();
+                if (productName.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
     // Function to handle "Add Ons" button click
     function handleAddOnsButtonClick(event) {
         event.preventDefault();
@@ -276,34 +290,48 @@
     // Initialize total amount variable
     let totalAmount = 0;
 
-    // Event delegation for quantity inputs in the cart
+    // Event listener for input changes within the cart
     document.addEventListener('input', function(event) {
-        if (event.target.matches('.cart-card input[type="number"]')) {
-            const cartCard = event.target.closest('.cart-card');
+        const target = event.target;
+        // Check if the changed input is a quantity input
+        if (target.matches('.added-products input[type="number"]')) {
+            const cartCard = target.closest('.cart-card');
             updateTotalAmount(cartCard);
         }
     });
 
-    // Function to update total amount in the cart
-    function updateTotalAmount(cartCard) {
-        // Get the room price from the cart card
-        const roomPrice = parseFloat(cartCard.querySelector('.price-value').textContent.trim().substring(1));
+    // Function to update the total amount
+    function updateTotalAmount(cart) {
+        const roomPrice = parseFloat(cart.querySelector('.cart-selected-price .price-value').textContent.replace('₱', ''));
+        // Get all product rows in the cart
+        const productRows = cart.querySelectorAll('.added-products table tbody tr');
 
-        // Calculate total price of added products
-        let totalPrice = 0;
-        const addedProductRows = cartCard.querySelectorAll('.added-products table tbody tr');
-        addedProductRows.forEach(row => {
-            const priceCell = row.querySelector('td:nth-child(2)');
+        // Initialize total amount
+        let totalAmount = roomPrice;
+
+        // Iterate over each product row
+        productRows.forEach(row => {
+            // Get the price and quantity for each product
+            const priceText = row.querySelector('td:nth-child(2)').textContent;
+            const productPrice = parseFloat(priceText.replace('₱', ''));
+
+            let productQuantity = 0;
             const quantityInput = row.querySelector('input[type="number"]');
-            const price = parseFloat(priceCell.textContent.trim().substring(1));
-            const quantity = parseInt(quantityInput.value);
-            totalPrice += price * quantity;
+            if (quantityInput) {
+                productQuantity = parseInt(quantityInput.value);
+            } else {
+                const quantityCell = row.querySelector('td:nth-child(3)');
+                productQuantity = parseInt(quantityCell.textContent.trim());
+            }
+
+            // Add the product price multiplied by its quantity to the total amount
+            totalAmount += productPrice * productQuantity;
         });
 
-        // Update total amount in the cart
-        cartCard.querySelector('.cart-total p').textContent = 'Total: ₱' + (roomPrice + totalPrice).toFixed(2);
+        // Display the updated total amount
+        const totalAmountElement = cart.querySelector('.cart-total .total-amount');
+        totalAmountElement.textContent = `₱${totalAmount.toFixed(2)}`;
     }
-
 
     // Add event listener to all pricing buttons
     document.querySelectorAll('.price-button').forEach(item => {
@@ -360,7 +388,7 @@
         productNameCell.textContent = productName;
 
         const productPriceCell = document.createElement('td');
-        productPriceCell.textContent = `₱${productPrice.toFixed(2)}`;
+        productPriceCell.textContent = `₱${productPrice.toFixed(2)}`; // Set the price text
 
         const productQuantityCell = document.createElement('td');
         const quantityInput = document.createElement('input');
@@ -381,7 +409,7 @@
 
         // Append cells to the row
         newRow.appendChild(productNameCell);
-        newRow.appendChild(productPriceCell);
+        newRow.appendChild(productPriceCell); // Append the price cell
         newRow.appendChild(productQuantityCell);
         newRow.appendChild(deleteButtonCell);
 
@@ -389,7 +417,7 @@
         addedProductsTable.appendChild(newRow);
 
         // Update total amount
-        updateTotalAmount(cart);
+        updateTotalAmount(cart, productPrice); // Pass the product price to updateTotalAmount function
 
         // Add product name, price, and quantity to hidden inputs for form submission
         const productNamesInput = cart.querySelector('input[name="product_names[]"]');
@@ -418,7 +446,7 @@
         // Update product quantity when the input changes
         quantityInput.addEventListener('change', function() {
             productQuantityInput.value = quantityInput.value;
-            updateTotalAmount(cart); // Update total amount after quantity change
+            updateTotalAmount(cart, productPrice); // Update total amount after quantity change
         });
     }
 
@@ -430,135 +458,5 @@
     // Add event listeners for "Add Ons" buttons
     document.querySelectorAll('.checkinBtn').forEach(function(button) {
         button.addEventListener('click', handleAddOnsButtonClick);
-    });
-</script>
-<script>
-    // Add event listener to all room cards
-    document.querySelectorAll('.card').forEach(item => {
-        item.addEventListener('click', event => {
-            const roomStatus = event.currentTarget.querySelector('.status').textContent.trim();
-            // Check if the room status is not occupied and not in housekeeping
-            if (roomStatus !== 'Occupied' && roomStatus !== 'Housekeeping') {
-                const roomId = event.currentTarget.id.split('_')[1];
-                // Show the modal for the selected room
-                $('#roomModal_' + roomId).modal('show'); // Assuming you're using jQuery
-            } else if (roomStatus === 'Housekeeping') {
-                // Room is in housekeeping, show a toastr notification
-                toastr.warning('This room is currently in housekeeping. Please select another room.');
-            } else {
-                // Room is occupied, show a toastr notification
-                toastr.error('This room is currently occupied. Please select another room.');
-            }
-        });
-    });
-
-    // Function to handle click on add-ons button
-    function handleAddOnsClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Open the add-ons modal
-        $('#addOnsModal').modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Function to handle click on checkout button
-    function handleCheckoutClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Open another modal or perform any other action
-        console.log("Checkout button clicked");
-        // For example, open another modal
-        // document.getElementById('otherModal').modal('show');
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the buttons
-    document.querySelectorAll('.add-ons-button').forEach(item => {
-        item.addEventListener('click', handleAddOnsClick);
-    });
-
-    document.querySelectorAll('.checkout-button').forEach(item => {
-        item.addEventListener('click', handleCheckoutClick);
-    });
-    // Function to handle add-ons button click
-    function handleAddOnsClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Get the room ID from the clicked add-ons button
-        const roomId = event.currentTarget.closest('.card').id.split('_')[1];
-        // Open the corresponding add-ons modal with the room number
-        $('#addOnsModal_' + roomId).modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the add-ons buttons
-    document.querySelectorAll('.add-ons-button').forEach(item => {
-        item.addEventListener('click', handleAddOnsClick);
-    });
-
-    // Remove data-toggle attribute from cards with occupied rooms
-    document.querySelectorAll('.card').forEach(item => {
-        const roomStatus = item.querySelector('.status').textContent.trim();
-        if (roomStatus === 'Occupied') {
-            item.removeAttribute('data-toggle');
-        }
-    });
-
-    // Remove data-toggle attribute from cards with occupied rooms
-    document.querySelectorAll('.card').forEach(item => {
-        const roomStatus = item.querySelector('.status').textContent.trim();
-        if (roomStatus === 'Housekeeping') {
-            item.removeAttribute('data-toggle');
-        }
-    });
-    // Function to handle click on checkout button
-    function handleCheckoutClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Get the room ID from the clicked checkout button
-        const roomId = event.currentTarget.closest('.card').id.split('_')[1];
-        // Open the corresponding checkout modal
-        $('#checkoutModal_' + roomId).modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the checkout buttons
-    document.querySelectorAll('.checkout-button').forEach(item => {
-        item.addEventListener('click', handleCheckoutClick);
-    });
-
-    // Add event listener to the confirm checkout buttons in the checkout modals
-    <?php foreach ($get_all_room as $room) : ?>
-        document.getElementById('confirmCheckoutBtn_<?php echo $room->room_id; ?>').addEventListener('click', function() {
-            // Perform checkout operation for room <?php echo $room->room_id; ?> here
-            console.log('Checkout confirmed for room <?php echo $room->room_id; ?>'); // For demonstration purposes
-            // Close the corresponding checkout modal
-            $('#checkoutModal_<?php echo $room->room_id; ?>').modal('hide'); // Assuming you're using jQuery
-        });
-    <?php endforeach; ?>
-</script>
-<script>
-    // Add event listener to remove modal backdrop after modal is hidden
-    $('.modal').on('hidden.bs.modal', function(e) {
-        $(this).data('bs.modal', null); // Reset modal data to prevent caching
-        $('.modal-backdrop').remove(); // Remove modal backdrop
-    });
-
-    $(document).ready(function() {
-        $('.search-input').keyup(function() {
-            var searchText = $(this).val().toLowerCase();
-            $('.product-button').each(function() {
-                var productName = $(this).find('.product-name').text().toLowerCase();
-                if (productName.includes(searchText)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
     });
 </script>

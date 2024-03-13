@@ -17,11 +17,29 @@
                         Status:
                         <?php echo ucfirst($checkin->status); ?>
                     </p>
+
+                    <?php
+                    // Assuming $checkin->check_in_time is in the format 'Y-m-d H:i:s' (e.g., '2024-03-12 23:00:00' for 11:00 PM)
+                    // and $checkin->room_hour is the number of hours for the room stay (e.g., 2)
+                    $checkInDateTime = new DateTime($checkin->check_in_time, new DateTimeZone('Asia/Manila')); // Replace 'Asia/Manila' with your server's timezone
+                    $checkOutDateTime = clone $checkInDateTime;
+                    $checkOutDateTime->modify('+' . $checkin->room_hour . ' hours'); // Add room hours to check-in time
+
+                    // Get the current date and time in the server's timezone
+                    $currentDateTime = new DateTime('now', new DateTimeZone('Asia/Manila')); // Replace 'Asia/Manila' with your server's timezone
+
+                    // Calculate remaining time interval
+                    $remainingInterval = $currentDateTime->diff($checkOutDateTime);
+
+                    // Format remaining time
+                    $remainingTimeFormatted = $remainingInterval->format('%H:%I:%S');
+                    ?>
                     <!-- Check-in, Check-out, and Remaining Time -->
                     <div class="time-info">
-                        <p>Check-In Time: <span id="checkInTime"><?php echo date('h:i A', strtotime($checkin->check_in_time)); ?></span></p>
-                        <p>Check-Out Time: <span id="checkOutTime">00:00:00</span></p>
-                        <p>Remaining Time: <span id="remainingTime">00:00:00</span></p>
+                        <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo $checkInDateTime->format('h:i A m-d-Y'); ?></strong></span></p>
+                        <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo $checkOutDateTime->format('h:i A m-d-Y'); ?></strong></span></p>
+                        <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
+
                         <!-- Input field to add hours -->
                         <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" step="1" placeholder="Add hours">
                         <!-- Button to add hours -->
@@ -78,6 +96,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <input type="hidden" name="product_names[]" value="">
+                                                    <input type="hidden" name="product_quantities[]" value="">
+                                                    <input type="hidden" name="product_prices[]" value="">
                                                     <?php foreach ($view as $row) { ?>
                                                         <tr>
                                                             <td><?= $row->product_name; ?></td>
@@ -93,7 +114,7 @@
                             </div>
                             <!-- Total Amount -->
                             <div class="cart-total">
-                                <p>Total: <!-- Calculate and display total amount here --></p>
+                                <p>Total: <span class="total-amount">₱<?php echo $checkin->total_amount; ?></span></p>
                             </div>
                         </div>
                     </div>
@@ -105,3 +126,50 @@
         </div>
     </div>
 </div>
+<script>
+    // Function to update remaining time every second
+    function updateRemainingTime() {
+        // Get the remaining time span element
+        var remainingTimeSpan = document.getElementById('remainingTime');
+
+        // Get the remaining time string
+        var remainingTime = remainingTimeSpan.innerHTML;
+
+        // Split the remaining time string into hours, minutes, and seconds
+        var timeParts = remainingTime.split(':');
+        var hours = parseInt(timeParts[0]);
+        var minutes = parseInt(timeParts[1]);
+        var seconds = parseInt(timeParts[2]);
+
+        // Decrement seconds
+        seconds--;
+
+        // Update minutes and hours if necessary
+        if (seconds < 0) {
+            seconds = 59;
+            minutes--;
+            if (minutes < 0) {
+                minutes = 59;
+                hours--;
+                if (hours < 0) {
+                    // If remaining time is negative, stop updating
+                    clearInterval(intervalId);
+                    remainingTimeSpan.innerHTML = 'Your time has passed';
+                    return;
+                }
+            }
+        }
+
+        // Format new remaining time string
+        var newRemainingTime = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
+
+        // Update remaining time in the span element
+        remainingTimeSpan.innerHTML = newRemainingTime;
+
+        // Apply CSS style to make the remaining time bolder
+        remainingTimeSpan.style.fontWeight = 'bold';
+    }
+
+    // Call updateRemainingTime function every second
+    var intervalId = setInterval(updateRemainingTime, 1000);
+</script>

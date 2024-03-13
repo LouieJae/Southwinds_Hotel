@@ -189,10 +189,8 @@ class Bookings extends CI_Controller
     function add_on()
     {
         $this->load->model('checkin_model');
-        $this->load->model('product_model');
         $this->load->model('room_model');
         $this->data['checkin'] = $this->checkin_model->get_all_checkin();
-        $this->data['products'] = $this->product_model->get_all_product();
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->view('bookings/header');
         $this->load->view('bookings/add_on', $this->data);
