@@ -52,7 +52,7 @@
                         <div class="product-card">
                             <h5>Add Ons</h5>
                             <!-- Search bar -->
-                            <input type="text" class="form-control search-input" placeholder="Search Product">
+                            <input type="text" class="form-control search-input" id="productSearch" oninput="filterProducts()" placeholder="Search Product">
                             <!-- Empty content for search results -->
                             <div class="search-results">
                                 <!-- Content will be populated dynamically -->
@@ -172,4 +172,28 @@
 
     // Call updateRemainingTime function every second
     var intervalId = setInterval(updateRemainingTime, 1000);
+
+
+    function filterProducts() {
+        // Get the search input value
+        var searchInput = document.getElementById('productSearch').value.toLowerCase();
+
+        // Get all product buttons
+        var productButtons = document.querySelectorAll('.product-button');
+
+        // Loop through each product button
+        productButtons.forEach(function(button) {
+            // Get the product name from the button's data attribute
+            var productName = button.dataset.name.toLowerCase();
+
+            // Check if the product name contains the search input
+            if (productName.includes(searchInput)) {
+                // If the product matches the search input, display it
+                button.style.display = 'block';
+            } else {
+                // If the product does not match the search input, hide it
+                button.style.display = 'none';
+            }
+        });
+    }
 </script>

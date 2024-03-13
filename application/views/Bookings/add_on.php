@@ -243,20 +243,6 @@
     <?php include('addOnsModals.php') ?>
 </div>
 <script>
-    // Add event listener to search input
-    $(document).ready(function() {
-        $('.search-input').keyup(function() {
-            var searchText = $(this).val().toLowerCase();
-            $('.product-button').each(function() {
-                var productName = $(this).find('.product-name').text().toLowerCase();
-                if (productName.includes(searchText)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
     // Function to handle "Add Ons" button click
     function handleAddOnsButtonClick(event) {
         event.preventDefault();

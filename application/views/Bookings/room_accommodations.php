@@ -317,7 +317,6 @@
     <?php endforeach; ?>
 </div>
 <?php include('roomModals.php') ?>
-<?php include('addOnsModals.php') ?>
 <?php include('checkoutModal.php') ?>
 
 <script>
