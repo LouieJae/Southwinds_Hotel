@@ -279,7 +279,7 @@
 
         <div class="custom-dropdown" id="inventoryDropdown">
             <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                <i class="fas fa-bed"></i> Room Accomodations
+                <i class="fas fa-bed"></i> Room Accommodations
                 <div class="custom-caret"></div>
             </a>
             <div class="custom-dropdown-content">
