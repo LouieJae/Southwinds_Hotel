@@ -28,11 +28,11 @@ class Report_model extends CI_Model
 
     function get_sales_by_month($date_from, $date_to)
     {
-        $this->db->select('room_id, MONTH(date) as month, SUM(amount) as total_sales');
+        $this->db->select('room_no, MONTH(date) as month, SUM(total_amount) as total_sales');
         $this->db->from('room_sales');
         $this->db->where('date >=', $date_from);
         $this->db->where('date <=', $date_to);
-        $this->db->group_by('room_id, MONTH(date)');
+        $this->db->group_by('room_no, MONTH(date)');
         $query = $this->db->get()->result();
         return $query;
     }

@@ -13,7 +13,10 @@
                     <p class="room-number">
                         Room Number:
                         <?php echo $checkout->room_no; ?>
+                        <input type="hidden" name="room_sales_no" value="<?= $room_sales_no ?>">
                         <input type="hidden" name="room_no" value="<?php echo $checkout->room_no; ?>">
+                        <input type="hidden" name="date" value="<?php echo date('Y-m-d'); ?>">
+
                         <br>
                         Status:
                         <?php echo ucfirst($checkout->status); ?>
@@ -55,6 +58,8 @@
                                         <p class="cart-room-number">Room Number: <?php echo $checkout->room_no; ?></p>
                                         <!-- Selected Price -->
                                         <p class="cart-selected-price">Price: <span class="price-value" name="room_price">₱<?php echo $checkout->room_price; ?></span></p>
+                                        <input type="hidden" name="room_hour" value="<?php echo $checkout->room_hour; ?>">
+
                                     </div>
                                     <!-- Add your cart items list here -->
                                     <div class="products-container">
@@ -98,10 +103,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="submit" onclick="return confirm('Are you sure you want to update this check in?')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Submit</button>
+                    <button type="submit" name="submit" onclick="return confirm('Are you sure you want to checkout?')" class="btn btn-danger btn-sm"><i class="fas fa-door-open"></i> Checkout</button>
                 </div>
                 <input type="hidden" name="room_price" value="<?php echo isset($checkout->room_price) ? $checkout->room_price : ''; ?>">
-                <input type="hidden" name="check_in_id" value="<?php echo $checkout->check_in_id; ?>">
+                <input type="hidden" name="check_in_id" value="<?php echo isset($checkout->check_in_id) ? $checkout->check_in_id : ''; ?>">
             </div>
     </div>
 </div>
