@@ -41,7 +41,7 @@ $grand_total_sales = 0;
                             $total_sales = 0;
                             $sales_found = false;
                             foreach ($daily_room as $sales) {
-                                if ($rr->room_id == $sales->room_id) {
+                                if ($rr->room_no == $sales->room_no) {
                                     echo "<td><strong>₱ " . number_format($sales->daily_total_sales_per_room, 2) . "</strong></td>";
                                     // Add to total sales for the room
                                     $total_sales += $sales->daily_total_sales_per_room;

@@ -314,7 +314,6 @@
     <?php endforeach; ?>
 </div>
 <?php include('roomModals.php') ?>
-<?php include('checkoutModal.php') ?>
 
 <script>
     // Initialize total amount variable

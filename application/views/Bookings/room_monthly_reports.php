@@ -23,7 +23,7 @@ $grand_total_sales = 0;
                             $total_sales = 0;
                             $sales_found = false;
                             foreach ($monthly_room as $room_sale) {
-                                if ($room_sale->room_id == $rr->room_id) {
+                                if ($room_sale->room_no == $rr->room_no) {
                                     echo "<td><strong>₱ " . number_format($room_sale->total_sales, 2) . "</strong></td>";
                                     $total_sales = $room_sale->total_sales;
                                     $sales_found = true;
