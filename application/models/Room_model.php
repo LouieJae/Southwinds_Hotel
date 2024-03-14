@@ -24,6 +24,7 @@ class Room_model extends CI_Model
         return $this->db->count_all_results('room');
     }
 
+
     public function get_room_sales()
     {
         $this->db->select('*');
@@ -31,4 +32,5 @@ class Room_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+
 }

@@ -90,6 +90,8 @@ class Bookings extends CI_Controller
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->model('product_model');
         $this->data['products'] = $this->product_model->get_all_product();
+        $this->load->model('checkin_model');
+        $this->data['add_ons_no'] = $this->checkin_model->add_ons_no();
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/room_accommodations', $this->data);
         $this->load->view('Bookings/footer');
@@ -153,6 +155,30 @@ class Bookings extends CI_Controller
                 $this->session->set_flashdata('debug_info', $debug_info);
                 redirect('bookings/product');
             }
+        }
+    }
+
+    function checkin_submit()
+    {
+        $this->load->model('room_model');
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+        $this->load->model('product_model');
+        $this->data['products'] = $this->product_model->get_all_product();
+        $this->load->view('bookings/roomModals', $this->data);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $this->load->model('checkin_model');
+            $response = $this->checkin_model->checkin_room();
+
+            if ($response) {
+                $success_message = 'Checkin added successfully.';
+                $this->session->set_flashdata('success', $success_message);
+            } else {
+                $error_message = 'Checkin was not added.';
+                $this->session->set_flashdata('error', $error_message);
+            }
+            redirect('bookings/room_accommodations');
         }
     }
 
