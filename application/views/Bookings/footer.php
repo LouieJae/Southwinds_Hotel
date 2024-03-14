@@ -17,6 +17,8 @@
 
 
 <script>
+    // Sales data
+
     // Your DataTable initialization scripts
     $(document).ready(function() {
         $('#user-datatables').dataTable({
@@ -89,6 +91,21 @@
                 }
             }
         });
+    });
+
+    // Create the chart
+    const salesChart = new Chart(ctx, {
+        type: 'line',
+        data: salesData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
     });
 </script>
 
@@ -195,38 +212,5 @@
 
         // Call the function when the page loads
         highlightActiveLink();
-    });
-
-
-    // Chart.js code
-    const ctx = document.getElementById('roomChart').getContext('2d');
-    const chartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-            label: 'Sales',
-            data: [2000, 3000, 2500, 4000, 3500, 5000, 4500], // Sample data, replace with your actual data
-            fill: false,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
-        }]
-    };
-
-    const roomChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-
     });
 </script>

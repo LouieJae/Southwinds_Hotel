@@ -98,8 +98,10 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-exclamation-triangle fa-icon"></i>Rooms Low in Stock</h5>
-            <p class="card-text"><span id="lowStockRooms"></span></p>
+            <h5 class="card-title"><i class="fas fa-exclamation-triangle fa-icon"></i>Housekeeping</h5>
+            <p class="card-text"><span id="lowStockRooms"></span>
+                <?= $get_total_housekeeping_rooms ?>
+            </p>
         </div>
     </div>
 </div>
@@ -107,17 +109,28 @@
 <!-- New card for the chart -->
 <div class="card chart-card">
     <div class="chart-card-body">
-        <canvas id="roomChart" width="400" height="127"></canvas>
+        <canvas id="roomChart" width="500" height="150"></canvas>
     </div>
 </div>
 
-<script>
-    // Sample data (replace with your actual data)
-    const totalRooms = 100;
-    const availableRooms = 70;
-    const occupiedRooms = 20;
-    const lowStockRooms = 5;
 
-    // Update the DOM with the analytics data
-    document.getElementById('lowStockRooms').textContent = lowStockRooms;
+<script>
+    const salesData = {
+        datasets: [{
+            label: 'Total Sales',
+            data: <?php echo json_encode(array_map(function ($sales) {
+                        return isset($sales[0]['total_sales']) ? $sales[0]['total_sales'] : 0;
+                    }, $sales_data)); ?>,
+            fill: false,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
+        }]
+    };
+
+    // Get the canvas element
+    const ctx = document.getElementById('roomChart').getContext('2d');
 </script>

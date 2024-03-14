@@ -79,6 +79,25 @@ class Bookings extends CI_Controller
         $this->data['get_total_rooms'] = $this->room_model->get_total_rooms();
         $this->data['get_total_available_rooms'] = $this->room_model->get_total_available_rooms();
         $this->data['get_total_occupied_rooms'] = $this->room_model->get_total_occupied_rooms();
+        $this->data['get_total_housekeeping_rooms'] = $this->room_model->get_total_housekeeping_rooms();
+
+        // Define the start year
+        $start_year = 2022;
+        $current_year = date('Y');
+        $years = range($start_year, $current_year);
+
+        // Load the report model and fetch sales data for each year
+        $this->load->model('report_model');
+        $sales_data = array();
+        foreach ($years as $year) {
+            $sales_data[$year] = $this->report_model->get_total_sales_per_year($year);
+        }
+
+        // Pass the sales data and years to the view
+        $this->data['sales_data'] = $sales_data;
+        $this->data['years'] = $years;
+
+        // Load the views
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/dashboard', $this->data);
         $this->load->view('Bookings/footer');
@@ -93,7 +112,7 @@ class Bookings extends CI_Controller
         $this->load->model('checkin_model');
         $this->data['add_ons_no'] = $this->checkin_model->add_ons_no();
         $this->load->view('Bookings/header');
-        $this->load->view('Bookings/room_accommodations', $this->data);
+        $this->load->view('bookings/room_accommodations', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -230,6 +249,7 @@ class Bookings extends CI_Controller
         $this->load->model('room_model');
         $this->load->model('checkin_model');
         $this->data['checkout'] = $this->checkin_model->get_checkout($check_in_id);
+        $this->data['room_sales_no'] = $this->checkin_model->sales_ref_no();
         $this->data['view'] = $this->checkin_model->view_all_addons($check_in_id);
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->data['products'] = $this->product_model->get_all_product();
