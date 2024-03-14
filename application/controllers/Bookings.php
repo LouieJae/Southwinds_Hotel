@@ -253,6 +253,22 @@ class Bookings extends CI_Controller
         }
     }
 
+    function update_available($check_in_id)
+    {
+        $this->load->model('checkin_model');
+        $response = $this->checkin_model->update_available($check_in_id);
+
+        if ($response) {
+            $success_message = 'Room is done housekeeping.';
+            $this->session->set_flashdata('success', $success_message);
+        } else {
+            $error_message = 'Room was not done housekeeping.';
+            $this->session->set_flashdata('error', $error_message);
+        }
+
+        redirect('bookings/room_accommodations');
+    }
+
     function add_product_category_submit()
     {
         $this->load->view('Bookings/add_product_category');

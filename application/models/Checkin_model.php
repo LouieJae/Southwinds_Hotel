@@ -215,7 +215,7 @@ class Checkin_model extends CI_Model
         // Update the purchase order with the new total cost and supplier id
         $checkin = [
             'total_amount' => $updated_total_amount,
-            'status' => 'available',
+            'status' => 'housekeeping',
         ];
 
         $this->db->where('check_in_id', $check_in_id);
@@ -261,7 +261,7 @@ class Checkin_model extends CI_Model
     private function update_room_status1($room_no)
     {
         $data = [
-            'status' => 'available'
+            'status' => 'housekeeping'
         ];
 
         $this->db->where('room_no', $room_no);
@@ -285,12 +285,48 @@ class Checkin_model extends CI_Model
 
         return $row;
     }
+
+    public function update_available($check_in_id)
+    {
+        // Get the room number associated with the check-in
+        $query = $this->db->select('room_no')->from('check_in')->where('check_in_id', $check_in_id)->get();
+        $result = $query->row();
+
+        if ($result) {
+            $room_no = $result->room_no;
+
+            // Update the status of the room to 'available' in the room table
+            $room_data = array(
+                'status' => 'available'
+            );
+            $this->db->where('room_no', $room_no);
+            $this->db->update('room', $room_data);
+
+            // Update the status of the check-in to 'available' in the check_in table
+            $checkin_data = array(
+                'status' => 'available'
+            );
+            $this->db->where('check_in_id', $check_in_id);
+            $this->db->update('check_in', $checkin_data);
+
+            // Check if the updates were successful
+            return $this->db->affected_rows() > 0;
+        } else {
+            // Check-in with the provided ID not found
+            return false;
+        }
+    }
+
+
+
     public function get_all_checkin()
     {
         $this->db->where('check_in.status', 'occupied');
+        $this->db->or_where('check_in.status', 'housekeeping');
         $query = $this->db->get('check_in');
         return $query->result();
     }
+
 
     function view_all_addons($check_in_id)
     {
