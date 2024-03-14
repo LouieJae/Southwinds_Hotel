@@ -302,17 +302,17 @@
 <div class="card-container">
     <?php foreach ($get_all_room as $room) : ?>
         <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
-            Room
-            <?php echo $room->room_no; ?>
+            Room <?php echo $room->room_no; ?>
             <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
-            <div class="card-footer">
-            </div>
-            <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
+            <div class="card-footer"></div>
+            <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>;
+                <?php echo ($room->status == 'housekeeping') ? 'color: black;' : ''; ?>">
                 <?php echo ucfirst($room->status); ?>
             </div>
         </div>
     <?php endforeach; ?>
 </div>
+
 <?php include('roomModals.php') ?>
 
 <script>

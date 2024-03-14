@@ -119,8 +119,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="submit" onclick="return confirm('Are you sure you want to update this check in?')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Submit</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" onclick="return confirm('Are you sure you want to add this add ons?')" class="btn btn-danger btn-sm"><i class="fas fa-shopping-basket"></i> Submit</button>
                 </div>
                 <input type="hidden" name="room_price" value="<?php echo isset($checkin->room_price) ? $checkin->room_price : ''; ?>">
                 <input type="hidden" name="check_in_id" value="<?php echo $checkin->check_in_id; ?>">

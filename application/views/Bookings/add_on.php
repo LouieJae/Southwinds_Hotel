@@ -218,6 +218,7 @@
                     if (isset($checkins) && !empty($checkins)) {
                         foreach ($checkins as $key => $check) {
                             $check_in_id = $check->check_in_id;
+                            $status = ucfirst($check->status);
                     ?>
                             <tr class="text-center">
                                 <td class="text-center">
@@ -233,11 +234,15 @@
                                     <?php echo date('h:i A', strtotime($check->check_in_time)); ?>
                                 </td>
                                 <td class="text-center">
-                                    <?php echo ucfirst($check->status); ?>
+                                    <?php echo $status; ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-secondary checkinBtn" data-checkinid="<?php echo $check->check_in_id; ?>" title="Click here to add product quantity" data-bs-toggle="modal">Add Ons</a>
-                                    <a href="#" class="btn btn-danger checkoutBtn" data-checkoutid="<?php echo $check->check_in_id; ?>" title="Click here to proceed to checkout" data-bs-toggle="modal">Checkout</a>
+                                    <?php if ($status === 'Occupied') { ?>
+                                        <a href="#" class="btn btn-secondary checkinBtn" data-checkinid="<?php echo $check->check_in_id; ?>" title="Click here to add product quantity" data-bs-toggle="modal">Add Ons</a>
+                                        <a href="#" class="btn btn-danger checkoutBtn" data-checkoutid="<?php echo $check->check_in_id; ?>" title="Click here to proceed to checkout" data-bs-toggle="modal">Checkout</a>
+                                    <?php } elseif ($status === 'Housekeeping') { ?>
+                                        <a href="<?php echo site_url('Bookings/update_available/' . $check->check_in_id); ?>" class="btn btn-success housekeepingBtn" onclick="return confirm('Are you sure this room done housekeeping?')" title="Click here to mark this room as available"></i> Available</a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                     <?php
