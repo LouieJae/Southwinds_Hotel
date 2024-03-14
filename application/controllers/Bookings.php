@@ -162,7 +162,7 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/add_product_category');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->form_validation->set_rules('product_category1', 'Product Category Name', 'trim|required|is_unique[product_category.product_category]');
+            $this->form_validation->set_rules('product_category1', 'Product Category Name', 'trim|required|is_unique[product_category.product_category]', array('is_unique' => 'The Product Category is already taken.'));
 
             if ($this->form_validation->run() != FALSE) {
                 $this->load->model('product_model');
@@ -175,6 +175,14 @@ class Bookings extends CI_Controller
                     $this->session->set_flashdata('error', $error_message);
                 }
                 redirect('bookings/product');
+            } else {
+                // Form validation failed, set session flashdata for debugging
+                $debug_info = array(
+                    'form_data' => $this->input->post(),
+                    'validation_errors' => validation_errors()
+                );
+                $this->session->set_flashdata('debug_info', $debug_info);
+                redirect('bookings/product');
             }
         }
     }
@@ -185,7 +193,7 @@ class Bookings extends CI_Controller
 
         $this->load->view('Bookings/add_uom');
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->form_validation->set_rules('uom', 'Unit of Measure', 'trim|required|is_unique[uom.uom]');
+            $this->form_validation->set_rules('uom', 'Unit of Measure', 'trim|required|is_unique[uom.uom]', array('is_unique' => 'The Unit of Measure is already taken.'));
 
             if ($this->form_validation->run() != FALSE) {
                 $this->load->model('uom_model');
@@ -197,6 +205,14 @@ class Bookings extends CI_Controller
                     $error_message = 'Unit of Measure was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
+                redirect('bookings/product');
+            } else {
+                // Form validation failed, set session flashdata for debugging
+                $debug_info = array(
+                    'form_data' => $this->input->post(),
+                    'validation_errors' => validation_errors()
+                );
+                $this->session->set_flashdata('debug_info', $debug_info);
                 redirect('bookings/product');
             }
         }
@@ -330,7 +346,7 @@ class Bookings extends CI_Controller
 
     /*public function total_reports()
     {
-        $this->load->model('report_model');
+        $this->load->model('report_model');aaaaaa
         $this->data['room'] = $this->report_model->get_all_room();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -389,6 +405,19 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
+    public function view_monthly_reports($year_month)
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+        $this->data['monthly_room'] = $this->report_model->get_monthly_sales_per_room($year_month);
+        $this->data['date'] = $year_month;
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/room_monthly_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+
     public function per_room_reports()
     {
         $this->load->model('room_model');
@@ -421,22 +450,27 @@ class Bookings extends CI_Controller
         $this->data['room'] = $this->room_model->get_all_room();
         $this->load->model('report_model');
 
-        // Check if the form is submitted
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Get the values from the form
-            $date_from = $this->input->post('date_from');
-            $date_to = $this->input->post('date_to');
+        // Set the start date to the beginning of the year
+        $start_date = new DateTime(date('2022') . '-01-01');
+        $end_date = new DateTime(); // Current date
 
-            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
-        } else {
-            // If the form is not submitted, set default values or handle accordingly
-            $date_from = ''; // Set default or handle as needed
-            $date_to = ''; // Set default or handle as needed
+        // Array to store monthly sales
+        $monthly_sales = array();
 
-            $this->data['total'] = array();
+        // Loop through each month from the start date until today
+        while ($start_date <= $end_date) {
+            $year_month = $start_date->format('Y-m');
+
+            // Fetch monthly sales for the current month
+            $monthly_sales[$year_month] = $this->report_model->get_monthly_sales($year_month);
+
+            // Move to the next month
+            $start_date->modify('+1 month');
         }
 
-        // Load the view with the necessary data
+        // Pass monthly sales data to the view
+        $this->data['monthly_sales'] = $monthly_sales;
+
         $this->load->view('Bookings/header');
         $this->load->view('bookings/monthly_reports', $this->data);
         $this->load->view('Bookings/footer');

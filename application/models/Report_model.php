@@ -56,4 +56,24 @@ class Report_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+
+    public function get_monthly_sales($year_month)
+    {
+        $this->db->select('MONTH(date) as month, SUM(amount) as total_sales');
+        $this->db->from('room_sales');
+        $this->db->where("DATE_FORMAT(date, '%Y-%m') = '$year_month'");
+        $this->db->group_by('MONTH(date)');
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
+    function get_monthly_sales_per_room($year_month)
+    {
+        $this->db->select('room_id, MONTH(date) as month, SUM(amount) as total_sales');
+        $this->db->from('room_sales');
+        $this->db->where("DATE_FORMAT(date, '%Y-%m') = '$year_month'");
+        $this->db->group_by('room_id');
+        $query = $this->db->get()->result();
+        return $query;
+    }
 }

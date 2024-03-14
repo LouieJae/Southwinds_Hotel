@@ -30,8 +30,9 @@
                 <table class="table display cell-border" id="total-datatables">
                     <thead>
                         <tr>
-                            <th style="width: 100%">Room No.</th>
-                            <th style="width: 100%">Total Sales</th>
+                            <th>Room No.</th>
+                            <th>Total Sales</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +44,7 @@
                                 $sales_found = false;
                                 foreach ($total as $sales) {
                                     if ($rr->room_id == $sales->room_id) {
-                                        echo "<td><strong>₱" . $sales->total_sales . "</strong></td>";
+                                        echo "<td><strong>₱ " . number_format($sales->total_sales, 2) . "</strong></td>";
                                         // Add to total sales for the room
                                         $total_sales += $sales->total_sales;
                                         $sales_found = true;
@@ -51,7 +52,7 @@
                                     }
                                 }
                                 if (!$sales_found) {
-                                    echo "<td>₱0</td>"; // Display empty cell if no sales data found for the room
+                                    echo "<td>-</td>"; // Display empty cell if no sales data found for the room
                                 }
                                 ?>
                             </tr>
@@ -59,15 +60,15 @@
                         endforeach; ?>
                     </tbody>
                     <tf>
-                        <td><strong>Grand Total Sales:</strong></td>
-                        <td><strong>₱ <?= $grand_total_sales ?></strong></td>
+                        <td style=text-align:right><strong>Grand Total Sales:</strong></td>
+                        <td><strong>₱ <?= number_format($grand_total_sales, 2) ?></strong></td>
 
                     </tf>
                 </table>
             </div>
         </div>
     <?php else : ?>
-        <p>No data found for the selected date range.</p>
+        <p>No data found for the selected date range. Enter a new data range.</p>
     <?php endif; ?>
 
 </div>

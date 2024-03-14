@@ -44,23 +44,43 @@
         });
 
         // Initialize DataTable for Module 3
-        $('#user-datatables-module3').DataTable({
-            "lengthMenu": [5, 10, 25, 50, 75, 100]
+        $('#per_room_monthly-datatables').DataTable({
+            "lengthMenu": [8, 20],
+            responsive: true
         });
 
         // Initialize DataTable for Module 4
         $('#per_room_daily-datatables').DataTable({
-            "lengthMenu": [10, 20]
+            "lengthMenu": [8, 28],
+
+            responsive: true
         });
         // Initialize DataTable for Module 4
-        $('#monthly-datatables').DataTable({
-            "lengthMenu": [6]
+        $(document).ready(function() {
+            var table = $('#monthly-datatables').DataTable({
+                "lengthMenu": [12],
+                "scrollY": "500px",
+                responsive: true,
+                ordering: false
+            });
+
+            var totalPages = table.page.info().pages; // Get the total number of pages
+            table.page(totalPages - 1).draw('page'); // Set the initial page to the last page
         });
-        $('#daily-datatables').dataTable({
-            "lengthMenu": [7]
+        $(document).ready(function() {
+            var table = $('#daily-datatables').DataTable({
+                "lengthMenu": [7],
+
+                responsive: true,
+                ordering: false
+            });
+
+            var totalPages = table.page.info().pages; // Get the total number of pages
+            table.page(totalPages - 1).draw('page'); // Set the initial page to the last page
         });
         $('#total-datatables').dataTable({
-            "lengthMenu": [8, 25, 50, 75, 100]
+            "lengthMenu": [8, 25, 50],
+            responsive: true
         });
 
         // Additional DataTable configurations

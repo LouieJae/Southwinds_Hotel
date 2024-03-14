@@ -11,7 +11,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Daily Total Sales</th>
-                            <th>Views</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,7 +27,7 @@
                             endforeach;
                         endforeach;
 
-                        $start_date = new DateTime('2024-03-01');
+                        $start_date = new DateTime('2023-12-31');
                         $end_date = new DateTime();
                         $interval = new DateInterval('P1D');
                         $date_range = new DatePeriod($start_date, $interval, $end_date);
@@ -44,20 +44,21 @@
                                 // Get the day name
                                 $dayName = $dateObj->format('l');
                                 ?>
-                                <td><?= $date_str ?> (<?= $dayName ?>)</td>
+                                <td><?= $date_str ?> <strong><?= $dayName ?></strong></td>
                                 <?php if ($total_sales == 0) { ?>
-                                    <td>₱ <?= $total_sales ?></td>
+                                    <td>-</td>
                                 <?php } else { ?>
-                                    <td><strong>₱ <?= $total_sales ?></strong></td>
+                                    <td><strong>₱ <?= number_format($total_sales, 2) ?></strong></td>
                                 <?php } ?>
                                 <td>
                                     <div class="col-sm-6">
-                                        <a href="<?php echo site_url('bookings/view_daily_reports/' . $date_str); ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+                                        <a href="<?php echo site_url('bookings/view_daily_reports/' . $date_str); ?>" class="btn btn-info btn-sm"><i class="fas fa-door-open"></i> View</a>
                                     </div>
                                 </td>
                             </tr>
                         <?php } ?>
                     </tbody>
+
                 </table>
             </div>
         </div>
