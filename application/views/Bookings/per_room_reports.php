@@ -43,7 +43,7 @@
                                 $total_sales = 0;
                                 $sales_found = false;
                                 foreach ($total as $sales) {
-                                    if ($rr->room_id == $sales->room_id) {
+                                    if ($rr->room_no == $sales->room_no) {
                                         echo "<td><strong>₱ " . number_format($sales->total_sales, 2) . "</strong></td>";
                                         // Add to total sales for the room
                                         $total_sales += $sales->total_sales;
