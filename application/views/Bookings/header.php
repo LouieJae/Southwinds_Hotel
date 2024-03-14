@@ -280,7 +280,6 @@
         <div class="custom-dropdown" id="inventoryDropdown">
             <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
                 <i class="fas fa-bed"></i> Room Accommodations
-                <div class="custom-caret"></div>
             </a>
             <div class="custom-dropdown-content">
                 <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
