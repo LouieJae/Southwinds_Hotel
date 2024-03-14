@@ -20,31 +20,30 @@
                             </span>
                         </p>
                         <input type="hidden" name="room_no" value="<?php echo $room->room_no; ?>">
+                        <input type="hidden" name="room_hour" value="2">
                         <input type="hidden" name="status" value="<?php echo ucfirst($room->status); ?>">
                         <input type="hidden" name="room_price" value="<?php echo $room->twohr_price; ?>">
                         <input type="hidden" name="prepared_by" value="<?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>">
                         <input type="hidden" name="date" value="<?= date('Y-d-m'); ?>">
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twohr_price; ?>">2 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twohr_price; ?>" data-hour="2">2 Hours: $
                             <?php echo $room->twohr_price; ?>
                         </button>
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->threehr_price; ?>">3 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->threehr_price; ?>" data-hour="3">3 Hours: $
                             <?php echo $room->threehr_price; ?>
                         </button>
 
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->sixhr_price; ?>">6 Hours: $
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->sixhr_price; ?>" data-hour="6">6 Hours: $
                             <?php echo $room->sixhr_price; ?>
                         </button>
 
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twelvehr_price; ?>">12 Hours:
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twelvehr_price; ?>" data-hour="12">12 Hours:
                             $
                             <?php echo $room->twelvehr_price; ?>
                         </button>
 
-
-                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twentyfourhr_price; ?>">24 Hours:
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twentyfourhr_price; ?>" data-hour="24">24 Hours:
                             $
                             <?php echo $room->twentyfourhr_price; ?>
                         </button>
@@ -100,6 +99,7 @@
                                                     <tbody>
                                                         <input type="hidden" name="add_ons" value="<?= $add_ons_no ?>">
                                                         <input type="hidden" name="product_names[]" value="">
+                                                        <input type="hidden" name="product_quantities[]" value="">
                                                         <input type="hidden" name="product_prices[]" value="">
                                                         <!-- Dynamically add products here -->
                                                     </tbody>
@@ -124,14 +124,13 @@
         </div>
     </div>
 <?php endforeach; ?>
+
 <script>
-    // Prevent form submission when clicking on price buttons or selecting products
     $(document).ready(function() {
         $('.price-button').click(function(event) {
             event.preventDefault();
-        });
-        $('.product-button').click(function(event) {
-            event.preventDefault();
+            var hourValue = $(this).data('hour');
+            $('input[name="room_hour"]').val(hourValue);
         });
     });
 </script>

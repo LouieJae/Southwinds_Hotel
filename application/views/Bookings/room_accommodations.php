@@ -63,7 +63,7 @@
     /* Adjust image size */
     .card img {
         max-width: 100%;
-        max-height: 45%;
+        max-height: 60%;
         /* Ensure the image doesn't overflow */
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -299,7 +299,6 @@
         display: block;
     }
 </style>
-
 <div class="card-container">
     <?php foreach ($get_all_room as $room) : ?>
         <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
@@ -307,34 +306,36 @@
             <?php echo $room->room_no; ?>
             <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
             <div class="card-footer">
-                <?php if ($room->status === 'occupied') : ?>
-                    <button class="add-ons-button">Add-ons</button>
-                    <button class="checkout-button">Checkout</button>
-                <?php endif; ?>
             </div>
             <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
                 <?php echo ucfirst($room->status); ?>
             </div>
         </div>
-
     <?php endforeach; ?>
 </div>
 <?php include('roomModals.php') ?>
-<?php include('addOnsModals.php') ?>
 <?php include('checkoutModal.php') ?>
-
 
 <script>
     // Initialize total amount variable
     let totalAmount = 0;
 
-    function updateTotalAmount(cart) {
-        // Get the room price
-        const roomPrice = parseFloat(cart.querySelector('.price-value').textContent.trim().substring(1));
+    // Event delegation for quantity inputs in the cart
+    document.addEventListener('input', function(event) {
+        if (event.target.matches('.cart-card input[type="number"]')) {
+            const cartCard = event.target.closest('.cart-card');
+            updateTotalAmount(cartCard);
+        }
+    });
+
+    // Function to update total amount in the cart
+    function updateTotalAmount(cartCard) {
+        // Get the room price from the cart card
+        const roomPrice = parseFloat(cartCard.querySelector('.price-value').textContent.trim().substring(1));
 
         // Calculate total price of added products
         let totalPrice = 0;
-        const addedProductRows = cart.querySelectorAll('.added-products table tbody tr');
+        const addedProductRows = cartCard.querySelectorAll('.added-products table tbody tr');
         addedProductRows.forEach(row => {
             const priceCell = row.querySelector('td:nth-child(2)');
             const quantityInput = row.querySelector('input[type="number"]');
@@ -344,7 +345,7 @@
         });
 
         // Update total amount in the cart
-        cart.querySelector('.cart-total p').textContent = 'Total: ₱' + (roomPrice + totalPrice).toFixed(2);
+        cartCard.querySelector('.cart-total p').textContent = 'Total: ₱' + (roomPrice + totalPrice).toFixed(2);
     }
 
 
@@ -361,85 +362,101 @@
         });
     });
 
-    document.addEventListener('click', function(event) {
-        if (event.target && event.target.matches('.product-button')) {
-            const productName = event.target.dataset.name;
-            const productPrice = parseFloat(event.target.dataset.price);
+    // Function to handle click on product button
+    function handleProductButtonClick(event) {
+        // Prevent the default behavior of the button
+        event.preventDefault();
 
-            // Find the closest cart for the clicked product
-            const cart = event.target.closest('.product-cart-container').querySelector('.cart-card');
-            const addedProductsTable = cart.querySelector('.added-products table tbody');
-            const cartPriceElement = cart.querySelector('.cart-selected-price');
+        // Get the clicked product details
+        const productName = event.currentTarget.dataset.name;
+        const productPrice = parseFloat(event.currentTarget.dataset.price);
 
-            // Create a new row for the product
-            const newRow = document.createElement('tr');
+        // Find the closest cart for the clicked product
+        const cart = event.currentTarget.closest('.product-cart-container').querySelector('.cart-card');
+        const addedProductsTable = cart.querySelector('.added-products table tbody');
 
-            // Create cells for product name, price, quantity, and delete button
-            const productNameCell = document.createElement('td');
-            productNameCell.textContent = productName;
-
-            const productPriceCell = document.createElement('td');
-            productPriceCell.textContent = `₱${productPrice.toFixed(2)}`;
-
-            const productQuantityCell = document.createElement('td');
-            const quantityInput = document.createElement('input');
-            quantityInput.type = 'number';
-            quantityInput.value = 1; // Default quantity is 1
-            quantityInput.style.width = '50px'; // Set width of quantity input
-            productQuantityCell.appendChild(quantityInput);
-
-            const deleteButtonCell = document.createElement('td');
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-button'); // Add a class for styling
-            deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Set delete icon
-            deleteButton.addEventListener('click', function() {
-                newRow.remove(); // Remove the row when delete button is clicked
-                updateTotalAmount(cart); // Update total amount after deletion
-            });
-            deleteButtonCell.appendChild(deleteButton);
-
-            // Append cells to the row
-            newRow.appendChild(productNameCell);
-            newRow.appendChild(productPriceCell);
-            newRow.appendChild(productQuantityCell);
-            newRow.appendChild(deleteButtonCell);
-
-            // Append the new row to the table body
-            addedProductsTable.appendChild(newRow);
-
-            // Update total amount
-            updateTotalAmount(cart);
-
-            // Add product name, price, and quantity to hidden inputs for form submission
-            const productNamesInput = cart.querySelector('input[name="product_names[]"]');
-            const productPricesInput = cart.querySelector('input[name="product_prices[]"]');
-            const productQuantitiesInput = cart.querySelector('input[name="product_quantities[]"]');
-
-            // Append each product name, price, and quantity as separate values
-            const productNameInput = document.createElement('input');
-            productNameInput.type = 'hidden';
-            productNameInput.name = 'product_names[]';
-            productNameInput.value = productName;
-            productNamesInput.parentNode.appendChild(productNameInput);
-
-            const productPriceInput = document.createElement('input');
-            productPriceInput.type = 'hidden';
-            productPriceInput.name = 'product_prices[]';
-            productPriceInput.value = productPrice.toFixed(2);
-            productPricesInput.parentNode.appendChild(productPriceInput);
-
-            const productQuantityInput = document.createElement('input');
-            productQuantityInput.type = 'hidden';
-            productQuantityInput.name = 'product_quantities[]';
-            productQuantityInput.value = quantityInput.value;
-            productQuantitiesInput.parentNode.appendChild(productQuantityInput);
-
-            // Update product quantity when the input changes
-            quantityInput.addEventListener('change', function() {
-                productQuantityInput.value = quantityInput.value;
-                updateTotalAmount(cart); // Update total amount after quantity change
-            });
+        // Check if the product is already in the cart
+        const existingProductRow = addedProductsTable.querySelector(`tr[data-product-name="${productName}"]`);
+        if (existingProductRow) {
+            // Product already exists in the cart, show error message or handle it as required
+            toastr.warning('This product is already on the cart.');
+            return; // Stop execution
         }
+
+        // Create a new row for the product
+        const newRow = document.createElement('tr');
+        newRow.dataset.productName = productName; // Set data attribute to track the product name
+
+        // Create cells for product name, price, quantity, and delete button
+        const productNameCell = document.createElement('td');
+        productNameCell.textContent = productName;
+
+        const productPriceCell = document.createElement('td');
+        productPriceCell.textContent = `₱${productPrice.toFixed(2)}`;
+
+        const productQuantityCell = document.createElement('td');
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.value = 1; // Default quantity is 1
+        quantityInput.style.width = '80px'; // Set width of quantity input
+        productQuantityCell.appendChild(quantityInput);
+
+        const deleteButtonCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button'); // Add a class for styling
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Set delete icon
+        deleteButton.addEventListener('click', function() {
+            newRow.remove(); // Remove the row when delete button is clicked
+            updateTotalAmount(cart); // Update total amount after deletion
+        });
+        deleteButtonCell.appendChild(deleteButton);
+
+        // Append cells to the row
+        newRow.appendChild(productNameCell);
+        newRow.appendChild(productPriceCell);
+        newRow.appendChild(productQuantityCell);
+        newRow.appendChild(deleteButtonCell);
+
+        // Append the new row to the table body
+        addedProductsTable.appendChild(newRow);
+
+        // Update total amount
+        updateTotalAmount(cart);
+
+        // Add product name, price, and quantity to hidden inputs for form submission
+        const productNamesInput = cart.querySelector('input[name="product_names[]"]');
+        const productPricesInput = cart.querySelector('input[name="product_prices[]"]');
+        const productQuantitiesInput = cart.querySelector('input[name="product_quantities[]"]');
+
+        // Append each product name, price, and quantity as separate values
+        const productNameInput = document.createElement('input');
+        productNameInput.type = 'hidden';
+        productNameInput.name = 'product_names[]';
+        productNameInput.value = productName;
+        productNamesInput.parentNode.appendChild(productNameInput);
+
+        const productPriceInput = document.createElement('input');
+        productPriceInput.type = 'hidden';
+        productPriceInput.name = 'product_prices[]';
+        productPriceInput.value = productPrice.toFixed(2);
+        productPricesInput.parentNode.appendChild(productPriceInput);
+
+        const productQuantityInput = document.createElement('input');
+        productQuantityInput.type = 'hidden';
+        productQuantityInput.name = 'product_quantities[]';
+        productQuantityInput.value = quantityInput.value;
+        productQuantitiesInput.parentNode.appendChild(productQuantityInput);
+
+        // Update product quantity when the input changes
+        quantityInput.addEventListener('change', function() {
+            productQuantityInput.value = quantityInput.value;
+            updateTotalAmount(cart); // Update total amount after quantity change
+        });
+    }
+
+    // Add event listeners to the product buttons
+    document.querySelectorAll('.product-button').forEach(item => {
+        item.addEventListener('click', handleProductButtonClick);
     });
 </script>
 
@@ -454,15 +471,14 @@
                 // Show the modal for the selected room
                 $('#roomModal_' + roomId).modal('show'); // Assuming you're using jQuery
             } else if (roomStatus === 'Housekeeping') {
-                // Room is in housekeeping, show an alert
-                alert('This room is currently in housekeeping. Please select another room.');
+                // Room is in housekeeping, show a toastr notification
+                toastr.warning('This room is currently in housekeeping. Please select another room.');
             } else {
-                // Room is occupied, show an alert
-                alert('This room is currently occupied. Please select another room.');
+                // Room is occupied, show a toastr notification
+                toastr.error('This room is currently occupied. Please select another room.');
             }
         });
     });
-
 
     // Function to handle click on add-ons button
     function handleAddOnsClick(event) {
@@ -622,9 +638,7 @@
         // Update the displayed remaining time
         updateTime();
     }
-</script>
 
-<script>
     // Add event listener to remove modal backdrop after modal is hidden
     $('.modal').on('hidden.bs.modal', function(e) {
         $(this).data('bs.modal', null); // Reset modal data to prevent caching
@@ -643,5 +657,13 @@
                 }
             });
         });
+    });
+
+    $(document).ready(function() {
+        <?php if ($this->session->flashdata('success')) { ?>
+            toastr.success('<?php echo $this->session->flashdata('success'); ?>');
+        <?php } elseif ($this->session->flashdata('error')) { ?>
+            toastr.error('<?php echo $this->session->flashdata('error'); ?>');
+        <?php } ?>
     });
 </script>
