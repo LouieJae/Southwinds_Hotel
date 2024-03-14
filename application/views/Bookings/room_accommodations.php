@@ -63,7 +63,7 @@
     /* Adjust image size */
     .card img {
         max-width: 100%;
-        max-height: 45%;
+        max-height: 60%;
         /* Ensure the image doesn't overflow */
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -306,9 +306,6 @@
             <?php echo $room->room_no; ?>
             <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
             <div class="card-footer">
-                <?php if ($room->status === 'occupied') : ?>
-                    <button class="checkout-button">Checkout</button>
-                <?php endif; ?>
             </div>
             <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>">
                 <?php echo ucfirst($room->status); ?>
@@ -660,5 +657,13 @@
                 }
             });
         });
+    });
+
+    $(document).ready(function() {
+        <?php if ($this->session->flashdata('success')) { ?>
+            toastr.success('<?php echo $this->session->flashdata('success'); ?>');
+        <?php } elseif ($this->session->flashdata('error')) { ?>
+            toastr.error('<?php echo $this->session->flashdata('error'); ?>');
+        <?php } ?>
     });
 </script>

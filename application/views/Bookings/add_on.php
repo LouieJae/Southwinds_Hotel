@@ -48,6 +48,16 @@
         border-radius: 5px;
     }
 
+    .cart-carding {
+        flex: 0 0 calc(100% - 10px);
+        /* Adjust width as needed */
+        background-color: #F3EDC8;
+        padding: 10px;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
     .product-card input[type="text"] {
         margin-bottom: 10px;
     }
@@ -205,8 +215,8 @@
 
                 <tbody>
                     <?php
-                    if (isset($checkin) && !empty($checkin)) {
-                        foreach ($checkin as $key => $check) {
+                    if (isset($checkins) && !empty($checkins)) {
+                        foreach ($checkins as $key => $check) {
                             $check_in_id = $check->check_in_id;
                     ?>
                             <tr class="text-center">
@@ -227,6 +237,7 @@
                                 </td>
                                 <td class="text-center">
                                     <a href="#" class="btn btn-secondary checkinBtn" data-checkinid="<?php echo $check->check_in_id; ?>" title="Click here to add product quantity" data-bs-toggle="modal">Add Ons</a>
+                                    <a href="#" class="btn btn-danger checkoutBtn" data-checkoutid="<?php echo $check->check_in_id; ?>" title="Click here to proceed to checkout" data-bs-toggle="modal">Checkout</a>
                                 </td>
                             </tr>
                     <?php
@@ -243,6 +254,13 @@
     <?php include('addOnsModals.php') ?>
 </div>
 <script>
+    $(document).ready(function() {
+        <?php if ($this->session->flashdata('success')) { ?>
+            toastr.success('<?php echo $this->session->flashdata('success'); ?>');
+        <?php } elseif ($this->session->flashdata('error')) { ?>
+            toastr.error('<?php echo $this->session->flashdata('error'); ?>');
+        <?php } ?>
+    });
     // Function to handle "Add Ons" button click
     function handleAddOnsButtonClick(event) {
         event.preventDefault();
@@ -273,6 +291,36 @@
             item.addEventListener('click', handleProductButtonClick);
         });
     }
+
+    // Function to handle "Checkout" button click
+    function handleCheckoutButtonClick(event) {
+        event.preventDefault();
+        var checkoutId = this.getAttribute('data-checkoutid');
+        console.log("Clicked button check in ID:", checkoutId);
+        loadCheckoutModal('<?php echo base_url('Bookings/check_out/'); ?>' + checkoutId);
+    }
+
+    // Function to load checkout modal content
+    function loadCheckoutModal(url) {
+        console.log("loadCheckoutModal function called");
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('modalContainer').innerHTML = data;
+                $('#checkoutModal').modal('show');
+                // Add event listeners for adding hours and product buttons after modal content is loaded
+                addCheckoutButtonListener();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Add event listener for "Checkout" buttons
+    document.querySelectorAll('.checkoutBtn').forEach(function(button) {
+        button.addEventListener('click', handleCheckoutButtonClick);
+    });
+
     // Initialize total amount variable
     let totalAmount = 0;
 

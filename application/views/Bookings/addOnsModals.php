@@ -1,6 +1,6 @@
-<div id="addOnsModals">
-    <div class="modal fade" id="addOnsModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addOnsModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">\
+        <form action="<?php echo site_url('Bookings/add_ons_submit/' . $checkin->check_in_id); ?>" method="post">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addOnsModalLabel">Add-Ons
@@ -19,8 +19,6 @@
                     </p>
 
                     <?php
-                    // Assuming $checkin->check_in_time is in the format 'Y-m-d H:i:s' (e.g., '2024-03-12 23:00:00' for 11:00 PM)
-                    // and $checkin->room_hour is the number of hours for the room stay (e.g., 2)
                     $checkInDateTime = new DateTime($checkin->check_in_time, new DateTimeZone('Asia/Manila')); // Replace 'Asia/Manila' with your server's timezone
                     $checkOutDateTime = clone $checkInDateTime;
                     $checkOutDateTime->modify('+' . $checkin->room_hour . ' hours'); // Add room hours to check-in time
@@ -96,16 +94,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <input type="hidden" name="product_names[]" value="">
-                                                    <input type="hidden" name="product_quantities[]" value="">
-                                                    <input type="hidden" name="product_prices[]" value="">
                                                     <?php foreach ($view as $row) { ?>
+                                                        <input type="hidden" name="add_ons[]" value="<?= $row->add_ons_id ?> ">
                                                         <tr>
                                                             <td><?= $row->product_name; ?></td>
                                                             <td>₱<?= $row->product_price; ?></td>
                                                             <td><?= $row->product_quantity; ?></td>
                                                         </tr>
                                                     <?php } ?>
+                                                    <input type="hidden" name="product_names[]" value="">
+                                                    <input type="hidden" name="product_quantities[]" value="">
+                                                    <input type="hidden" name="product_prices[]" value="">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -120,10 +119,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" onclick="return confirm('Are you sure you want to update this check in?')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Submit</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
+                <input type="hidden" name="room_price" value="<?php echo isset($checkin->room_price) ? $checkin->room_price : ''; ?>">
+                <input type="hidden" name="check_in_id" value="<?php echo $checkin->check_in_id; ?>">
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script>
@@ -181,6 +183,9 @@
         // Get all product buttons
         var productButtons = document.querySelectorAll('.product-button');
 
+        // Flag to track if any product matches the search input
+        var productFound = false;
+
         // Loop through each product button
         productButtons.forEach(function(button) {
             // Get the product name from the button's data attribute
@@ -190,10 +195,25 @@
             if (productName.includes(searchInput)) {
                 // If the product matches the search input, display it
                 button.style.display = 'block';
+                productFound = true; // Set flag to true indicating a product was found
             } else {
                 // If the product does not match the search input, hide it
                 button.style.display = 'none';
             }
         });
+
+        // Check if no product was found and the message does not exist
+        var noProductMessage = document.querySelector('.search-results .no-product-message');
+        if (!productFound && !noProductMessage) {
+            // If no product was found and the message does not exist, create and append the message
+            noProductMessage = document.createElement('p');
+            noProductMessage.textContent = 'No product found.';
+            noProductMessage.classList.add('no-product-message');
+            // Append the message after the product container
+            document.querySelector('.search-results').appendChild(noProductMessage);
+        } else if (productFound && noProductMessage) {
+            // If products were found and the message exists, remove the message
+            noProductMessage.remove();
+        }
     }
 </script>

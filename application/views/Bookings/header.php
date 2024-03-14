@@ -283,8 +283,8 @@
                 <div class="custom-caret"></div>
             </a>
             <div class="custom-dropdown-content">
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Check In</a>
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Add Ons</a>
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
+                <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Check Ins</a>
             </div>
         </div>
         <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>

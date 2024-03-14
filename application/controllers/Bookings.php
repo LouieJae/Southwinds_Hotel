@@ -186,11 +186,12 @@ class Bookings extends CI_Controller
             redirect('bookings/room_accommodations');
         }
     }
+
     function add_on()
     {
         $this->load->model('checkin_model');
         $this->load->model('room_model');
-        $this->data['checkin'] = $this->checkin_model->get_all_checkin();
+        $this->data['checkins'] = $this->checkin_model->get_all_checkin();
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->view('bookings/header');
         $this->load->view('bookings/add_on', $this->data);
@@ -208,6 +209,55 @@ class Bookings extends CI_Controller
         $this->data['products'] = $this->product_model->get_all_product();
         // Load view for adding add-ons
         $this->load->view('Bookings/addOnsModals', $this->data);
+    }
+
+    function add_ons_submit($check_in_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $this->load->model('checkin_model');
+            $response = $this->checkin_model->update_checkin($check_in_id);
+
+            if ($response) {
+                $success_message = 'Add ons added successfully.';
+                $this->session->set_flashdata('success', $success_message);
+            } else {
+                $error_message = 'Add ons added was not added.';
+                $this->session->set_flashdata('error', $error_message);
+            }
+            redirect('bookings/add_on');
+        }
+    }
+
+    public function check_out($check_in_id)
+    {
+        $this->load->model('product_model');
+        $this->load->model('room_model');
+        $this->load->model('checkin_model');
+        $this->data['checkout'] = $this->checkin_model->get_checkout($check_in_id);
+        $this->data['view'] = $this->checkin_model->view_all_addons($check_in_id);
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+        $this->data['products'] = $this->product_model->get_all_product();
+        // Load view for adding add-ons
+        $this->load->view('Bookings/checkoutModal', $this->data);
+    }
+
+    function check_out_submit($check_in_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $this->load->model('checkin_model');
+            $response = $this->checkin_model->check_out($check_in_id);
+
+            if ($response) {
+                $success_message = 'Add ons added successfully.';
+                $this->session->set_flashdata('success', $success_message);
+            } else {
+                $error_message = 'Add ons added was not added.';
+                $this->session->set_flashdata('error', $error_message);
+            }
+            redirect('bookings/add_on');
+        }
     }
 
     function add_product_category_submit()
