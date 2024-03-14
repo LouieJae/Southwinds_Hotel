@@ -76,7 +76,7 @@
                                     <?php echo $pro->product_uom; ?>
                                 </td>
                                 <td class="text-center">₱
-                                    <?php echo $pro->product_price; ?>
+                                    <?php echo number_format($pro->product_price, 2); ?>
                                 </td>
                                 <td class="text-center">
                                     <?php echo $pro->minimum_quantity; ?>

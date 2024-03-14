@@ -97,12 +97,7 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
-    public function reports()
-    {
-        $this->load->view('Bookings/header');
-        $this->load->view('Bookings/reports');
-        $this->load->view('Bookings/footer');
-    }
+
 
 
     public function product()
@@ -193,7 +188,7 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/add_product_category');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->form_validation->set_rules('product_category1', 'Product Category Name', 'trim|required|is_unique[product_category.product_category]');
+            $this->form_validation->set_rules('product_category1', 'Product Category Name', 'trim|required|is_unique[product_category.product_category]', array('is_unique' => 'The Product Category is already taken.'));
 
             if ($this->form_validation->run() != FALSE) {
                 $this->load->model('product_model');
@@ -206,6 +201,14 @@ class Bookings extends CI_Controller
                     $this->session->set_flashdata('error', $error_message);
                 }
                 redirect('bookings/product');
+            } else {
+                // Form validation failed, set session flashdata for debugging
+                $debug_info = array(
+                    'form_data' => $this->input->post(),
+                    'validation_errors' => validation_errors()
+                );
+                $this->session->set_flashdata('debug_info', $debug_info);
+                redirect('bookings/product');
             }
         }
     }
@@ -216,7 +219,7 @@ class Bookings extends CI_Controller
 
         $this->load->view('Bookings/add_uom');
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->form_validation->set_rules('uom', 'Unit of Measure', 'trim|required|is_unique[uom.uom]');
+            $this->form_validation->set_rules('uom', 'Unit of Measure', 'trim|required|is_unique[uom.uom]', array('is_unique' => 'The Unit of Measure is already taken.'));
 
             if ($this->form_validation->run() != FALSE) {
                 $this->load->model('uom_model');
@@ -228,6 +231,14 @@ class Bookings extends CI_Controller
                     $error_message = 'Unit of Measure was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
+                redirect('bookings/product');
+            } else {
+                // Form validation failed, set session flashdata for debugging
+                $debug_info = array(
+                    'form_data' => $this->input->post(),
+                    'validation_errors' => validation_errors()
+                );
+                $this->session->set_flashdata('debug_info', $debug_info);
                 redirect('bookings/product');
             }
         }
@@ -326,5 +337,187 @@ class Bookings extends CI_Controller
         }
 
         redirect('bookings/product');
+    }
+
+    public function reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get the values from the form
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            // Pass the values to the model and retrieve the sales data
+            $this->data['sales_data'] = $this->report_model->get_sales_by_day_of_week($date_from, $date_to);
+            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
+            $this->data['month_data'] = $this->report_model->get_sales_by_month($date_from, $date_to);
+        } else {
+            // If the form is not submitted, set default values or handle accordingly
+            $date_from = ''; // Set default or handle as needed
+            $date_to = ''; // Set default or handle as needed
+            $this->data['sales_data'] = array(); // Initialize sales data array
+            $this->data['total'] = array();
+            $this->data['month_data'] = array();
+        }
+
+        // Load the view with the necessary data
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    /*public function total_reports()
+    {
+        $this->load->model('report_model');aaaaaa
+        $this->data['room'] = $this->report_model->get_all_room();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            $this->data['total'] = $this->report_model->get_sales_by_date_range($date_from, $date_to);
+        } else {
+            $date_from = '';
+            $date_to = '';
+            $this->data['total'] = array();
+        }
+    }*/
+
+    public function daily_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Set the start date to March 1, 2024
+        $start_date = new DateTime('2024-03-01'); // Change this depending on the starting day of operations
+        $end_date = new DateTime(); // Current date
+
+        // Array to store daily sales
+        $daily_sales = array();
+
+        // Loop through each day from start date until today
+        while ($start_date <= $end_date) {
+            $date = $start_date->format('Y-m-d');
+
+            // Fetch daily sales for the current date
+            $daily_sales[$date] = $this->report_model->get_daily_sales($date);
+
+            // Move to the next day
+            $start_date->modify('+1 day');
+        }
+
+        // Pass daily sales data to the view
+        $this->data['daily_sales'] = $daily_sales;
+
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/daily_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function view_daily_reports($date)
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+        $this->data['daily_room'] = $this->report_model->get_daily_sales_per_room($date);
+        $this->data['date'] = $date;
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/room_daily_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function view_monthly_reports($year_month)
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+        $this->data['monthly_room'] = $this->report_model->get_monthly_sales_per_room($year_month);
+        $this->data['date'] = $year_month;
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/room_monthly_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+
+    public function per_room_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get the values from the form
+            $date_from = $this->input->post('date_from');
+            $date_to = $this->input->post('date_to');
+
+            $this->data['total'] = $this->report_model->get_sales_by_room($date_from, $date_to);
+        } else {
+            // If the form is not submitted, set default values or handle accordingly
+            $date_from = ''; // Set default or handle as needed
+            $date_to = ''; // Set default or handle as needed
+
+            $this->data['total'] = array();
+        }
+
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/per_room_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    public function monthly_reports()
+    {
+        $this->load->model('room_model');
+        $this->data['room'] = $this->room_model->get_all_room();
+        $this->load->model('report_model');
+
+        // Set the start date to the beginning of the year
+        $start_date = new DateTime(date('2022') . '-01-01');
+        $end_date = new DateTime(); // Current date
+
+        // Array to store monthly sales
+        $monthly_sales = array();
+
+        // Loop through each month from the start date until today
+        while ($start_date <= $end_date) {
+            $year_month = $start_date->format('Y-m');
+
+            // Fetch monthly sales for the current month
+            $monthly_sales[$year_month] = $this->report_model->get_monthly_sales($year_month);
+
+            // Move to the next month
+            $start_date->modify('+1 month');
+        }
+
+        // Pass monthly sales data to the view
+        $this->data['monthly_sales'] = $monthly_sales;
+
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/monthly_reports', $this->data);
+        $this->load->view('Bookings/footer');
+    }
+
+    function check_in_submit()
+    {
+        $this->load->model('room_model');
+        $this->data['get_all_room'] = $this->room_model->get_all_room();
+
+        $this->load->model('check_in_model');
+        $response = $this->check_in_model->insert_checkin();
+
+        if ($response) {
+            $success_message = 'CheckIn updated successfully.';
+            $this->session->set_flashdata('success', $success_message);
+            redirect('bookings/room_accommodations');
+        } else {
+            $error_message = 'Product was not updated.';
+            $this->session->set_flashdata('error', $error_message);
+            redirect('bookings/product');
+        }
     }
 }

@@ -23,4 +23,14 @@ class Room_model extends CI_Model
         $this->db->where('status', 'occupied');
         return $this->db->count_all_results('room');
     }
+
+
+    public function get_room_sales()
+    {
+        $this->db->select('*');
+        $this->db->from('room');
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
 }

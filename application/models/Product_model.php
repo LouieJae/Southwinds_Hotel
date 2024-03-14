@@ -47,6 +47,7 @@ class Product_model extends CI_Model
             'product_status' => $product_status,
             'minimum_quantity' => $minimum_quantity,
             'beginning_quantity' => $beginning_quantity,
+            'product_quantity' => $beginning_quantity,
         );
 
         $response = $this->db->insert('product', $data);
