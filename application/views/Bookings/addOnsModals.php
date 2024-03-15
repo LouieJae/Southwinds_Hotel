@@ -1,3 +1,10 @@
+<style>
+    #checkOutDateTime {
+        font-weight: bolder;
+    }
+</style>
+
+
 <div class="modal fade" id="addOnsModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">\
         <form action="<?php echo site_url('Bookings/add_ons_submit/' . $checkin->check_in_id); ?>" method="post">
@@ -38,10 +45,12 @@
                         <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo $checkOutDateTime->format('h:i A m-d-Y'); ?></strong></span></p>
                         <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
 
+                        <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('h:i A m-d-Y'); ?>">
+
                         <!-- Input field to add hours -->
-                        <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" step="1" placeholder="Add hours">
+                        <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours">
                         <!-- Button to add hours -->
-                        <button class="btn btn-primary">Add Hours</button>
+                        <button type="button" class="btn btn-primary" onclick="addHoursToRemainingTime()">Add Hours</button>
                     </div>
 
                     <!-- Container for product selection and cart -->
@@ -114,6 +123,7 @@
                             <!-- Total Amount -->
                             <div class="cart-total">
                                 <p>Total: <span class="total-amount">₱<?php echo $checkin->total_amount; ?></span></p>
+
                             </div>
                         </div>
                     </div>
@@ -122,6 +132,7 @@
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                     <button type="submit" name="submit" onclick="return confirm('Are you sure you want to add this add ons?')" class="btn btn-danger btn-sm"><i class="fas fa-shopping-basket"></i> Submit</button>
                 </div>
+                <input type="hidden" name="total_amount" value="<?php echo isset($checkin->total_amount) ? $checkin->total_amount : ''; ?>">
                 <input type="hidden" name="room_price" value="<?php echo isset($checkin->room_price) ? $checkin->room_price : ''; ?>">
                 <input type="hidden" name="check_in_id" value="<?php echo $checkin->check_in_id; ?>">
             </div>
@@ -175,6 +186,98 @@
     // Call updateRemainingTime function every second
     var intervalId = setInterval(updateRemainingTime, 1000);
 
+    // Function to add hours to remaining time and update total amount
+    function addHoursToRemainingTime() {
+        // Get the input field for adding hours
+        var addHoursInput = document.getElementById('addHours');
+
+        // Get the value entered by the user
+        var hoursToAdd = parseInt(addHoursInput.value);
+
+        // Get the total amount element
+        var totalAmountElement = document.querySelector('.cart-total .total-amount');
+
+        // Get the current total amount
+        var currentTotalAmount = parseFloat(totalAmountElement.textContent.replace('₱', ''));
+
+        // Calculate the total amount for the added hours
+        var hourlyRate = 100; // Assuming the rate is 100 pesos per hour
+        var totalAmountForHours = hourlyRate * hoursToAdd;
+
+        // Calculate the new total amount
+        var newTotalAmount = currentTotalAmount + totalAmountForHours;
+
+        // Update the total amount element with the new total amount
+        totalAmountElement.textContent = `₱${newTotalAmount.toFixed(2)}`;
+
+        // Update the total amount input field value
+        var totalAmountInput = document.querySelector('input[name="total_amount"]');
+        totalAmountInput.value = newTotalAmount.toFixed(2);
+
+        // Update the checkout date and time
+        var checkOutDateTimeElement = document.getElementById('checkOutDateTime');
+        var checkOutDateTime = new Date(checkOutDateTimeElement.innerText);
+
+        // Add hours to the checkout date and time
+        checkOutDateTime.setHours(checkOutDateTime.getHours() + hoursToAdd);
+
+        // Format the new checkout date and time
+        var formattedCheckOutDateTime = formatDate(checkOutDateTime);
+
+        // Update the checkout date and time element
+        checkOutDateTimeElement.innerText = formattedCheckOutDateTime;
+
+        // Update the check_out_time input field value
+        var checkOutTimeInput = document.querySelector('input[name="check_out_time"]');
+        checkOutTimeInput.value = formattedCheckOutDateTime;
+
+        // Update the room price element and input field
+        var roomPriceElement = document.querySelector('.cart-selected-price .price-value');
+        var currentRoomPrice = parseFloat(roomPriceElement.textContent.replace('₱', ''));
+        var newRoomPrice = currentRoomPrice + 100 * hoursToAdd; // Assuming the rate is 100 pesos per hour
+        roomPriceElement.textContent = `₱${newRoomPrice.toFixed(2)}`;
+
+        // Update the room price input field value
+        var roomPriceInput = document.querySelector('input[name="room_price"]');
+        roomPriceInput.value = newRoomPrice.toFixed(2);
+
+        // Recalculate remaining time
+        var remainingTime = calculateRemainingTime(checkOutDateTime);
+
+        // Update the remaining time element
+        var remainingTimeSpan = document.getElementById('remainingTime');
+        remainingTimeSpan.textContent = remainingTime;
+    }
+
+    // Function to calculate remaining time
+    function calculateRemainingTime(checkOutDateTime) {
+        var currentDateTime = new Date();
+        var remainingMilliseconds = checkOutDateTime - currentDateTime;
+        var remainingHours = Math.floor(remainingMilliseconds / (1000 * 60 * 60));
+        remainingMilliseconds -= remainingHours * 1000 * 60 * 60;
+        var remainingMinutes = Math.floor(remainingMilliseconds / (1000 * 60));
+        remainingMilliseconds -= remainingMinutes * 1000 * 60;
+        var remainingSeconds = Math.floor(remainingMilliseconds / 1000);
+
+        // Format remaining time
+        var remainingTimeFormatted = ('0' + remainingHours).slice(-2) + ':' + ('0' + remainingMinutes).slice(-2) + ':' + ('0' + remainingSeconds).slice(-2);
+
+        return remainingTimeFormatted;
+    }
+
+
+    function formatDate(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // 12-hour clock, '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        var formattedDate = hours + ':' + minutes + ' ' + ampm + ' ' + (date.getMonth() + 1) + '-' + date.getDate() + '-' + date.getFullYear();
+
+        return formattedDate;
+    }
 
     function filterProducts() {
         // Get the search input value
