@@ -201,13 +201,13 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered table-stripped table-sm" id="user-datatables">
+            <table class="table table-bordered table-stripped table-sm" id="add_ons-datatables">
                 <thead>
                     <tr class="text-center">
+                        <th class="text-center">Check In Time</th>
                         <th class="text-center">Room No</th>
                         <th class="text-center">Room Price</th>
                         <th class="text-center">Total Amount</th>
-                        <th class="text-center">Check In Time</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -222,6 +222,9 @@
                     ?>
                             <tr class="text-center">
                                 <td class="text-center">
+                                    <?php echo date('h:i A', strtotime($check->check_in_time)); ?>
+                                </td>
+                                <td class="text-center">
                                     <?php echo $check->room_no; ?>
                                 </td>
                                 <td class="text-center">
@@ -229,9 +232,6 @@
                                 </td>
                                 <td class="text-center">
                                     ₱<?php echo $check->total_amount; ?>
-                                </td>
-                                <td class="text-center">
-                                    <?php echo date('h:i A', strtotime($check->check_in_time)); ?>
                                 </td>
                                 <td class="text-center">
                                     <?php echo $status; ?>
@@ -258,6 +258,16 @@
 
     <?php include('addOnsModals.php') ?>
 </div>
+<script>
+    $(document).ready(function() {
+        $("#add_ons-datatables").DataTable({
+            "order": [
+                [0, "desc"]
+            ],
+            "lengthMenu": [10, 25, 50, 100]
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         <?php if ($this->session->flashdata('success')) { ?>
@@ -339,9 +349,10 @@
         }
     });
 
-    // Function to update the total amount
+    // Function to update the total amount and its corresponding input field
     function updateTotalAmount(cart) {
         const roomPrice = parseFloat(cart.querySelector('.cart-selected-price .price-value').textContent.replace('₱', ''));
+
         // Get all product rows in the cart
         const productRows = cart.querySelectorAll('.added-products table tbody tr');
 
@@ -370,7 +381,12 @@
         // Display the updated total amount
         const totalAmountElement = cart.querySelector('.cart-total .total-amount');
         totalAmountElement.textContent = `₱${totalAmount.toFixed(2)}`;
+
+        // Update the value of the total amount input field
+        const totalAmountInput = document.querySelector('input[name="total_amount"]');
+        totalAmountInput.value = totalAmount.toFixed(2);
     }
+
 
     // Add event listener to all pricing buttons
     document.querySelectorAll('.price-button').forEach(item => {

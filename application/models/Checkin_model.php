@@ -37,6 +37,24 @@ class Checkin_model extends CI_Model
         return $next_room_sales_code;
     }
 
+    function checkout_no()
+    {
+        $year = date('Y');
+
+        $prefix = "CO-";
+
+        $query =  $this->db->query("SELECT max(checkout_no) as max_checkout_code FROM check_out where checkout_no LIKE '{$prefix}%'");
+        $result = $query->row();
+
+
+        if ($result->max_checkout_code) {
+            $next_checkout_code = ++$result->max_checkout_code;
+        } else {
+            $next_checkout_code = $prefix . '00001';
+        }
+        return $next_checkout_code;
+    }
+
     function checkin_room()
     {
         // Get the product names, quantities, and prices from the form
@@ -97,8 +115,11 @@ class Checkin_model extends CI_Model
     {
         $check_in_id = (int) $this->input->post('check_in_id');
         $product_names = $this->input->post('product_names');
+        $check_out_time = $this->input->post('check_out_time');
         $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
+        $room_price = $this->input->post('room_price');
+        $total_amount = $this->input->post('total_amount');
 
         // Check if the first row is empty
         if (empty($product_names[0]) || empty($product_prices[0])) {
@@ -127,7 +148,9 @@ class Checkin_model extends CI_Model
 
         // Update the purchase order with the new total cost and supplier id
         $checkin = [
-            'total_amount' => $updated_total_amount
+            'room_price' => $room_price,
+            'check_out_time' => $check_out_time,
+            'total_amount' => $total_amount,
         ];
 
         $this->db->where('check_in_id', $check_in_id);
@@ -162,25 +185,68 @@ class Checkin_model extends CI_Model
 
     public function check_out()
     {
+        // Retrieving necessary data from the form
         $check_in_id = (int) $this->input->post('check_in_id');
         $room_sales_no = $this->input->post('room_sales_no');
+        $checkout_no = $this->input->post('checkout_no');
         $room_no = $this->input->post('room_no');
+        $room_price = $this->input->post('room_price');
         $room_hour = (int) $this->input->post('room_hour');
         $date = $this->input->post('date');
         $product_names = $this->input->post('product_names');
         $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
 
-        // Check if the first row is empty
-        if (empty($product_names[0]) || empty($product_prices[0])) {
-            // If the first row is empty, remove it from the arrays
+        // Check if the first row is empty or if the product names array is null
+        if (!empty($product_names) && !empty($product_names[0]) && !empty($product_prices[0])) {
+            // If the first row is not empty, remove it from the arrays
             array_shift($product_names);
             array_shift($product_quantities);
             array_shift($product_prices);
         }
 
+        // Loop through the array of product data and update product quantities
+        foreach ($product_names as $index => $product_name) {
+            // Retrieve the current quantity of the product
+            $current_quantity = $this->db->select('product_quantity')->where('product_name', $product_name)->get('product')->row()->product_quantity;
+
+            // Calculate the new quantity after checkout
+            $new_quantity = $current_quantity - $product_quantities[$index];
+
+            // Update the product quantity in the database
+            $this->db->where('product_name', $product_name);
+            $this->db->update('product', ['product_quantity' => $new_quantity]);
+        }
+        $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
+
+        // Insert data into the check_out table
+        $check_out_data = array(
+            'checkout_no' => $checkout_no,
+            'room_no' => $room_no,
+            'room_price' => $room_price,
+            'room_hour' => $room_hour,
+            'total_amount' => $existing_total_amount, // You need to calculate the total amount based on room price and duration
+            'date' => $date,
+        );
+        $this->db->insert('check_out', $check_out_data);
+
+        // Get the check_out_id of the inserted row
+        $check_out_id = $this->db->insert_id();
+
+        // Insert data into add_ons_check_out table
+        foreach ($product_names as $index => $product_name) {
+            $add_ons_check_out_data = array(
+                'add_ons_checkout_no' => $check_out_id,
+                'product_name' => $product_name,
+                'product_quantity' => $product_quantities[$index],
+                'product_price' => $product_prices[$index]
+            );
+            $this->db->insert('add_ons_check_out', $add_ons_check_out_data);
+        }
+
         // Retrieve existing total amount from the database
         $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
+
         // Insert data into room_sales table
         $room_sales_data = array(
             'room_sales_no' => $room_sales_no,
@@ -189,61 +255,17 @@ class Checkin_model extends CI_Model
             'total_amount' => $existing_total_amount,
             'date' => $date
         );
-
         $this->db->insert('room_sales', $room_sales_data);
 
         // Update room status to 'available'
         $this->update_room_status1($room_no);
 
-        // Retrieve existing total amount from the database
-        $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
-
-        // Calculate total amount for newly added products only
-        $new_product_total = 0;
-        foreach ($product_prices as $index => $price) {
-            // Check if the product is newly added
-            $result = $this->db->where('add_ons_no', $check_in_id)->where('product_name', $product_names[$index])->get('add_ons');
-            if ($result->num_rows() == 0) {
-                // If the product is newly added, calculate its amount
-                $new_product_total += is_numeric($price) && is_numeric($product_quantities[$index]) ? $price * $product_quantities[$index] : 0;
-            }
-        }
-
-        // Calculate updated total amount
-        $updated_total_amount = $existing_total_amount + $new_product_total;
-
-        // Update the purchase order with the new total cost and supplier id
-        $checkin = [
-            'total_amount' => $updated_total_amount,
-            'status' => 'housekeeping',
-        ];
-
+        // Update the check_in table with the new total amount and status
+        $checkin = array(
+            'status' => 'housekeeping'
+        );
         $this->db->where('check_in_id', $check_in_id);
         $this->db->update('check_in', $checkin);
-
-        // Loop through the array of product data and update existing records or insert new ones
-        foreach ($product_names as $index => $product_name) {
-            $data = [
-                'add_ons_no' => $check_in_id, // Use appropriate identifier for add-ons
-                'product_name' => $product_name,
-                'product_quantity' => $product_quantities[$index],
-                'product_price' => $product_prices[$index]
-            ];
-
-            $this->db->where('add_ons_no', $check_in_id);
-            $this->db->where('product_name', $product_name);
-            $result = $this->db->get('add_ons');
-
-            if ($result->num_rows() > 0) {
-                // If the product already exists, update the existing record
-                $this->db->where('add_ons_no', $check_in_id);
-                $this->db->where('product_name', $product_name);
-                $this->db->update('add_ons', $data);
-            } else {
-                // If the product does not exist, insert a new record
-                $this->db->insert('add_ons', $data);
-            }
-        }
 
         return $check_in_id;
     }
@@ -267,6 +289,7 @@ class Checkin_model extends CI_Model
         $this->db->where('room_no', $room_no);
         $this->db->update('room', $data);
     }
+
 
     function get_checkin($check_in_id)
     {

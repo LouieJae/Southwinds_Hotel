@@ -117,7 +117,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancel</button>
-                        <button type="submit" onclick="return confirm('Are you sure you want to check in?')" class="btn btn-danger btn-sm">Check-In</button>
+                        <button type="submit" onclick="return confirm('Are you sure you want to check in?')" class="btn btn-danger btn-sm"><i class="fas fa-door-closed"></i>Check-In</button>
                     </div>
                 </form>
             </div>

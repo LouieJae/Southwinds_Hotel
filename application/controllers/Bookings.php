@@ -228,6 +228,7 @@ class Bookings extends CI_Controller
         $this->load->model('checkin_model');
         $this->data['checkout'] = $this->checkin_model->get_checkout($check_in_id);
         $this->data['room_sales_no'] = $this->checkin_model->sales_ref_no();
+        $this->data['checkout_no'] = $this->checkin_model->checkout_no();
         $this->data['view'] = $this->checkin_model->view_all_addons($check_in_id);
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->data['products'] = $this->product_model->get_all_product();
