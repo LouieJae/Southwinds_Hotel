@@ -81,25 +81,37 @@ class Bookings extends CI_Controller
         $this->data['get_total_occupied_rooms'] = $this->room_model->get_total_occupied_rooms();
         $this->data['get_total_housekeeping_rooms'] = $this->room_model->get_total_housekeeping_rooms();
 
-        // Define the start year
-        $start_year = 2022;
-        $current_year = date('Y');
-        $years = range($start_year, $current_year);
+        // Define the year
+        $selected_year = 2024;
 
-        // Load the report model and fetch sales data for each year
+        // Load the report model
         $this->load->model('report_model');
+
+        // Define the months
+        $months = range(1, 12);
+
+        // Fetch sales data for each month of the selected year
         $sales_data = array();
-        foreach ($years as $year) {
-            $sales_data[$year] = $this->report_model->get_total_sales_per_year($year);
+        foreach ($months as $month) {
+            // Fetch total sales for the current year and month
+            $sales = $this->report_model->get_total_sales_per_month($selected_year, $month);
+            // If sales data exists for the month, add it to the sales data array
+            if (!empty($sales)) {
+                $sales_data[$month] = $sales[0]['total_sales'];
+            } else {
+                // If no sales data, set total_sales to 0
+                $sales_data[$month] = 0;
+            }
         }
 
-        // Pass the sales data and years to the view
-        $this->data['sales_data'] = $sales_data;
-        $this->data['years'] = $years;
-
-        // Load the views
+        // Pass the sales data and selected year to the view
         $this->load->view('Bookings/header');
-        $this->load->view('Bookings/dashboard', $this->data);
+        $this->load->view('Bookings/dashboard', array(
+            'selected_year' => $selected_year,
+            'sales_data' => $sales_data,
+            'months' => $months,
+            'data' => $this->data  // Include $this->data
+        ));
         $this->load->view('Bookings/footer');
     }
 

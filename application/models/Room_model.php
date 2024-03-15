@@ -24,6 +24,11 @@ class Room_model extends CI_Model
         return $this->db->count_all_results('room');
     }
 
+    public function get_total_housekeeping_rooms()
+    {
+        $this->db->where('status', 'housekeeping');
+        return $this->db->count_all_results('room');
+    }
 
     public function get_room_sales()
     {
@@ -32,5 +37,4 @@ class Room_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
-
 }
