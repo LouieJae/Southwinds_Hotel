@@ -86,4 +86,15 @@ class Report_model extends CI_Model
         $query = $this->db->get()->result_array(); // Return result as array
         return $query;
     }
+
+    // total sales per month
+    public function get_total_sales_per_month($year, $month)
+    {
+        $this->db->select('SUM(total_amount) as total_sales');
+        $this->db->from('room_sales');
+        $this->db->where('YEAR(date)', $year);
+        $this->db->where('MONTH(date)', $month);
+        $query = $this->db->get()->result_array(); // Return result as array
+        return $query;
+    }
 }

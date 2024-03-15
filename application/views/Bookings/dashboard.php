@@ -75,32 +75,45 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-bed fa-icon"></i>Total Rooms</h5>
-            <p class="card-text"><span id="totalRooms">
-                    <?= $get_total_rooms ?>
-                </span></p>
+            <p class="card-text">
+                <span id="totalRooms">
+                    <?php if (isset($data['get_total_rooms'])) : ?>
+                        <p class="card-text"><?php echo $data['get_total_rooms']; ?></p>
+                    <?php endif; ?>
+                </span>
+            </p>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-door-open fa-icon"></i>Available Rooms</h5>
             <p class="card-text"><span id="availableRooms">
-                    <?= $get_total_available_rooms ?>
+                    <?php if (isset($data['get_total_available_rooms'])) : ?>
+                        <p class="card-text"><?php echo $data['get_total_available_rooms']; ?></p>
+                    <?php endif; ?>
                 </span></p>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-door-closed fa-icon"></i>Occupied Rooms</h5>
-            <p class="card-text"><span id="occupiedRooms"></span>
-                <?= $get_total_occupied_rooms ?>
+            <p class="card-text"><span id="occupiedRooms">
+                    <?php if (isset($data['get_total_occupied_rooms'])) : ?>
+                        <p class="card-text"><?= $data['get_total_occupied_rooms']; ?></p>
+                    <?php endif; ?>
+                </span>
             </p>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-exclamation-triangle fa-icon"></i>Housekeeping</h5>
-            <p class="card-text"><span id="lowStockRooms"></span>
-                <?= $get_total_housekeeping_rooms ?>
+            <p class="card-text"><span id="lowStockRooms">
+                    <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
+                        <p class="card-text"><?= $data['get_total_housekeeping_rooms']; ?></p>
+                    <?php endif; ?>
+                </span>
+
             </p>
         </div>
     </div>
@@ -113,14 +126,18 @@
     </div>
 </div>
 
-
 <script>
+    // Define an array of month names
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
     const salesData = {
+        labels: <?php echo json_encode(array_map(function ($month) {
+                    // Convert month number to month name
+                    return date('F', mktime(0, 0, 0, $month, 1));
+                }, $months)); ?>,
         datasets: [{
             label: 'Total Sales',
-            data: <?php echo json_encode(array_map(function ($sales) {
-                        return isset($sales[0]['total_sales']) ? $sales[0]['total_sales'] : 0;
-                    }, $sales_data)); ?>,
+            data: <?php echo json_encode(array_values($sales_data)); ?>,
             fill: false,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
