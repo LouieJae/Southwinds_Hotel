@@ -79,14 +79,29 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($view as $row) { ?>
-                                                        <input type="hidden" name="add_ons[]" value="<?= $row->add_ons_id ?>">
+                                                    <?php if (empty($view)) { ?>
+                                                        <!-- Add default or empty row here -->
                                                         <tr>
-                                                            <td><input class="form-control form-control-sm" readonly type="text" name="product_names[]" value="<?= $row->product_name; ?>"></td>
-                                                            <td><input class="form-control form-control-sm" readonly type="number" name="product_quantities[]" value="<?= $row->product_quantity; ?>"></td>
-                                                            <td><input class="form-control form-control-sm" readonly type="text" name="product_prices[]" value="&#8369; <?= $row->product_price; ?>"></td>
+                                                            <td>No products selected</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><input class="form-control form-control-sm" type="hidden" readonly name="product_names[]" value=""></td>
+                                                            <td><input class="form-control form-control-sm" type="hidden" readonly name="product_quantities[]" value=""></td>
+                                                            <td><input class="form-control form-control-sm" type="hidden" readonly name="product_prices[]" value=""></td>
                                                         </tr>
-                                                    <?php } ?>
+                                                        <?php } else {
+                                                        foreach ($view as $row) { ?>
+                                                            <input type="hidden" name="add_ons[]" value="<?= $row->add_ons_id ?>">
+                                                            <tr>
+                                                                <td><?= $row->product_name; ?></td>
+                                                                <td>₱<?= $row->product_price; ?></td>
+                                                                <td><?= $row->product_quantity; ?></td>
+                                                                <td><input class="form-control form-control-sm" type="hidden" readonly name="product_names[]" value="<?= $row->product_name; ?>"></td>
+                                                                <td><input class="form-control form-control-sm" type="hidden" readonly name="product_quantities[]" value="<?= $row->product_quantity; ?>"></td>
+                                                                <td><input class="form-control form-control-sm" type="hidden" readonly name="product_prices[]" value="<?= $row->product_price; ?>"></td>
+                                                            </tr>
+                                                    <?php }
+                                                    } ?>
                                                 </tbody>
                                             </table>
                                         </div>

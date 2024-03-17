@@ -86,6 +86,8 @@ class Checkin_model extends CI_Model
             'room_price' => $room_price,
             'prepared_by' => $this->input->post('prepared_by'),
             'date' => $this->input->post('date'),
+            'check_in_time' => $this->input->post('check_in_time'),
+            'check_out_time' => $this->input->post('check_out_time'),
             'total_amount' => $total_amount,
             'status' => 'occupied',
         ];
@@ -132,21 +134,45 @@ class Checkin_model extends CI_Model
         // Retrieve existing total amount from the database
         $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
 
-        // Calculate total amount for newly added products only
-        $new_product_total = 0;
-        foreach ($product_prices as $index => $price) {
-            // Check if the product is newly added
-            $result = $this->db->where('add_ons_no', $check_in_id)->where('product_name', $product_names[$index])->get('add_ons');
-            if ($result->num_rows() == 0) {
-                // If the product is newly added, calculate its amount
-                $new_product_total += is_numeric($price) && is_numeric($product_quantities[$index]) ? $price * $product_quantities[$index] : 0;
+        // Initialize array to store existing product quantities and prices
+        $existing_products = [];
+
+        // Fetch existing products for the check-in
+        $existing_products_query = $this->db->select('product_name, product_quantity, product_price')->where('add_ons_no', $check_in_id)->get('add_ons');
+        foreach ($existing_products_query->result() as $row) {
+            $existing_products[$row->product_name] = ['quantity' => $row->product_quantity, 'price' => $row->product_price];
+        }
+
+        // Loop through the array of product data and update existing records or insert new ones
+        foreach ($product_names as $index => $product_name) {
+            if (isset($existing_products[$product_name])) {
+                // If the product already exists, update the existing record
+                $existing_quantity = $existing_products[$product_name]['quantity'];
+                $existing_price = $existing_products[$product_name]['price'];
+                $new_quantity = $existing_quantity + $product_quantities[$index];
+                $new_price = $existing_price + ($product_prices[$index] * $product_quantities[$index]);
+                $data = [
+                    'product_quantity' => $new_quantity,
+                    'product_price' => $new_price
+                ];
+
+                $this->db->where('add_ons_no', $check_in_id);
+                $this->db->where('product_name', $product_name);
+                $this->db->update('add_ons', $data);
+            } else {
+                // If the product does not exist, insert a new record
+                $data = [
+                    'add_ons_no' => $check_in_id, // Use appropriate identifier for add-ons
+                    'product_name' => $product_name,
+                    'product_quantity' => $product_quantities[$index],
+                    'product_price' => $product_prices[$index]
+                ];
+
+                $this->db->insert('add_ons', $data);
             }
         }
 
-        // Calculate updated total amount
-        $updated_total_amount = $existing_total_amount + $new_product_total;
-
-        // Update the purchase order with the new total cost and supplier id
+        // Update the check-in with the new total amount
         $checkin = [
             'room_price' => $room_price,
             'check_out_time' => $check_out_time,
@@ -156,32 +182,9 @@ class Checkin_model extends CI_Model
         $this->db->where('check_in_id', $check_in_id);
         $this->db->update('check_in', $checkin);
 
-        // Loop through the array of product data and update existing records or insert new ones
-        foreach ($product_names as $index => $product_name) {
-            $data = [
-                'add_ons_no' => $check_in_id, // Use appropriate identifier for add-ons
-                'product_name' => $product_name,
-                'product_quantity' => $product_quantities[$index],
-                'product_price' => $product_prices[$index]
-            ];
-
-            $this->db->where('add_ons_no', $check_in_id);
-            $this->db->where('product_name', $product_name);
-            $result = $this->db->get('add_ons');
-
-            if ($result->num_rows() > 0) {
-                // If the product already exists, update the existing record
-                $this->db->where('add_ons_no', $check_in_id);
-                $this->db->where('product_name', $product_name);
-                $this->db->update('add_ons', $data);
-            } else {
-                // If the product does not exist, insert a new record
-                $this->db->insert('add_ons', $data);
-            }
-        }
-
         return $check_in_id;
     }
+
 
     public function check_out()
     {
@@ -197,9 +200,9 @@ class Checkin_model extends CI_Model
         $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
 
-        // Check if the first row is empty or if the product names array is null
-        if (!empty($product_names) && !empty($product_names[0]) && !empty($product_prices[0])) {
-            // If the first row is not empty, remove it from the arrays
+        // Check if the first row is empty
+        if (empty($product_names[0]) || empty($product_prices[0])) {
+            // If the first row is empty, remove it from the arrays
             array_shift($product_names);
             array_shift($product_quantities);
             array_shift($product_prices);

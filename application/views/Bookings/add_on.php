@@ -388,6 +388,7 @@
     }
 
 
+
     // Add event listener to all pricing buttons
     document.querySelectorAll('.price-button').forEach(item => {
         item.addEventListener('click', event => {
@@ -494,14 +495,29 @@
 
         const productQuantityInput = document.createElement('input');
         productQuantityInput.type = 'hidden';
+        productQuantityInput.min = 0;
         productQuantityInput.name = 'product_quantities[]';
         productQuantityInput.value = quantityInput.value;
         productQuantitiesInput.parentNode.appendChild(productQuantityInput);
 
         // Update product quantity when the input changes
         quantityInput.addEventListener('change', function() {
-            productQuantityInput.value = quantityInput.value;
-            updateTotalAmount(cart, productPrice); // Update total amount after quantity change
+            if (quantityInput.value < 0) {
+                toastr.error('Quantity cannot be negative.');
+                quantityInput.value = 1; // Reset quantity to 1
+            } else {
+                productQuantityInput.value = quantityInput.value;
+                updateTotalAmount(cart, productPrice); // Update total amount after quantity change
+            }
+        });
+
+        deleteButton.addEventListener('click', function() {
+            newRow.remove(); // Remove the row when delete button is clicked
+            // Remove corresponding hidden input fields
+            productNameInput.remove();
+            productPriceInput.remove();
+            productQuantityInput.remove();
+            updateTotalAmount(cart); // Update total amount after deletion
         });
     }
 

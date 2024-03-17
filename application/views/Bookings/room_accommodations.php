@@ -397,6 +397,7 @@
         const quantityInput = document.createElement('input');
         quantityInput.type = 'number';
         quantityInput.value = 1; // Default quantity is 1
+        quantityInput.min = 0;
         quantityInput.style.width = '80px'; // Set width of quantity input
         productQuantityCell.appendChild(quantityInput);
 
@@ -451,6 +452,16 @@
             productQuantityInput.value = quantityInput.value;
             updateTotalAmount(cart); // Update total amount after quantity change
         });
+
+        deleteButton.addEventListener('click', function() {
+            newRow.remove(); // Remove the row when delete button is clicked
+            // Remove corresponding hidden input fields
+            productNameInput.remove();
+            productPriceInput.remove();
+            productQuantityInput.remove();
+            updateTotalAmount(cart); // Update total amount after deletion
+        });
+
     }
 
     // Add event listeners to the product buttons

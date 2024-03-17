@@ -41,11 +41,12 @@
                     ?>
                     <!-- Check-in, Check-out, and Remaining Time -->
                     <div class="time-info">
-                        <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo $checkInDateTime->format('h:i A m-d-Y'); ?></strong></span></p>
-                        <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo $checkOutDateTime->format('h:i A m-d-Y'); ?></strong></span></p>
+                        <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo isset($checkin->check_in_time) ? date('Y-m-d H:i:s', strtotime($checkin->check_in_time)) : ''; ?></strong></span></p>
+                        <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo isset($checkin->check_out_time) ? date('Y-m-d H:i:s', strtotime($checkin->check_out_time)) : ''; ?></strong></span></p>
                         <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
 
-                        <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('h:i A m-d-Y'); ?>">
+                        <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('Y-m-d H:i:s'); ?>">
+
 
                         <!-- Input field to add hours -->
                         <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours">
@@ -140,44 +141,20 @@
     </div>
 </div>
 <script>
-    // Function to update remaining time every second
     function updateRemainingTime() {
-        // Get the remaining time span element
+        // Get the check-out date and time element
+        var checkOutDateTimeElement = document.getElementById('checkOutDateTime');
+        var checkOutDateTime = new Date(checkOutDateTimeElement.innerText);
+
+        // Get the current date and time
+        var currentDateTime = new Date();
+
+        // Calculate the remaining time
+        var remainingTime = calculateRemainingTime(checkOutDateTime);
+
+        // Update the remaining time element
         var remainingTimeSpan = document.getElementById('remainingTime');
-
-        // Get the remaining time string
-        var remainingTime = remainingTimeSpan.innerHTML;
-
-        // Split the remaining time string into hours, minutes, and seconds
-        var timeParts = remainingTime.split(':');
-        var hours = parseInt(timeParts[0]);
-        var minutes = parseInt(timeParts[1]);
-        var seconds = parseInt(timeParts[2]);
-
-        // Decrement seconds
-        seconds--;
-
-        // Update minutes and hours if necessary
-        if (seconds < 0) {
-            seconds = 59;
-            minutes--;
-            if (minutes < 0) {
-                minutes = 59;
-                hours--;
-                if (hours < 0) {
-                    // If remaining time is negative, stop updating
-                    clearInterval(intervalId);
-                    remainingTimeSpan.innerHTML = 'Your time has passed';
-                    return;
-                }
-            }
-        }
-
-        // Format new remaining time string
-        var newRemainingTime = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
-
-        // Update remaining time in the span element
-        remainingTimeSpan.innerHTML = newRemainingTime;
+        remainingTimeSpan.textContent = remainingTime;
 
         // Apply CSS style to make the remaining time bolder
         remainingTimeSpan.style.fontWeight = 'bold';
@@ -193,6 +170,12 @@
 
         // Get the value entered by the user
         var hoursToAdd = parseInt(addHoursInput.value);
+
+        // Check if the entered value is valid (greater than or equal to 1)
+        if (hoursToAdd < 1 || isNaN(hoursToAdd)) {
+            toastr.error('Please enter a valid positive number of hours.');
+            return; // Exit the function if the input is invalid
+        }
 
         // Get the total amount element
         var totalAmountElement = document.querySelector('.cart-total .total-amount');
@@ -247,6 +230,19 @@
         // Update the remaining time element
         var remainingTimeSpan = document.getElementById('remainingTime');
         remainingTimeSpan.textContent = remainingTime;
+
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var day = ('0' + date.getDate()).slice(-2);
+            var hours = ('0' + date.getHours()).slice(-2);
+            var minutes = ('0' + date.getMinutes()).slice(-2);
+            var seconds = ('0' + date.getSeconds()).slice(-2);
+            var formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+            return formattedDate;
+        }
+
     }
 
     // Function to calculate remaining time
@@ -264,7 +260,6 @@
 
         return remainingTimeFormatted;
     }
-
 
     function formatDate(date) {
         var hours = date.getHours();

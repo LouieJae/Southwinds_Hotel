@@ -25,6 +25,8 @@
                         <input type="hidden" name="room_price" value="<?php echo $room->twohr_price; ?>">
                         <input type="hidden" name="prepared_by" value="<?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>">
                         <input type="hidden" name="date" value="<?= date('Y-d-m'); ?>">
+                        <input type="hidden" name="check_in_time" value="<?php echo date('Y-m-d H:i:s'); ?>">
+                        <input type="hidden" name="check_out_time" value="">
 
                         <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twohr_price; ?>" data-hour="2">2 Hours: $
                             <?php echo $room->twohr_price; ?>
@@ -124,6 +126,45 @@
         </div>
     </div>
 <?php endforeach; ?>
+
+<script>
+    $(document).ready(function() {
+        // Calculate default checkout time on page load
+        var defaultHourValue = 2; // Default duration in hours
+        var now = new Date();
+        var checkoutTime = new Date(now.getTime() + defaultHourValue * 60 * 60 * 1000);
+        var checkoutYear = checkoutTime.getFullYear();
+        var checkoutMonth = ('0' + (checkoutTime.getMonth() + 1)).slice(-2); // Months are zero-based
+        var checkoutDate = ('0' + checkoutTime.getDate()).slice(-2);
+        var checkoutHours = ('0' + checkoutTime.getHours()).slice(-2);
+        var checkoutMinutes = ('0' + checkoutTime.getMinutes()).slice(-2);
+        var checkoutSeconds = ('0' + checkoutTime.getSeconds()).slice(-2);
+        var checkoutDateTimeString = checkoutYear + '-' + checkoutMonth + '-' + checkoutDate + ' ' + checkoutHours + ':' + checkoutMinutes + ':' + checkoutSeconds;
+
+        // Set default value for the checkout time field
+        $('input[name="check_out_time"]').val(checkoutDateTimeString);
+
+        // Event listener for duration buttons
+        $('.price-button').click(function(event) {
+            event.preventDefault();
+            var hourValue = $(this).data('hour');
+            $('input[name="room_hour"]').val(hourValue);
+
+            // Calculate checkout time based on selected duration
+            var checkoutTime = new Date(now.getTime() + hourValue * 60 * 60 * 1000);
+            var checkoutYear = checkoutTime.getFullYear();
+            var checkoutMonth = ('0' + (checkoutTime.getMonth() + 1)).slice(-2); // Months are zero-based
+            var checkoutDate = ('0' + checkoutTime.getDate()).slice(-2);
+            var checkoutHours = ('0' + checkoutTime.getHours()).slice(-2);
+            var checkoutMinutes = ('0' + checkoutTime.getMinutes()).slice(-2);
+            var checkoutSeconds = ('0' + checkoutTime.getSeconds()).slice(-2);
+            var checkoutDateTimeString = checkoutYear + '-' + checkoutMonth + '-' + checkoutDate + ' ' + checkoutHours + ':' + checkoutMinutes + ':' + checkoutSeconds;
+
+            // Update checkout time field value
+            $('input[name="check_out_time"]').val(checkoutDateTimeString);
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {

@@ -5,6 +5,7 @@ class Bookings extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Manila');
         // Exclude the index and login_submit methods from session check
         if ($this->router->fetch_method() != 'index' && $this->router->fetch_method() != 'login_submit') {
             $this->check_session(); // Call the session check method
