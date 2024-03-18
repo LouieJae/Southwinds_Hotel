@@ -97,4 +97,22 @@ class Report_model extends CI_Model
         $query = $this->db->get()->result_array(); // Return result as array
         return $query;
     }
+
+    public function get_last_seven_days_sales()
+    {
+        // Get the current date
+        $current_date = date('Y-m-d');
+
+        // Calculate the date seven days ago
+        $seven_days_ago = date('Y-m-d', strtotime('-7 days', strtotime($current_date)));
+
+        $this->db->select('DATE(date) as date, SUM(total_amount) as daily_total_sales');
+        $this->db->from('room_sales');
+        $this->db->where('date >=', $seven_days_ago);
+        $this->db->where('date <=', $current_date);
+        $this->db->group_by('DATE(date)');
+        $query = $this->db->get()->result();
+
+        return $query;
+    }
 }

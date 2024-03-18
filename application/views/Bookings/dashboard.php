@@ -119,25 +119,22 @@
     </div>
 </div>
 
-<!-- New card for the chart -->
+
+<!-- Card for the last seven days' sales chart -->
 <div class="card chart-card">
     <div class="chart-card-body">
-        <canvas id="roomChart" width="500" height="150"></canvas>
+        <canvas id="salesChart" width='500' height="150"></canvas>
     </div>
 </div>
 
-<script>
-    // Define an array of month names
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+<script>
+    // Fetched PHP data
     const salesData = {
-        labels: <?php echo json_encode(array_map(function ($month) {
-                    // Convert month number to month name
-                    return date('F', mktime(0, 0, 0, $month, 1));
-                }, $months)); ?>,
+        labels: <?php echo json_encode($chart_labels); ?>, // Labels with day name and date
         datasets: [{
             label: 'Total Sales',
-            data: <?php echo json_encode(array_values($sales_data)); ?>,
+            data: <?php echo json_encode($sales_data); ?>, // Sales data for each day
             fill: false,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -149,5 +146,5 @@
     };
 
     // Get the canvas element
-    const ctx = document.getElementById('roomChart').getContext('2d');
+    const ctx = document.getElementById('salesChart').getContext('2d');
 </script>
