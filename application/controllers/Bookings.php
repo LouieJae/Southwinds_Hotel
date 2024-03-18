@@ -563,6 +563,16 @@ class Bookings extends CI_Controller
         $this->load->view('Bookings/footer');
     }
 
+    public function view_daily_breakdowns($date, $room_no)
+    {
+        $this->load->model('report_model');
+        $this->data['breakdowns'] = $this->report_model->get_room_no_and_date($date, $room_no);
+        $this->data['date'] = $date;
+        $this->data['room_no'] = $room_no;
+        $this->load->view('Bookings/header');
+        $this->load->view('bookings/room_breakdown', $this->data);
+        $this->load->view('Bookings/footer');
+    }
 
     public function per_room_reports()
     {

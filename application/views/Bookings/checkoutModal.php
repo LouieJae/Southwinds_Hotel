@@ -44,11 +44,12 @@
                     <!-- Check-in, Check-out, and Remaining Time -->
                     <div class="time-info">
                         <p>Check-In Time: <span id="checkInDateTime"><strong><?php echo $checkInDateTime->format('h:i A m/d/Y'); ?></strong></span></p>
+                        <input type="hidden" name="checkInDateTime" value="<?php echo $checkInDateTime->format('h:i A m/d/Y'); ?>">
                         <p>Check-Out Time: <span id="checkOutDateTime"><strong><?php echo $checkOutDateTime->format('h:i A m/d/Y'); ?></strong></span></p>
+                        <input type="hidden" name="checkOutDateTime" value="<?php echo $checkOutDateTime->format('h:i A m/d/Y'); ?>">
                         <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
                         <p>Overtime: <span id="overtime">0:00:00</span></p>
                     </div>
-
                     <!-- Container for product selection and cart -->
                     <div class="product-cart-container">
                         <div class="cart-carding">

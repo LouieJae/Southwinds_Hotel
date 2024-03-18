@@ -192,6 +192,8 @@ class Checkin_model extends CI_Model
         $check_in_id = (int) $this->input->post('check_in_id');
         $room_sales_no = $this->input->post('room_sales_no');
         $checkout_no = $this->input->post('checkout_no');
+        $checkin_date = $this->input->post('checkInDateTime');
+        $checkout_date = $this->input->post('checkOutDateTime');
         $room_no = $this->input->post('room_no');
         $room_price = $this->input->post('room_price');
         $room_hour = (int) $this->input->post('room_hour');
@@ -226,6 +228,8 @@ class Checkin_model extends CI_Model
         $check_out_data = array(
             'checkout_no' => $checkout_no,
             'room_no' => $room_no,
+            'checkin_date' => $checkin_date,
+            'checkout_date' => $checkout_date,
             'room_price' => $room_price,
             'room_hour' => $room_hour,
             'total_amount' => $existing_total_amount, // You need to calculate the total amount based on room price and duration
@@ -253,6 +257,7 @@ class Checkin_model extends CI_Model
         // Insert data into room_sales table
         $room_sales_data = array(
             'room_sales_no' => $room_sales_no,
+            'check_out_id' => $check_out_id,
             'room_no' => $room_no,
             'hours' => $room_hour,
             'total_amount' => $existing_total_amount,

@@ -55,7 +55,7 @@ $grand_total_sales = 0;
                             ?>
                             <td>
                                 <div class="col-sm-6">
-                                    <a href="<?php echo site_url('bookings/view_daily_reports/' . $date); ?>" class="btn btn-info btn-sm"><i class="fas fa-door-open"></i> View</a>
+                                    <a href="<?php echo site_url('bookings/view_daily_breakdowns/' . $date . '/' . $rr->room_no); ?>" class="btn btn-info btn-sm"><i class="fas fa-door-open"></i> View</a>
                                 </div>
                             </td>
                         </tr>

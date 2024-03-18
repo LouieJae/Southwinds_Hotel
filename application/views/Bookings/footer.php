@@ -75,6 +75,15 @@
             responsive: true
         });
 
+        $(document).ready(function() {
+            var table = $('#breakdown-datatables').DataTable({
+                "lengthMenu": [10, 25, 50],
+
+                responsive: true,
+                ordering: false
+            });
+        });
+
         // Additional DataTable configurations
         $('#ledger-table').DataTable({
             paging: true,
