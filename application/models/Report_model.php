@@ -56,6 +56,30 @@ class Report_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+
+    public function get_room_no_and_date($date, $room_no)
+    {
+        $this->db->select('*');
+        $this->db->from('check_out AS co');
+        $this->db->join('add_ons_check_out AS aoc', 'co.check_out_id = aoc.add_ons_checkout_no');
+        $this->db->where('co.date', $date);
+        $this->db->where('co.room_no', $room_no);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function view_breakdowns($id)
+    {
+        $this->db->select('*');
+        $this->db->from('check_out AS co');
+        $this->db->join('add_ons_check_out AS aoc', 'co.check_out_id = aoc.check_out_id');
+        $this->db->join('add_ons_check_out AS aoc', 'co.check_out_id = aoc.check_out_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
+
     // monthly sales
     public function get_monthly_sales($year_month)
     {

@@ -49,7 +49,7 @@
                         <input type="hidden" name="add_hour" value="0">
 
                         <!-- Input field to add hours -->
-                        <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours">
+                        <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours" name="addHours">
                         <!-- Button to add hours -->
                         <button type="button" class="btn btn-primary" onclick="addHoursToRemainingTime()">Add Hours</button>
                     </div>
