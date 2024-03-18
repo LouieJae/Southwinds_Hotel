@@ -3,10 +3,8 @@
         font-weight: bolder;
     }
 </style>
-
-
 <div class="modal fade" id="addOnsModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">\
+    <div class="modal-dialog modal-lg" role="document">
         <form action="<?php echo site_url('Bookings/add_ons_submit/' . $checkin->check_in_id); ?>" method="post">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,8 +39,8 @@
                     ?>
                     <!-- Check-in, Check-out, and Remaining Time -->
                     <div class="time-info">
-                        <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo isset($checkin->check_in_time) ? date('Y-m-d H:i:s', strtotime($checkin->check_in_time)) : ''; ?></strong></span></p>
-                        <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo isset($checkin->check_out_time) ? date('Y-m-d H:i:s', strtotime($checkin->check_out_time)) : ''; ?></strong></span></p>
+                        <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo isset($checkin->check_in_time) ? date('h:i A m-d-Y', strtotime($checkin->check_in_time)) : ''; ?></strong></span></p>
+                        <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo isset($checkin->check_out_time) ? date('h:i A m-d-Y', strtotime($checkin->check_out_time)) : ''; ?></strong></span></p>
                         <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
 
                         <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('Y-m-d H:i:s'); ?>">
@@ -152,16 +150,24 @@
         // Calculate the remaining time
         var remainingTime = calculateRemainingTime(checkOutDateTime);
 
-        // Update the remaining time element
-        var remainingTimeSpan = document.getElementById('remainingTime');
-        remainingTimeSpan.textContent = remainingTime;
-
-        // Apply CSS style to make the remaining time bolder
-        remainingTimeSpan.style.fontWeight = 'bold';
+        // Check if remaining time is negative
+        if (remainingTime.includes('-')) {
+            // Display message indicating that time has passed
+            var remainingTimeSpan = document.getElementById('remainingTime');
+            remainingTimeSpan.textContent = 'Room time has passed';
+            remainingTimeSpan.style.fontWeight = 'bold';
+            clearInterval(intervalId); // Stop the interval
+        } else {
+            // Update the remaining time element
+            var remainingTimeSpan = document.getElementById('remainingTime');
+            remainingTimeSpan.textContent = remainingTime;
+            remainingTimeSpan.style.fontWeight = 'bold';
+        }
     }
 
     // Call updateRemainingTime function every second
     var intervalId = setInterval(updateRemainingTime, 1000);
+
 
     // Function to add hours to remaining time and update total amount
     function addHoursToRemainingTime() {

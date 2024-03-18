@@ -511,6 +511,21 @@
             }
         });
 
+        // Add event listener to quantity input to restrict certain characters
+        quantityInput.addEventListener('input', function(event) {
+            // Get the value entered by the user
+            const inputValue = event.target.value;
+
+            // Check if the entered value contains any restricted characters
+            if (/[=_\-*]/.test(inputValue)) {
+                // If restricted characters are found, show a toastr alert
+                toastr.error('Quantity cannot contain special characters.');
+
+                // Reset the quantity to 1
+                event.target.value = 1;
+            }
+        });
+
         deleteButton.addEventListener('click', function() {
             newRow.remove(); // Remove the row when delete button is clicked
             // Remove corresponding hidden input fields
@@ -520,6 +535,7 @@
             updateTotalAmount(cart); // Update total amount after deletion
         });
     }
+
 
     // Add event listeners to the product buttons
     document.querySelectorAll('.product-button').forEach(item => {
