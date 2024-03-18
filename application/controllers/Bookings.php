@@ -73,7 +73,6 @@ class Bookings extends CI_Controller
         redirect(base_url('bookings'));
     }
 
-
     public function dashboard()
     {
         $this->load->model('room_model');
@@ -82,39 +81,41 @@ class Bookings extends CI_Controller
         $this->data['get_total_occupied_rooms'] = $this->room_model->get_total_occupied_rooms();
         $this->data['get_total_housekeeping_rooms'] = $this->room_model->get_total_housekeeping_rooms();
 
-        // Define the year
-        $selected_year = 2024;
-
-        // Load the report model
         $this->load->model('report_model');
 
-        // Define the months
-        $months = range(1, 12);
 
-        // Fetch sales data for each month of the selected year
+        $last_seven_days_sales = $this->report_model->get_last_seven_days_sales();
+
+        $chart_labels = array();
         $sales_data = array();
-        foreach ($months as $month) {
-            // Fetch total sales for the current year and month
-            $sales = $this->report_model->get_total_sales_per_month($selected_year, $month);
-            // If sales data exists for the month, add it to the sales data array
-            if (!empty($sales)) {
-                $sales_data[$month] = $sales[0]['total_sales'];
-            } else {
-                // If no sales data, set total_sales to 0
-                $sales_data[$month] = 0;
+        $current_date = date('Y-m-d');
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days", strtotime($current_date)));
+
+            $day_name = date('l', strtotime($date));
+            $chart_labels[] = $day_name . ' (' . date('M d', strtotime($date)) . ')';
+
+            $sales_for_date = 0;
+            foreach ($last_seven_days_sales as $sale) {
+                if ($sale->date === $date) {
+                    $sales_for_date = $sale->daily_total_sales;
+                    break;
+                }
             }
+
+            $sales_data[] = $sales_for_date;
         }
 
-        // Pass the sales data and selected year to the view
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/dashboard', array(
-            'selected_year' => $selected_year,
+            'chart_labels' => $chart_labels,
             'sales_data' => $sales_data,
-            'months' => $months,
-            'data' => $this->data  // Include $this->data
+            'data' => $this->data
         ));
         $this->load->view('Bookings/footer');
     }
+
 
     public function room_accommodations()
     {
