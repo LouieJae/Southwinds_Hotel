@@ -133,7 +133,7 @@ class Bookings extends CI_Controller
     public function product()
     {
         $this->load->model('product_model');
-        $this->data['products'] = $this->product_model->get_all_product();
+        $this->data['products'] = $this->product_model->get_all_product_table();
         $this->data['product_code'] = $this->product_model->product_code();
         $this->data['procat'] = $this->product_model->get_all_product_category();
         $this->load->model('uom_model');
