@@ -42,6 +42,8 @@
                         <p>Check-In Date & Time: <span id="checkInDateTime"><strong><?php echo isset($checkin->check_in_time) ? date('h:i A m-d-Y', strtotime($checkin->check_in_time)) : ''; ?></strong></span></p>
                         <p>Check-Out Date & Time: <span id="checkOutDateTime"><strong><?php echo isset($checkin->check_out_time) ? date('h:i A m-d-Y', strtotime($checkin->check_out_time)) : ''; ?></strong></span></p>
                         <p>Remaining Time: <span id="remainingTime"><?php echo $remainingTimeFormatted; ?></span></p>
+                        <!-- Display extended time of the room -->
+                        <p>Extended Time: <span id="extendedTime">0 hour(s)</span></p>
 
                         <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('Y-m-d H:i:s'); ?>">
 
@@ -183,6 +185,19 @@
             toastr.error('Please enter a valid positive number of hours.');
             return; // Exit the function if the input is invalid
         }
+
+        // Clear the input field
+        addHoursInput.value = '';
+
+        // Display a message indicating that hours have been added to the room
+        toastr.success(hoursToAdd + ' hour(s) added to this room');
+
+        // Update the extended time
+        var extendedTimeElement = document.getElementById('extendedTime');
+        var currentExtendedTime = extendedTimeElement.textContent;
+        var currentHours = parseInt(currentExtendedTime.split(' ')[0]); // Extract current hours
+        var newHours = currentHours + hoursToAdd; // Add newly added hours
+        extendedTimeElement.textContent = newHours + ' hour(s)'; // Update extended time display
 
         // Update the value of the add_hour input field
         var addHourInput = document.querySelector('input[name="add_hour"]');
