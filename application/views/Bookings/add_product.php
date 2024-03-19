@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Product Price</label>
-                        <input type="number" id="product_price" name="product_price" class="form-control" placeholder="Enter Product Price" required>
+                        <input type="number" id="product_price" name="product_price" class="form-control" placeholder="Enter Product Price" min="0" required>
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">UoM</label>
@@ -57,11 +57,11 @@
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Beginning Quantity</label>
-                        <input type="number" id="beginning_quantity" name="beginning_quantity" class="form-control" placeholder="Enter Beginning Quantity" required>
+                        <input type="number" id="beginning_quantity" name="beginning_quantity" class="form-control" placeholder="Enter Beginning Quantity" min="0" required>
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Minimum Quantity</label>
-                        <input type="number" id="minimum_quantity" name="minimum_quantity" class="form-control" placeholder="Enter Minimum Quantity" required>
+                        <input type="number" id="minimum_quantity" name="minimum_quantity" class="form-control" placeholder="Enter Minimum Quantity" min="0" required>
                     </div>
                     <div class="custom-control custom-checkbox col-5 d-inline-block">
                         <input class="custom-control-input" name="product_status" type="checkbox" id="customCheckbox1" value="1">
