@@ -143,6 +143,15 @@ class Checkin_model extends CI_Model
         $total_amount = $this->input->post('total_amount');
         $add_hour = (int) $this->input->post('add_hour'); // Get the value from the add_hour input field
 
+        // Check product quantities against available quantities
+        foreach ($product_names as $index => $product_name) {
+            $available_quantity = $this->get_available_quantity($product_name);
+            if ($product_quantities[$index] > $available_quantity) {
+                // Quantity exceeds available quantity, return false to indicate failure
+                return false;
+            }
+        }
+
         // Retrieve existing room_hour from the database
         $existing_room_hour = $this->db->select('room_hour')->where('check_in_id', $check_in_id)->get('check_in')->row()->room_hour;
 
