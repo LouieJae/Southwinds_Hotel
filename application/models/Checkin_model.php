@@ -70,6 +70,15 @@ class Checkin_model extends CI_Model
             array_shift($product_prices);
         }
 
+        // Check product quantities against available quantities
+        foreach ($product_names as $index => $product_name) {
+            $available_quantity = $this->get_available_quantity($product_name);
+            if ($product_quantities[$index] > $available_quantity) {
+                // Product quantity exceeds available quantity, return the product name causing the error
+                return $product_name;
+            }
+        }
+
         // Calculate total amount by summing room price and product prices considering quantities
         $room_price = $this->input->post('room_price');
         $product_total = 0;
@@ -113,6 +122,16 @@ class Checkin_model extends CI_Model
         return $check_in_id;
     }
 
+    // In your product_model
+    function get_available_quantity($product_name)
+    {
+        $this->db->select('product_quantity');
+        $this->db->where('product_name', $product_name);
+        $query = $this->db->get('product');
+        $result = $query->row();
+        return ($result) ? $result->product_quantity : 0;
+    }
+
     public function update_checkin()
     {
         $check_in_id = (int) $this->input->post('check_in_id');
@@ -122,6 +141,22 @@ class Checkin_model extends CI_Model
         $product_prices = $this->input->post('product_prices');
         $room_price = $this->input->post('room_price');
         $total_amount = $this->input->post('total_amount');
+        $add_hour = (int) $this->input->post('add_hour'); // Get the value from the add_hour input field
+
+        // Check product quantities against available quantities
+        foreach ($product_names as $index => $product_name) {
+            $available_quantity = $this->get_available_quantity($product_name);
+            if ($product_quantities[$index] > $available_quantity) {
+                // Quantity exceeds available quantity, return false to indicate failure
+                return false;
+            }
+        }
+
+        // Retrieve existing room_hour from the database
+        $existing_room_hour = $this->db->select('room_hour')->where('check_in_id', $check_in_id)->get('check_in')->row()->room_hour;
+
+        // Add the value from add_hour to the existing room_hour
+        $updated_room_hour = $existing_room_hour + $add_hour;
 
         // Check if the first row is empty
         if (empty($product_names[0]) || empty($product_prices[0])) {
@@ -172,11 +207,12 @@ class Checkin_model extends CI_Model
             }
         }
 
-        // Update the check-in with the new total amount
+        // Update the check-in with the new total amount and updated room_hour
         $checkin = [
             'room_price' => $room_price,
             'check_out_time' => $check_out_time,
             'total_amount' => $total_amount,
+            'room_hour' => $updated_room_hour // Update room_hour with the new value
         ];
 
         $this->db->where('check_in_id', $check_in_id);
@@ -184,7 +220,6 @@ class Checkin_model extends CI_Model
 
         return $check_in_id;
     }
-
 
     public function check_out()
     {

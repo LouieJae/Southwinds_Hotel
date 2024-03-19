@@ -45,6 +45,8 @@
 
                         <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('Y-m-d H:i:s'); ?>">
 
+                        <!-- Input field to add hours -->
+                        <input type="hidden" name="add_hour" value="0">
 
                         <!-- Input field to add hours -->
                         <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours" name="addHours">
@@ -169,7 +171,6 @@
     var intervalId = setInterval(updateRemainingTime, 1000);
 
 
-    // Function to add hours to remaining time and update total amount
     function addHoursToRemainingTime() {
         // Get the input field for adding hours
         var addHoursInput = document.getElementById('addHours');
@@ -182,6 +183,12 @@
             toastr.error('Please enter a valid positive number of hours.');
             return; // Exit the function if the input is invalid
         }
+
+        // Update the value of the add_hour input field
+        var addHourInput = document.querySelector('input[name="add_hour"]');
+        var currentAddHourValue = parseInt(addHourInput.value);
+        var newAddHourValue = currentAddHourValue + hoursToAdd;
+        addHourInput.value = newAddHourValue;
 
         // Get the total amount element
         var totalAmountElement = document.querySelector('.cart-total .total-amount');
