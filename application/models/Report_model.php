@@ -61,7 +61,7 @@ class Report_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('check_out AS co');
-        $this->db->join('add_ons_check_out AS aoc', 'co.check_out_id = aoc.add_ons_checkout_no');
+        $this->db->join('add_ons_check_out AS aoc', 'co.check_out_id = aoc.add_ons_checkout_no', 'left');
         $this->db->where('co.date', $date);
         $this->db->where('co.room_no', $room_no);
         $query = $this->db->get();

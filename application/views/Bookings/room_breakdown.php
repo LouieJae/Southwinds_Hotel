@@ -40,9 +40,12 @@ $dayName = $dateObj->format('l');
                                     <td>₱ <?= number_format($breakdown->room_price, 2) ?></td>
                                     <td><?= $breakdown->room_hour ?></td>
                                     <td>
-                                        <?= $breakdown->product_name ?> (<?= $breakdown->product_quantity ?>) - ₱ <?= number_format($breakdown->product_price, 2) ?>
                                         <?php
-                                        $prevCheckoutNo = $breakdown->checkout_no;
+                                        if ($breakdown->product_name !== null && $breakdown->product_quantity !== null && $breakdown->product_price !== null) {
+                                            echo $breakdown->product_name . ' (' . $breakdown->product_quantity . ') - ₱ ' . number_format($breakdown->product_price, 2);
+                                        } else {
+                                            echo "No products ordered";
+                                        }
                                         ?>
                                     </td>
                                     <td><strong>₱ <?= number_format($breakdown->total_amount, 2) ?></strong> </td>
