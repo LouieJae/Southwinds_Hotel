@@ -248,11 +248,11 @@ class Bookings extends CI_Controller
             if (is_string($response)) {
                 // Quantity exceeds available quantity
                 $available_quantity = $this->checkin_model->get_available_quantity($response);
-                $error_message = 'Checkin was not added. Quantity exceeds available quantity for product: ' . $response . '. Available quantity: ' . $available_quantity;
+                $error_message = 'Add ons was not added. Quantity exceeds available quantity for product: ' . $response . '. Available quantity: ' . $available_quantity;
                 $this->session->set_flashdata('error', $error_message);
             } else {
                 // Check-in successful
-                $success_message = 'Checkin added successfully.';
+                $success_message = 'Add ons added successfully.';
                 $this->session->set_flashdata('success', $success_message);
             }
             redirect('bookings/add_on');
