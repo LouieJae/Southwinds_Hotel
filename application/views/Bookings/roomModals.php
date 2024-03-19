@@ -1,3 +1,17 @@
+<style>
+    .modal-header {
+        background-color: #7D0A0A;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .bold-label {
+        font-weight: bolder;
+    }
+</style>
+
 <?php foreach ($get_all_room as $room) : ?>
     <!-- Modal for Room <?php echo $room->room_no; ?> -->
     <div class="modal fade" id="roomModal_<?php echo $room->room_id; ?>" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel_<?php echo $room->room_id; ?>" aria-hidden="true">

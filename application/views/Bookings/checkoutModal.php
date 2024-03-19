@@ -1,3 +1,19 @@
+<style>
+    .modal-header {
+        background-color: #7D0A0A;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .bold-label {
+        font-weight: bolder;
+    }
+</style>
+
+
+
 <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <form action="<?php echo site_url('Bookings/check_out_submit/' . $checkout->check_in_id); ?>" method="post">
