@@ -242,16 +242,18 @@ class Bookings extends CI_Controller
     function add_ons_submit($check_in_id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $this->load->model('checkin_model');
             $response = $this->checkin_model->update_checkin($check_in_id);
 
-            if ($response) {
-                $success_message = 'Add ons added successfully.';
-                $this->session->set_flashdata('success', $success_message);
-            } else {
-                $error_message = 'Add ons added was not added.';
+            if (is_string($response)) {
+                // Quantity exceeds available quantity
+                $available_quantity = $this->checkin_model->get_available_quantity($response);
+                $error_message = 'Checkin was not added. Quantity exceeds available quantity for product: ' . $response . '. Available quantity: ' . $available_quantity;
                 $this->session->set_flashdata('error', $error_message);
+            } else {
+                // Check-in successful
+                $success_message = 'Checkin added successfully.';
+                $this->session->set_flashdata('success', $success_message);
             }
             redirect('bookings/add_on');
         }
