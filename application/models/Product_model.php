@@ -62,6 +62,7 @@ class Product_model extends CI_Model
 
     function get_all_product()
     {
+        $this->db->where('product_status', '1');
         $this->db->where('isDelete', 'no');
         $query = $this->db->get('product');
         $result = $query->result();
