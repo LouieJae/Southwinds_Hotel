@@ -177,12 +177,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'The Product Name already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -327,12 +323,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'This Product Category already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -358,12 +350,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'This Unit of Measure already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -414,7 +402,7 @@ class Bookings extends CI_Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('product_code', 'Product Code', 'trim|required');
-            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required');
+            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required|is_unique[product.product_name]', array('is_unique' => 'The Product Name is already taken.'));
             $this->form_validation->set_rules('product_category', 'Product Category', 'trim|required');
             $this->form_validation->set_rules('product_uom', 'Product UoM', 'trim|required');
             $this->form_validation->set_rules('product_price', 'Product Price', 'trim|required');
@@ -437,12 +425,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'The Product Name already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
