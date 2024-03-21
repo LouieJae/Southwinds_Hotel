@@ -125,7 +125,7 @@
             font-size: 24px;
             color: white;
             cursor: pointer;
-            margin-left: 260px;
+            margin-left: 270px;
             z-index: 2;
             /* Ensure the toggle button is above the sidebar */
         }
@@ -133,7 +133,7 @@
         /* Sidebar Styles */
         .sidebar {
             height: 100vh;
-            width: 250px;
+            width: 265px;
             position: fixed;
             top: 0;
             left: 0;
@@ -163,7 +163,7 @@
         }
 
         .content {
-            margin-left: 250px;
+            margin-left: 265px;
             /* Adjusted to match the initial state of the sidebar */
             padding: 16px;
             transition: margin-left 0.3s ease;
@@ -213,11 +213,11 @@
         .custom-dropdown-content {
             display: none;
             position: absolute;
-            background-color: #BF3131;
+            background-color: gray;
             /* Adjust background color as needed */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             z-index: 1;
-            width: 250px;
+            width: 265px;
             /* Set the width to match the sidebar */
         }
 
@@ -226,7 +226,7 @@
         }
 
         .custom-dropdown-content a.dropdown-item:hover {
-            background-color: gray;
+            background-color: #BF3131;
             color: #fff;
         }
 
@@ -236,6 +236,7 @@
 
         .sidebar a.active {
             color: #ffffff;
+            width: 265px;
             /* Active link text color */
             background-color: #7D0A0A;
             /* Active link background color */
@@ -272,32 +273,56 @@
 
     <div class="sidebar">
         <a href="<?= base_url('bookings/dashboard') ?>" class="brand-link d-flex align-items-center exclude-from-highlight">
-            <img src="<?php echo base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
+            <img src="<?= base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
         </a>
         <hr class="sidebar-divider">
-        <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
 
-        <div class="custom-dropdown" id="inventoryDropdown">
-            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                <i class="fas fa-bed"></i> Room Accommodations
-            </a>
-            <div class="custom-dropdown-content">
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Check Ins</a>
+
+        <?php if (isset($_SESSION['UserLoginSession']['roles']) && ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER)) : ?>
+            <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN) : ?>
+
+            <div class="custom-dropdown" id="inventoryDropdown">
+                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
+                    <i class="fas fa-bed"></i> Room Accommodations
+                    <div class="custom-caret"></div>
+                </a>
+                <div class="custom-dropdown-content">
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Check Ins</a>
+                </div>
             </div>
-        </div>
-        <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
-        <div class="custom-dropdown" id="purchaseDropdown">
-            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                <i class="fas fa-chart-line"></i> Reports
-            </a>
-            <div class="custom-dropdown-content">
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+            <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
+
+            <div class="custom-dropdown" id="purchaseDropdown">
+                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
+                    <i class="fas fa-chart-line"></i> Reports
+                    <div class="custom-caret"></div>
+                </a>
+                <div class="custom-dropdown-content">
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                </div>
             </div>
-        </div>
+        <?php elseif (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) : ?>
+            <div class="custom-dropdown" id="purchaseDropdown">
+                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
+                    <i class="fas fa-chart-line"></i> Reports
+                    <div class="custom-caret"></div>
+                </a>
+                <div class="custom-dropdown-content">
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                    <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <hr>
     </div>
+
 
     <div class="content">

@@ -44,12 +44,11 @@ class Bookings extends CI_Controller
                 $password = $this->input->post('password');
 
                 $this->load->model('user_model');
-                $status = $this->user_model->checkPassword($password, $username);
-                if ($status != false) {
-                    $username = $status->username;
-
+                $user = $this->user_model->checkPassword($password, $username);
+                if ($user) {
                     $session_data = array(
-                        'username' => $username,
+                        'username' => $user->username,
+                        'roles' => $user->roles // Assuming 'roles' is a field in your user table
                     );
 
                     $this->session->set_userdata('UserLoginSession', $session_data);
@@ -241,7 +240,7 @@ class Bookings extends CI_Controller
             $this->load->model('checkin_model');
             $response = $this->checkin_model->update_checkin($check_in_id);
 
-            if (is_string($response)) {
+            if ($response === false) {
                 // Quantity exceeds available quantity
                 $available_quantity = $this->checkin_model->get_available_quantity($response);
                 $error_message = 'Add ons was not added. Quantity exceeds available quantity for product: ' . $response . '. Available quantity: ' . $available_quantity;
