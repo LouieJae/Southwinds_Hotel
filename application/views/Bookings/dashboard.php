@@ -107,7 +107,7 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-exclamation-triangle fa-icon"></i>Housekeeping</h5>
+            <h5 class="card-title"><i class="fas fa-broom fa-icon"></i>Housekeeping</h5>
             <p class="card-text"><span id="lowStockRooms">
                     <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
                         <p class="card-text"><?= $data['get_total_housekeeping_rooms']; ?></p>

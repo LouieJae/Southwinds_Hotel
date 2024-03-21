@@ -1,8 +1,10 @@
 <style>
     /* Style for the card container */
     .card-container {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        /* 7 columns */
+        grid-template-rows: repeat(4, auto);
         justify-content: space-between;
         /* Distribute space between cards */
         align-items: flex-start;
@@ -14,6 +16,7 @@
         /* Add scrollbar if needed */
         padding: 14px;
         /* Add some padding */
+        margin-left: 30px;
     }
 
     /* Style for each card */
