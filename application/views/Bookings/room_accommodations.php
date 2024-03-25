@@ -1,22 +1,17 @@
 <style>
-    /* Style for the card container */
     .card-container {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        /* 7 columns */
-        grid-template-rows: repeat(4, auto);
-        justify-content: space-between;
-        /* Distribute space between cards */
-        align-items: flex-start;
-        /* Align items to the top */
-        /* spacing between cards */
-        max-width: 100%;
-        /* Ensure it doesn't overflow */
-        overflow: auto;
-        /* Add scrollbar if needed */
-        padding: 14px;
-        /* Add some padding */
-        margin-left: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        /* Adjust min and max width */
+        grid-gap: 30px;
+        /* Adjust the gap between cards */
+        justify-content: center;
+        /* Center align cards horizontally */
+        align-items: center;
+        /* Center align cards vertically */
+        padding: 20px;
+        /* Add padding */
+
     }
 
     /* Style for each card */
@@ -33,7 +28,6 @@
         /* Center text */
         text-align: center;
         /* Add some margin */
-        margin-bottom: 19px;
         position: relative;
         font-size: x-large;
         font-weight: bolder;
@@ -66,7 +60,7 @@
     /* Adjust image size */
     .card img {
         max-width: 100%;
-        max-height: 60%;
+        max-height: 65%;
         /* Ensure the image doesn't overflow */
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -492,95 +486,21 @@
             }
         });
     });
-
-    // Function to handle click on add-ons button
-    function handleAddOnsClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Open the add-ons modal
-        $('#addOnsModal').modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Function to handle click on checkout button
-    function handleCheckoutClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Open another modal or perform any other action
-        console.log("Checkout button clicked");
-        // For example, open another modal
-        // document.getElementById('otherModal').modal('show');
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the buttons
-    document.querySelectorAll('.add-ons-button').forEach(item => {
-        item.addEventListener('click', handleAddOnsClick);
-    });
-
-    document.querySelectorAll('.checkout-button').forEach(item => {
-        item.addEventListener('click', handleCheckoutClick);
-    });
-    // Function to handle add-ons button click
-    function handleAddOnsClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Get the room ID from the clicked add-ons button
-        const roomId = event.currentTarget.closest('.card').id.split('_')[1];
-        // Open the corresponding add-ons modal with the room number
-        $('#addOnsModal_' + roomId).modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the add-ons buttons
-    document.querySelectorAll('.add-ons-button').forEach(item => {
-        item.addEventListener('click', handleAddOnsClick);
-    });
-
     // Remove data-toggle attribute from cards with occupied rooms
-    document.querySelectorAll('.card').forEach(item => {
-        const roomStatus = item.querySelector('.status').textContent.trim();
+    $('.card').each(function() {
+        const roomStatus = $(this).find('.status').text().trim();
         if (roomStatus === 'Occupied') {
-            item.removeAttribute('data-toggle');
+            $(this).removeAttr('data-toggle');
         }
     });
 
-    // Remove data-toggle attribute from cards with occupied rooms
-    document.querySelectorAll('.card').forEach(item => {
-        const roomStatus = item.querySelector('.status').textContent.trim();
+    // Remove data-toggle attribute from cards with housekeeping rooms
+    $('.card').each(function() {
+        const roomStatus = $(this).find('.status').text().trim();
         if (roomStatus === 'Housekeeping') {
-            item.removeAttribute('data-toggle');
+            $(this).removeAttr('data-toggle');
         }
     });
-    // Function to handle click on checkout button
-    function handleCheckoutClick(event) {
-        // Prevent the default behavior of the button
-        event.preventDefault();
-        // Get the room ID from the clicked checkout button
-        const roomId = event.currentTarget.closest('.card').id.split('_')[1];
-        // Open the corresponding checkout modal
-        $('#checkoutModal_' + roomId).modal('show'); // Assuming you're using jQuery
-        // Stop event propagation to prevent opening the room modal
-        event.stopPropagation();
-    }
-
-    // Add event listeners to the checkout buttons
-    document.querySelectorAll('.checkout-button').forEach(item => {
-        item.addEventListener('click', handleCheckoutClick);
-    });
-
-    // Add event listener to the confirm checkout buttons in the checkout modals
-    <?php foreach ($get_all_room as $room) : ?>
-        document.getElementById('confirmCheckoutBtn_<?php echo $room->room_id; ?>').addEventListener('click', function() {
-            // Perform checkout operation for room <?php echo $room->room_id; ?> here
-            console.log('Checkout confirmed for room <?php echo $room->room_id; ?>'); // For demonstration purposes
-            // Close the corresponding checkout modal
-            $('#checkoutModal_<?php echo $room->room_id; ?>').modal('hide'); // Assuming you're using jQuery
-        });
-    <?php endforeach; ?>
 </script>
 <script>
     // Define an object to store added hours for each room
@@ -675,6 +595,7 @@
     $(document).ready(function() {
         <?php if ($this->session->flashdata('success')) { ?>
             toastr.success('<?php echo $this->session->flashdata('success'); ?>');
+
         <?php } elseif ($this->session->flashdata('error')) { ?>
             toastr.error('<?php echo $this->session->flashdata('error'); ?>');
         <?php } ?>

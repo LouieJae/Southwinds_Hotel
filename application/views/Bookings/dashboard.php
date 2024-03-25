@@ -1,10 +1,4 @@
 <style>
-    .analytics-container {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
-
     .card {
         flex-basis: calc(25% - 20px);
         margin-bottom: 20px;
@@ -70,60 +64,67 @@
     }
 </style>
 
-<h3>Dashboard</h3>
-<div class="analytics-container">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-bed fa-icon"></i>Total Rooms</h5>
-            <p class="card-text">
-                <span id="totalRooms">
-                    <?php if (isset($data['get_total_rooms'])) : ?>
-                        <p class="card-text"><?php echo $data['get_total_rooms']; ?></p>
-                    <?php endif; ?>
-                </span>
-            </p>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-door-open fa-icon"></i>Available Rooms</h5>
-            <p class="card-text"><span id="availableRooms">
-                    <?php if (isset($data['get_total_available_rooms'])) : ?>
-                        <p class="card-text"><?php echo $data['get_total_available_rooms']; ?></p>
-                    <?php endif; ?>
-                </span></p>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-door-closed fa-icon"></i>Occupied Rooms</h5>
-            <p class="card-text"><span id="occupiedRooms">
-                    <?php if (isset($data['get_total_occupied_rooms'])) : ?>
-                        <p class="card-text"><?= $data['get_total_occupied_rooms']; ?></p>
-                    <?php endif; ?>
-                </span>
-            </p>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-broom fa-icon"></i>Housekeeping</h5>
-            <p class="card-text"><span id="lowStockRooms">
-                    <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
-                        <p class="card-text"><?= $data['get_total_housekeeping_rooms']; ?></p>
-                    <?php endif; ?>
-                </span>
+<h3 class="mt-2">Dashboard</h3>
 
-            </p>
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-bed fa-icon"></i>Total Rooms</h5>
+                <p class="card-text">
+                    <span id="totalRooms">
+                        <?php if (isset($data['get_total_rooms'])) : ?>
+                            <p class="card-text"><?php echo $data['get_total_rooms']; ?></p>
+                        <?php endif; ?>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-door-open fa-icon"></i>Available Rooms</h5>
+                <p class="card-text"><span id="availableRooms">
+                        <?php if (isset($data['get_total_available_rooms'])) : ?>
+                            <p class="card-text"><?php echo $data['get_total_available_rooms']; ?></p>
+                        <?php endif; ?>
+                    </span></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-door-closed fa-icon"></i>Occupied Rooms</h5>
+                <p class="card-text"><span id="occupiedRooms">
+                        <?php if (isset($data['get_total_occupied_rooms'])) : ?>
+                            <p class="card-text"><?= $data['get_total_occupied_rooms']; ?></p>
+                        <?php endif; ?>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-broom fa-icon"></i>Housekeeping</h5>
+                <p class="card-text"><span id="lowStockRooms">
+                        <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
+                            <p class="card-text"><?= $data['get_total_housekeeping_rooms']; ?></p>
+                        <?php endif; ?>
+                    </span>
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
-
 <!-- Card for the last seven days' sales chart -->
 <div class="card chart-card">
     <div class="chart-card-body">
-        <canvas id="salesChart" width='500' height="150"></canvas>
+        <canvas id="salesChart" width='500' height="160"></canvas>
     </div>
 </div>
 

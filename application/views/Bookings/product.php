@@ -1,4 +1,4 @@
-<h3>Inventory</h3>
+<h3 class="mt-2">Inventory</h3>
 <div class="card card-outline card-danger">
     <div class="card-header">
         <button id="addProductModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">

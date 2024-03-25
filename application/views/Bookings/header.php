@@ -19,310 +19,136 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
-
-        body {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 400;
-            background-color: #F3EDC8;
-            color: #2c3e50;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 700;
-        }
-
-        html {
-            font-size: 100%;
-        }
-
-        /* 16px */
-
-        h1 {
-            font-size: 4.210rem;
-            color: #fff;
-            /* 67.36px */
-        }
-
-        h2 {
-            font-size: 3.158rem;
-            /* 50.56px */
-        }
-
-        h3 {
-            font-size: 2.369rem;
-            color: #000;
-            /* 37.92px */
-        }
-
-        h4 {
-            font-size: 1.777rem;
-            color: #fff;
-            /* 28.48px */
-        }
-
-        h5 {
-            font-size: 1.333rem;
-            /* 21.28px */
-        }
-
-        small {
-            font-size: 0.750rem;
-            /* 12px */
-        }
-
-        /* For Webkit-based browsers (Chrome, Safari) */
-        ::-webkit-scrollbar {
-            width: 12px;
-            /* Width of the scrollbar */
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #fff;
-            /* Color of the track */
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #ccc;
-            /* Color of the thumb */
-            border-radius: 6px;
-            /* Rounded corners */
-        }
-
-        /* Top Navbar Styles */
-        .top-navbar {
-            background-color: #7D0A0A;
-            padding: 15px;
-            color: #ffffff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-            /* Add shadow to the top navbar */
-            z-index: 2;
-            /* Ensure the toggle button is above the sidebar */
-        }
-
-        .top-navbar a {
-            color: #ffffff;
-            text-decoration: none;
-            margin-right: 15px;
-        }
-
-        .toggle-btn {
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-            margin-left: 270px;
-            z-index: 2;
-            /* Ensure the toggle button is above the sidebar */
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            height: 100vh;
-            width: 265px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            /* Adjusted to initially show the sidebar */
-            background-color: #EAD196;
-            padding-top: 5px;
-            /* Adjusted to accommodate the navbar */
-            transition: left 0.3s ease;
-            /* Add smooth transition effect */
-            z-index: 1;
-            /* Ensure the sidebar is below the toggle button */
-        }
-
-        .sidebar a {
-            padding: 10px;
-            padding-left: 20px;
-            text-decoration: none;
-            font-size: 17px;
-            color: black;
-            display: block;
-            font-weight: bolder;
-        }
-
-        .sidebar a i {
-            margin-right: 5px;
-            /* Adjust the margin as needed */
-        }
-
-        .content {
-            margin-left: 265px;
-            /* Adjusted to match the initial state of the sidebar */
-            padding: 16px;
-            transition: margin-left 0.3s ease;
-            /* Add smooth transition effect */
-        }
-
-        .sidebar-divider {
-            border-top: 3px solid #384042;
-            /* Line color */
-            margin: 1px;
-            /* Adjust as needed for spacing */
-        }
-
-        /* Custom Dropdown Styles */
-        .custom-dropdown {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .custom-dropdown a.dropdown-toggle::after {
-            display: none;
-            /* Hide the default Bootstrap caret */
-        }
-
-        .custom-dropdown .custom-caret {
-            display: inline-block;
-            width: 0;
-            height: 0;
-            vertical-align: middle;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 7px solid #000;
-
-            margin-left: 5px;
-            /* Adjust color and size as needed */
-            /* Adjust the margin to increase the distance */
-            transition: transform 0.3s ease;
-            /* Add transition for arrow effect */
-        }
-
-        .custom-dropdown.open .custom-caret {
-            transform: rotate(90deg);
-            /* Rotate arrow for open state */
-        }
-
-        .custom-dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: gray;
-            /* Adjust background color as needed */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-            width: 265px;
-            /* Set the width to match the sidebar */
-        }
-
-        .custom-dropdown.open .custom-dropdown-content {
-            display: block;
-        }
-
-        .custom-dropdown-content a.dropdown-item:hover {
-            background-color: #BF3131;
-            color: #fff;
-        }
-
-        .custom-dropdown.open .custom-dropdown-content {
-            display: block;
-        }
-
-        .sidebar a.active {
-            color: #ffffff;
-            width: 265px;
-            /* Active link text color */
-            background-color: #7D0A0A;
-            /* Active link background color */
-        }
-    </style>
+    <link href="<?= base_url('assets/css/styles.css'); ?>" rel="stylesheet" />
+    <script src="<?= base_url('assets/js/scripts.js'); ?>"></script>
 </head>
 
-<body>
+<style>
+    /* Success notification style */
+    .toast-success {
+        background-color: #28a745 !important;
+        /* Green background color */
+    }
 
-    <!-- Top Navbar -->
-    <div class=" top-navbar">
-        <div class="toggle-btn" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </div>
-        <div>
-            <div class="dropdowns">
-                <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="user-greeting">Hi,
-                        <?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>! &nbsp;&nbsp;
-                    </span>
-                    <i class="fa fa-user"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item text-dark" href="#">User Profile</a>
-                    <a class="dropdown-item text-dark" href="#">Settings</a>
-                    <hr class="dropdown-divider">
-                    <a class="dropdown-item text-dark" href="<?= base_url('bookings/logout') ?>">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
+    /* Error notification style */
+    .toast-error {
+        background-color: #dc3545 !important;
+        /* Red background color */
+    }
 
-    <div class="sidebar">
+    /* Warning notification style */
+    .toast-warning {
+        background-color: #ffc107 !important;
+        /* Yellow background color */
+    }
+
+    /* Active sidebar item style */
+    .nav-link.active {
+        background-color: #BF3131;
+        /* Change the background color to red */
+        color: white;
+        /* Optionally change text color */
+    }
+
+    /* Adjusting nested sidebar items */
+    .sb-sidenav-menu-nested .nav-link.active {
+        margin-left: -25px;
+        /* Adjust margin to align nested items with parent */
+        text-align: center;
+    }
+</style>
+
+<script>
+
+</script>
+
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark navings">
+        <!-- Navbar Brand-->
         <a href="<?= base_url('bookings/dashboard') ?>" class="brand-link d-flex align-items-center exclude-from-highlight">
-            <img src="<?= base_url('assets/images/southwinds.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 t" style="opacity: .8; max-width: 100%; max-height: 60px;">
+            <img src="<?= base_url('assets/images/southwinds2.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8; max-width: 90%; max-height: 65px" />
         </a>
-        <hr class="sidebar-divider">
 
-
-        <?php if (isset($_SESSION['UserLoginSession']['roles']) && ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER)) : ?>
-            <a href="<?= base_url('bookings/dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <?php endif; ?>
-
-        <?php if (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN) : ?>
-
-            <div class="custom-dropdown" id="inventoryDropdown">
-                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                    <i class="fas fa-bed"></i> Room Accommodations
-                    <div class="custom-caret"></div>
-                </a>
-                <div class="custom-dropdown-content">
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/add_on') ?>">Check Ins</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
+        <!-- Navbar-->
+        <span class="user-greeting text-white">Hi,
+            <?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>! &nbsp;
+        </span>
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw text-white"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="<?= base_url('bookings/logout') ?>">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">General</div>
+                        <a id="nav-link" class="nav-link" href="<?= base_url('bookings/dashboard') ?>">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Dashboard
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            Room Accommodations
+                            <div class="sb-sidenav-collapse-arrow">
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </a>
+                        <div class="collapse bg-secondary" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
+                                <a class="nav-link" href="<?= base_url('bookings/add_on') ?>">Check In</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link" href="<?= base_url('bookings/product') ?>">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-archive"></i>
+                            </div>
+                            Inventory
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            Reports
+                            <div class="sb-sidenav-collapse-arrow">
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </a>
+                        <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                                <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                                <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <a href="<?= base_url('bookings/product') ?>"><i class="fas fa-archive"></i> Inventory</a>
-
-            <div class="custom-dropdown" id="purchaseDropdown">
-                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                    <i class="fas fa-chart-line"></i> Reports
-                    <div class="custom-caret"></div>
-                </a>
-                <div class="custom-dropdown-content">
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
-                </div>
-            </div>
-        <?php elseif (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) : ?>
-            <div class="custom-dropdown" id="purchaseDropdown">
-                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="">
-                    <i class="fas fa-chart-line"></i> Reports
-                    <div class="custom-caret"></div>
-                </a>
-                <div class="custom-dropdown-content">
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                    <a class="dropdown-item text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <hr>
-    </div>
-
-
-    <div class="content">
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
