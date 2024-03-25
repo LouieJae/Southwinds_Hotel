@@ -102,49 +102,71 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">General</div>
-                        <a id="nav-link" class="nav-link" href="<?= base_url('bookings/dashboard') ?>">
-                            <div class="sb-nav-link-icon">
-                                <i class="fas fa-tachometer-alt"></i>
+                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER)) : ?>
+                            <a id="nav-link" class="nav-link" href="<?= base_url('bookings/dashboard') ?>">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                Dashboard
+                            </a>
+                        <?php endif; ?>
+
+                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN) : ?>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-bed"></i>
+                                </div>
+                                Room Accommodations
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse bg-secondary" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
+                                    <a class="nav-link" href="<?= base_url('bookings/add_on') ?>">Check In</a>
+                                </nav>
                             </div>
-                            Dashboard
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon">
-                                <i class="fas fa-bed"></i>
+                            <a class="nav-link" href="<?= base_url('bookings/product') ?>">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-archive"></i>
+                                </div>
+                                Inventory
+                            </a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                Reports
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                                    <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                                    <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                                </nav>
                             </div>
-                            Room Accommodations
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
+                        <?php elseif (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) : ?>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                Reports
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                                    <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                                    <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                                </nav>
                             </div>
-                        </a>
-                        <div class="collapse bg-secondary" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
-                                <a class="nav-link" href="<?= base_url('bookings/add_on') ?>">Check In</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link" href="<?= base_url('bookings/product') ?>">
-                            <div class="sb-nav-link-icon">
-                                <i class="fas fa-archive"></i>
-                            </div>
-                            Inventory
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            Reports
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                                <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                                <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
-                            </nav>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </nav>
