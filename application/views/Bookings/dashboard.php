@@ -1,133 +1,184 @@
 <style>
-    .card {
-        flex-basis: calc(25% - 20px);
+    /* Common styles for small boxes */
+    .small-box {
+        border-radius: 2px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        display: block;
         margin-bottom: 20px;
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease;
-        background-color: #BF3131;
+        position: relative;
+        border-radius: 5px;
     }
 
-    .card:hover {
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    .small-box>.inner {
+        padding: 10px;
     }
 
-    .card-body {
-        padding: 20px;
-    }
-
-    .card-title {
-        font-size: 20px;
-        margin-bottom: 10px;
-        text-align: center;
-        color: #fff;
-    }
-
-    .card-text {
-        font-size: 60px;
+    .small-box h3 {
+        font-size: 40px;
         font-weight: bold;
-        text-align: center;
+        margin: 0 0 10px 0;
+        white-space: nowrap;
+    }
+
+    .small-box p {
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* Icon styles */
+    .small-box .icon {
+        color: rgba(0, 0, 0, 0.15);
+        font-size: 64px;
+        position: absolute;
+        right: 10px;
+        top: -3px;
+        transition: top 0.3s ease;
+    }
+
+    .small-box .icon>i {
+        font-size: 100%;
+        position: relative;
+    }
+
+    /* Hide icon on mobile devices */
+    @media only screen and (max-width: 767px) {
+        .small-box .icon {
+            display: none;
+        }
+    }
+
+    /* Hover effect */
+    .small-box:hover .icon {
+        top: -10px;
+    }
+
+    /* Box shadow on hover */
+    .small-box:hover {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
         color: #fff;
     }
 
-    .fa-icon {
-        font-size: 36px;
-        margin-right: 10px;
-        color: #fff;
+    /* Chart card header styles */
+    .chart-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #f4f6f9;
+        border-bottom: 1px solid #d2d6de;
+        border-radius: 5px 5px 0 0;
     }
 
-    .chart-card {
-        flex-basis: 100%;
-        margin-bottom: 20px;
+    .chart-card-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .chart-card-tools .btn {
+        background-color: transparent;
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-        color: #000;
+        font-size: 16px;
+        cursor: pointer;
+        color: #6c757d;
+    }
+
+    .chart-card-tools .btn:hover {
+        color: #343a40;
     }
 
     .chart-card-body {
         padding: 20px;
     }
 
-    @media only screen and (max-width: 768px) {
-        .card {
-            flex-basis: calc(50% - 20px);
-        }
-    }
-
-    @media only screen and (max-width: 576px) {
-        .card {
-            flex-basis: calc(100% - 20px);
-        }
+    .chart-card.collapsed .chart-card-body {
+        display: none;
     }
 </style>
-
 <h3 class="mt-2">Dashboard</h3>
 
 <div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-bed fa-icon"></i>Total Rooms</h5>
-                <p class="card-text">
-                    <span id="totalRooms">
-                        <?php if (isset($data['get_total_rooms'])) : ?>
-                            <p class="card-text"><?php echo $data['get_total_rooms']; ?></p>
-                        <?php endif; ?>
-                    </span>
-                </p>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>
+                    <?php if (isset($data['get_total_rooms'])) : ?>
+                        <?= $data['get_total_rooms']; ?>
+                    <?php endif; ?>
+                </h3>
+                <p>Total Rooms</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-bed"></i>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-door-open fa-icon"></i>Available Rooms</h5>
-                <p class="card-text"><span id="availableRooms">
-                        <?php if (isset($data['get_total_available_rooms'])) : ?>
-                            <p class="card-text"><?php echo $data['get_total_available_rooms']; ?></p>
-                        <?php endif; ?>
-                    </span></p>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>
+                    <?php if (isset($data['get_total_available_rooms'])) : ?>
+                        <?= $data['get_total_available_rooms']; ?>
+                    <?php endif; ?>
+                </h3>
+                <p>Available Rooms</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-door-open"></i>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-door-closed fa-icon"></i>Occupied Rooms</h5>
-                <p class="card-text"><span id="occupiedRooms">
-                        <?php if (isset($data['get_total_occupied_rooms'])) : ?>
-                            <p class="card-text"><?= $data['get_total_occupied_rooms']; ?></p>
-                        <?php endif; ?>
-                    </span>
-                </p>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>
+                    <?php if (isset($data['get_total_occupied_rooms'])) : ?>
+                        <?= $data['get_total_occupied_rooms']; ?>
+                    <?php endif; ?>
+                </h3>
+                <p>Occupied Rooms</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-door-closed"></i>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-broom fa-icon"></i>Housekeeping</h5>
-                <p class="card-text"><span id="lowStockRooms">
-                        <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
-                            <p class="card-text"><?= $data['get_total_housekeeping_rooms']; ?></p>
-                        <?php endif; ?>
-                    </span>
-                </p>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>
+                    <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
+                        <?= $data['get_total_housekeeping_rooms']; ?>
+                    <?php endif; ?>
+                </h3>
+                <p>Housekeeping</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-broom"></i>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Card for the last seven days' sales chart -->
 <div class="card chart-card">
+    <div class="chart-card-header">
+        <h3 class="chart-card-title">Sales Chart</h3>
+        <div class="chart-card-tools">
+            <button class="btn btn-tool minimize-chart" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            <button class="btn btn-tool close-chart" data-card-widget="remove"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
     <div class="chart-card-body">
-        <canvas id="salesChart" width='500' height="160"></canvas>
+        <canvas id="salesChart" width="500" height="160"></canvas>
     </div>
 </div>
-
 
 <script>
     // Fetched PHP data
@@ -148,4 +199,20 @@
 
     // Get the canvas element
     const ctx = document.getElementById('salesChart').getContext('2d');
+</script>
+
+<script>
+    // Add event listener to minimize chart button
+    const minimizeButton = document.querySelector('.minimize-chart');
+    minimizeButton.addEventListener('click', function() {
+        const chartCard = document.querySelector('.chart-card');
+        chartCard.classList.toggle('collapsed');
+    });
+
+    // Add event listener to close chart button
+    const closeButton = document.querySelector('.close-chart');
+    closeButton.addEventListener('click', function() {
+        const chartCard = document.querySelector('.chart-card');
+        chartCard.remove();
+    });
 </script>

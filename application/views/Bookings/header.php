@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
     <link href="<?= base_url('assets/css/styles.css'); ?>" rel="stylesheet" />
+
 </head>
 
 <style>
@@ -58,6 +59,13 @@
         /* Adjust margin to align nested items with parent */
         text-align: center;
     }
+
+    /* Hide icon on mobile devices */
+    @media only screen and (max-width: 767px) {
+        .user-greeting {
+            display: none;
+        }
+    }
 </style>
 
 <script>
@@ -68,7 +76,7 @@
     <nav class="sb-topnav navbar navbar-expand navbar-dark navings">
         <!-- Navbar Brand-->
         <a href="<?= base_url('bookings/dashboard') ?>" class="brand-link d-flex align-items-center exclude-from-highlight">
-            <img src="<?= base_url('assets/images/southwinds2.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8; max-width: 90%; max-height: 65px" />
+            <img src="<?= base_url('assets/images/southwinds2.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 10.0; max-width: 90%; max-height: 65px" />
         </a>
 
         <!-- Sidebar Toggle-->
