@@ -402,14 +402,14 @@ class Bookings extends CI_Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('product_code', 'Product Code', 'trim|required');
-            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required|is_unique[product.product_name]', array('is_unique' => 'The Product Name is already taken.'));
+            // Modify the validation rule for product name
+            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required|callback_unique_product_name[' . $product_id . ']');
             $this->form_validation->set_rules('product_category', 'Product Category', 'trim|required');
             $this->form_validation->set_rules('product_uom', 'Product UoM', 'trim|required');
             $this->form_validation->set_rules('product_price', 'Product Price', 'trim|required');
             $this->form_validation->set_rules('beginning_quantity', 'Beginning Quantity', 'trim|required');
             $this->form_validation->set_rules('product_status', 'Product Status', 'trim');
             $this->form_validation->set_rules('minimum_quantity', 'Minimum Quantity', 'trim|required');
-
 
             if ($this->form_validation->run() != FALSE) {
                 // Form validation successful, proceed with insertion
@@ -425,10 +425,25 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                $error_message = 'The Product Name already exists.';
+                $error_message = 'The form contains errors.';
                 $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
+        }
+    }
+
+    function unique_product_name($product_name, $product_id)
+    {
+        $this->load->model('product_model');
+        $existing_product = $this->product_model->get_product($product_id, $product_name);
+
+        // If no product found with the given name or the found product's ID matches the current product being edited, return true
+        if (!$existing_product) {
+            return true;
+        } else {
+            // Product name is already taken by another product
+            $this->form_validation->set_message('unique_product_name', 'The Product Name is already taken.');
+            return false;
         }
     }
 

@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Product Price</label>
-                        <input type="number" id="product_price" name="product_price" value="<?= set_value('product_price', $product->product_price); ?>" class="form-control" placeholder="Enter Product Price" required>
+                        <input type="number" id="product_price" name="product_price" value="<?= set_value('product_price', $product->product_price); ?>" class="form-control" min="1" placeholder="Enter Product Price" required>
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">UoM</label>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Beginning Quantity</label>
-                        <input type="number" id="beginning_quantity" name="beginning_quantity" value="<?= set_value('beginning_quantity', $product->beginning_quantity); ?>" class="form-control" placeholder="Enter Beginning Quantity" required>
+                        <input type="number" id="beginning_quantity" name="beginning_quantity" value="<?= set_value('beginning_quantity', $product->beginning_quantity); ?>" min="<?= set_value('product_quantity', $product->product_quantity); ?>" class="form-control" placeholder="Enter Beginning Quantity" required>
                     </div>
                     <div class="form-group col-5 d-inline-block">
                         <label for="product_code" class="bold-label">Minimum Quantity</label>
-                        <input type="number" id="minimum_quantity" name="minimum_quantity" value="<?= set_value('minimum_quantity', $product->minimum_quantity); ?>" class="form-control" placeholder="Enter Minimum Quantity" required>
+                        <input type="number" id="minimum_quantity" name="minimum_quantity" value="<?= set_value('minimum_quantity', $product->minimum_quantity); ?>" class="form-control" min="1" max="<?= set_value('product_quantity', $product->product_quantity); ?>" placeholder="Enter Minimum Quantity" required>
                     </div>
                     <?php $product_status = $product->product_status;
                     if ($product_status == '1') { ?>
@@ -91,8 +91,17 @@
         $("#beginning_quantity").change(function() {
             var beginningQuantity = parseInt($(this).val());
             var minQuantity = parseInt($("#minimum_quantity").val());
+            var productQuantity = parseInt($("#product_quantity").val());
             if (minQuantity >= beginningQuantity) {
                 toastr.error("Minimum Quantity must be less than Beginning Quantity");
+                $(this).val('');
+            } else if (beginningQuantity == 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
+            }
+
+            if (productQuantity > beginningQuantity) {
+                toastr.error("Beginning Quantity must be greater or equal to Current Quantity");
                 $(this).val('');
             }
         });
@@ -105,7 +114,20 @@
             if (minQuantity >= beginningQuantity) {
                 toastr.error("Minimum Quantity must be less than Beginning Quantity");
                 $(this).val('');
+            } else if (minQuantity == 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
             }
         });
     });
+
+    $(document).ready(function() {
+        $("#product_price").change(function() {
+            var productPrice = parseInt($(this).val());
+            if (productPrice == 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
+            }
+        });
+    })
 </script>
