@@ -194,7 +194,7 @@
         display: block;
     }
 </style>
-<h3>Check Ins</h3>
+<h3 class="mt-2">Check Ins</h3>
 <div class="card card-outline card-danger">
     <div class="card-header">
 

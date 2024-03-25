@@ -20,7 +20,7 @@
                 <form method="post" action="<?php echo site_url('bookings/checkin_submit'); ?>">
                     <div class="modal-header">
                         <h5 class="modal-title" id="roomModalLabel_<?php echo $room->room_id; ?>">Check-In:</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
                     <div class="modal-body">
@@ -132,7 +132,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" onclick="return confirm('Are you sure you want to check in?')" class="btn btn-danger btn-sm"><i class="fas fa-door-closed"></i>Check-In</button>
                     </div>
                 </form>
