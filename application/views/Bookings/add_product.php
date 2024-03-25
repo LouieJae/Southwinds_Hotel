@@ -86,6 +86,9 @@
             if (minQuantity >= beginningQuantity) {
                 toastr.error("Minimum Quantity must be less than Beginning Quantity");
                 $(this).val('');
+            } else if (beginningQuantity <= 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
             }
         });
     })
@@ -97,7 +100,20 @@
             if (minQuantity >= beginningQuantity) {
                 toastr.error("Minimum Quantity must be less than Beginning Quantity");
                 $(this).val('');
+            } else if (minQuantity <= 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
             }
         });
     });
+
+    $(document).ready(function() {
+        $("#product_price").change(function() {
+            var productPrice = parseInt($(this).val());
+            if (productPrice <= 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
+            }
+        });
+    })
 </script>

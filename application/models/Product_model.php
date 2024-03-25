@@ -105,8 +105,12 @@ class Product_model extends CI_Model
         return $procat;
     }
 
-    function get_product($product_id)
+    function get_product($product_id, $product_name = null)
     {
+        if ($product_name !== null) {
+            // If product name is provided, exclude it from the query
+            $this->db->where('product_name !=', $product_name);
+        }
         $this->db->where('product_id', $product_id);
         $query = $this->db->get('product');
         $row = $query->row();

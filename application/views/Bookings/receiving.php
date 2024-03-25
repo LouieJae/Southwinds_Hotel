@@ -28,7 +28,7 @@
 
                     </div>
                     <div class="form-group col-10 d-inline-block">
-                        <input type="number" name="product_quantity" class="form-control form-control text" placeholder="Enter Quantity" required>
+                        <input type="number" id="product_quantity" name="product_quantity" class="form-control form-control text" placeholder="Enter Quantity" min="1" required>
                     </div>
                     <input type="hidden" name="product_id" class="form-control form-control text" placeholder="Enter Quantity" required>
                     <div class="modal-footer">
@@ -43,5 +43,13 @@
 </form>
 
 <script>
-
+    $(document).ready(function() {
+        $("#product_quantity").change(function() {
+            var quantity = parseInt($(this).val());
+            if (quantity <= 0) {
+                toastr.error("Please enter a number more than 0");
+                $(this).val('');
+            }
+        });
+    })
 </script>
