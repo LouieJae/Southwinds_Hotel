@@ -176,12 +176,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'The Product Name already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -326,12 +322,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'This Product Category already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -357,12 +349,8 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'This Unit of Measure already exists.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
         }
@@ -413,14 +401,14 @@ class Bookings extends CI_Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('product_code', 'Product Code', 'trim|required');
-            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required');
+            // Modify the validation rule for product name
+            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required|callback_unique_product_name[' . $product_id . ']');
             $this->form_validation->set_rules('product_category', 'Product Category', 'trim|required');
             $this->form_validation->set_rules('product_uom', 'Product UoM', 'trim|required');
             $this->form_validation->set_rules('product_price', 'Product Price', 'trim|required');
             $this->form_validation->set_rules('beginning_quantity', 'Beginning Quantity', 'trim|required');
             $this->form_validation->set_rules('product_status', 'Product Status', 'trim');
             $this->form_validation->set_rules('minimum_quantity', 'Minimum Quantity', 'trim|required');
-
 
             if ($this->form_validation->run() != FALSE) {
                 // Form validation successful, proceed with insertion
@@ -436,14 +424,25 @@ class Bookings extends CI_Controller
                 }
                 redirect('bookings/product');
             } else {
-                // Form validation failed, set session flashdata for debugging
-                $debug_info = array(
-                    'form_data' => $this->input->post(),
-                    'validation_errors' => validation_errors()
-                );
-                $this->session->set_flashdata('debug_info', $debug_info);
+                $error_message = 'The form contains errors.';
+                $this->session->set_flashdata('error', $error_message);
                 redirect('bookings/product');
             }
+        }
+    }
+
+    function unique_product_name($product_name, $product_id)
+    {
+        $this->load->model('product_model');
+        $existing_product = $this->product_model->get_product($product_id, $product_name);
+
+        // If no product found with the given name or the found product's ID matches the current product being edited, return true
+        if (!$existing_product) {
+            return true;
+        } else {
+            // Product name is already taken by another product
+            $this->form_validation->set_message('unique_product_name', 'The Product Name is already taken.');
+            return false;
         }
     }
 
