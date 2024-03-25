@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
     <link href="<?= base_url('assets/css/styles.css'); ?>" rel="stylesheet" />
-    <script src="<?= base_url('assets/js/scripts.js'); ?>"></script>
 </head>
 
 <style>
