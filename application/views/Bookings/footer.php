@@ -117,18 +117,45 @@
         });
     });
 
-    // Create the chart
-    const salesChart = new Chart(ctx, {
-        type: 'line',
-        data: salesData,
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
+    let salesChart;
+
+    // Function to create the appropriate chart based on screen size
+    function createChart() {
+        const width = window.innerWidth;
+        const isMobile = width <= 767;
+
+        const chartType = isMobile ? 'bar' : 'line';
+
+        if (salesChart) {
+            salesChart.destroy();
+        }
+
+        salesChart = new Chart(ctx, {
+            type: chartType,
+            data: salesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
                         beginAtZero: true
                     }
-                }]
+                }
             }
+        });
+    }
+
+    // Create the initial chart
+    createChart();
+
+    // Update the chart if the window is resized
+    window.addEventListener('resize', createChart);
+
+    // Update the chart if the window is resized
+    window.addEventListener('resize', function() {
+        if (salesChart) {
+            salesChart.destroy();
         }
+        createChart();
     });
 </script>

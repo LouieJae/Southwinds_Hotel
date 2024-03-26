@@ -66,6 +66,13 @@
             display: none;
         }
     }
+
+    /* Hide icon on mobile devices */
+    @media only screen and (max-width: 767px) {
+        .user-greeting {
+            display: none;
+        }
+    }
 </style>
 
 <script>

@@ -176,7 +176,7 @@
         </div>
     </div>
     <div class="chart-card-body">
-        <canvas id="salesChart" width="500" height="160"></canvas>
+        <canvas id="salesChart" width="500" height="420"></canvas>
     </div>
 </div>
 
