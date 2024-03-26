@@ -12,13 +12,13 @@ $dayName = $dateObj->format('l');
     <div class="card" id="daily_reports">
 
         <div class="card-header">
-            <a href="<?php echo site_url('bookings/view_daily_reports/' . $date); ?>" class="btn btn-dark"> Back </a>
-            <div class="card-body" style="color: dark;">
+            <a href="<?php echo site_url('bookings/view_daily_reports/' . $date); ?>" class="btn" style="background-color: #7D0A0A; color: white"> Back </a>
+            <div class=" card-body" style="color: dark;">
                 <div class="table-responsive">
                     <table class="table display" id="breakdown-datatables">
                         <thead>
                             <tr>
-                                <th>Check Out No.</th>
+                                <th>No.</th>
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Rate</th>
