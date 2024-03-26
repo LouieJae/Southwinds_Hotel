@@ -21,7 +21,7 @@ $grand_total_sales = 0;
         <!--h5>Date: </h5-->
 
 
-        <a href="<?php echo site_url('bookings/daily_reports'); ?>" class="btn btn-dark"> Back </a>
+        <a href="<?php echo site_url('bookings/daily_reports'); ?>" class="btn" style="background-color: #7D0A0A; color: white"> Back </a>
 
 
         <div class="card-body" style="color: dark;">
@@ -57,7 +57,7 @@ $grand_total_sales = 0;
                                     ?>
                                     <td>
                                         <div class="col-sm-6">
-                                            <a href="<?php echo site_url('bookings/view_daily_breakdowns/' . $date . '/' . $rr->room_no); ?>" class="btn btn-info btn-sm"><i class="fas fa-door-open"></i> View</a>
+                                            <a href="<?php echo site_url('bookings/view_daily_breakdowns/' . $date . '/' . $rr->room_no); ?>"><i class="fas fa-eye" style="color: #1C9C98" ;></i></a>
                                         </div>
                                     </td>
                                 </tr>

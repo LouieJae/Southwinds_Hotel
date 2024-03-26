@@ -11,7 +11,7 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Daily Total Sales</th>
+                                <th>Sales</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -53,7 +53,7 @@
                                     <?php } ?>
                                     <td>
                                         <div class="col-sm-6">
-                                            <a href="<?php echo site_url('bookings/view_daily_reports/' . $date_str); ?>" class="btn btn-info btn-sm"><i class="fas fa-door-open"></i> View</a>
+                                            <a href="<?php echo site_url('bookings/view_daily_reports/' . $date_str); ?>"><i class="fas fa-eye" style="color: #1C9C98" ;></i></a>
                                         </div>
                                     </td>
                                 </tr>
