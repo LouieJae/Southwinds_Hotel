@@ -197,7 +197,6 @@
 <h3 class="mt-2">Check Ins</h3>
 <div class="card card-outline card-danger">
     <div class="card-header">
-
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -209,20 +208,43 @@
                         <th class="text-center">Room Price</th>
                         <th class="text-center">Total Amount</th>
                         <th class="text-center">Status</th>
+                        <th class="text-center">Checkout Time</th>
+                        <th class="text-center">Remaining Time</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
+                    // Get the current time
+                    $current_time = time();
+
                     if (isset($checkins) && !empty($checkins)) {
                         foreach ($checkins as $key => $check) {
                             $check_in_id = $check->check_in_id;
                             $status = ucfirst($check->status);
+
+                            // Calculate remaining time
+                            $check_in_time = strtotime($check->check_in_time);
+                            $check_out_time = strtotime($check->check_out_time);
+                            $remaining_time = $check_out_time - $current_time;
+
+                            // Check if checkout time has passed
+                            if ($current_time > $check_out_time) {
+                                // Display "Room Time Passed" with badge
+                                $remaining_time_html = '<span class="badge bg-danger">Room Time Passed</span>';
+                            } else {
+                                // Calculate remaining hours and minutes
+                                $remaining_hours = floor($remaining_time / 3600);
+                                $remaining_minutes = floor(($remaining_time % 3600) / 60);
+
+                                // Display remaining time
+                                $remaining_time_html = "$remaining_hours hours $remaining_minutes minutes";
+                            }
                     ?>
                             <tr class="text-center">
                                 <td class="text-center">
-                                    <?php echo date('h:i A', strtotime($check->check_in_time)); ?>
+                                    <?php echo date('h:i A', $check_in_time); ?>
                                 </td>
                                 <td class="text-center">
                                     <?php echo $check->room_no; ?>
@@ -237,11 +259,17 @@
                                     <?php echo $status; ?>
                                 </td>
                                 <td class="text-center">
+                                    <?php echo $check->check_out_time; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $remaining_time_html; ?>
+                                </td>
+                                <td class="text-center">
                                     <?php if ($status === 'Occupied') { ?>
                                         <a href="#" class="btn btn-secondary checkinBtn" data-checkinid="<?php echo $check->check_in_id; ?>" title="Click here to add product quantity" data-bs-toggle="modal">Add Ons</a>
                                         <a href="#" class="btn btn-danger checkoutBtn" data-checkoutid="<?php echo $check->check_in_id; ?>" title="Click here to proceed to checkout" data-bs-toggle="modal">Checkout</a>
                                     <?php } elseif ($status === 'Housekeeping') { ?>
-                                        <a href="<?php echo site_url('Bookings/update_available/' . $check->check_in_id); ?>" class="btn btn-success housekeepingBtn" onclick="return confirm('Are you sure this room done housekeeping?')" title="Click here to mark this room as available"></i> Available</a>
+                                        <a href="<?php echo site_url('Bookings/update_available/' . $check->check_in_id); ?>" class="btn btn-warning housekeepingBtn fw-bolder" onclick="return confirm('Are you sure this room done housekeeping?')" title="Click here to mark this room as available"></i> Done Housekeeping</a>
                                     <?php } ?>
                                 </td>
                             </tr>
@@ -249,6 +277,7 @@
                         }
                     }
                     ?>
+
                 </tbody>
             </table>
         </div>
@@ -545,5 +574,28 @@
     // Add event listeners for "Add Ons" buttons
     document.querySelectorAll('.checkinBtn').forEach(function(button) {
         button.addEventListener('click', handleAddOnsButtonClick);
+    });
+
+    // Add event listener for radio buttons
+    document.querySelectorAll('input[name="inlineRadioOptions"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const cartContent = document.querySelector('.modal-content');
+            const priceSpan = cartContent.querySelector('.cart-selected-price .price-value');
+
+            if (this.value === 'option1') { // VIP option selected
+                const originalPrice = parseFloat(cartContent.querySelector('input[name="room_price"]').value);
+                const discountedPrice = originalPrice - (originalPrice * 0.05); // Apply 5% discount
+                priceSpan.textContent = '₱' + discountedPrice.toFixed(2); // Update displayed price
+
+                // Update total amount
+                updateTotalAmount(cartContent);
+            } else if (this.value === 'option2') { // None option selected
+                const originalPrice = parseFloat(cartContent.querySelector('input[name="room_price"]').value);
+                priceSpan.textContent = '₱' + originalPrice.toFixed(2); // Reset displayed price
+
+                // Update total amount
+                updateTotalAmount(cartContent);
+            }
+        });
     });
 </script>

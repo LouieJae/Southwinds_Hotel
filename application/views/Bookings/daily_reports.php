@@ -16,7 +16,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
+                            <?php 
                             $total_sales_by_date = array();
                             foreach ($daily_sales as $date => $sales) :
                                 foreach ($sales as $sale) :

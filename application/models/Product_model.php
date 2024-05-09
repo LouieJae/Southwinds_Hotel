@@ -23,8 +23,11 @@ class Product_model extends CI_Model
 
     public function insertproduct()
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         // Debugging statement to check if the method is being called
-        echo "insertproduct method is called.";
+        // echo "insertproduct method is called.";
 
         $product_code = (string) $this->input->post('product_code');
         $product_name = (string) $this->input->post('product_name');
@@ -53,11 +56,19 @@ class Product_model extends CI_Model
         $response = $this->db->insert('product', $data);
 
         if ($response) {
+            // Insert activity log
+            $activity_log = array(
+                'user' => $user,
+                'activity' => 'Inserted new product: ' . $product_name,
+            );
+            $this->db->insert('activity_logs', $activity_log);
+
             return $this->db->insert_id();
         } else {
             return FALSE;
         }
     }
+
 
 
     function get_all_product_table()
@@ -81,9 +92,12 @@ class Product_model extends CI_Model
 
     public function insert_added_product_category()
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
 
         $product_category = (string) $this->input->post('product_category1');
-        var_dump($product_category);
+        // Debugging statement to check the data being received
+        // var_dump($product_category);
         $data = array(
             'product_category' => $product_category,
         );
@@ -91,11 +105,19 @@ class Product_model extends CI_Model
         $response = $this->db->insert('product_category', $data);
 
         if ($response) {
+            // Insert activity log
+            $activity_log = array(
+                'user' => $user,
+                'activity' => 'Inserted new product category: ' . $product_category,
+            );
+            $this->db->insert('activity_logs', $activity_log);
+
             return $this->db->insert_id();
         } else {
             return FALSE;
         }
     }
+
     function get_all_product_category()
     {
 
@@ -119,44 +141,59 @@ class Product_model extends CI_Model
     }
     public function insert_received_quantity()
     {
+        // Get the logged-in user's information from the session and capitalize the username
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         $product_id = (int) $this->input->post('product_id');
         $product_quantity = (int) $this->input->post('product_quantity');
 
-        $this->db->select('product_quantity, beginning_quantity');
+        $this->db->select('product_quantity, beginning_quantity, product_name');
         $this->db->where('product_id', $product_id);
         $query = $this->db->get('product');
         $row = $query->row();
 
-        $current_quantity = $row->product_quantity;
-        $beginning_quantity = $row->beginning_quantity;
+        if ($row) {
+            $current_quantity = $row->product_quantity;
+            $beginning_quantity = $row->beginning_quantity;
+            $product_name = $row->product_name;
 
+            $new_quantity = $current_quantity + $product_quantity;
 
-        $new_quantity = $current_quantity + $product_quantity;
+            if ($new_quantity > $beginning_quantity) {
+                $this->db->set('product_quantity', $new_quantity);
+                $this->db->set('beginning_quantity', $new_quantity);
+            } else {
+                $this->db->set('product_quantity', $new_quantity);
+            }
 
+            $this->db->where('product_id', $product_id);
+            $response = $this->db->update('product');
 
-        if ($new_quantity > $beginning_quantity) {
+            if ($response) {
+                // Insert activity log with the product name
+                $activity_log = array(
+                    'user' => $user,
+                    'activity' => 'Inserted received quantity for product: ' . $product_name,
+                );
+                $this->db->insert('activity_logs', $activity_log);
 
-            $this->db->set('product_quantity', $new_quantity);
-            $this->db->set('beginning_quantity', $new_quantity);
+                return $new_quantity;
+            } else {
+                return FALSE;
+            }
         } else {
-
-            $this->db->set('product_quantity', $new_quantity);
-        }
-
-        $this->db->where('product_id', $product_id);
-        $response = $this->db->update('product');
-
-        if ($response) {
-            return $new_quantity;
-        } else {
-            return FALSE;
+            return FALSE; // Product not found
         }
     }
 
+
     public function update_product($product_id)
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         // Debugging statement to check if the method is being called
-        echo "editproduct method is called.";
+        // echo "editproduct method is called.";
 
         $product_code = (string) $this->input->post('product_code');
         $product_name = (string) $this->input->post('product_name');
@@ -185,6 +222,13 @@ class Product_model extends CI_Model
         $response = $this->db->update('product', $data);
 
         if ($response) {
+            // Insert activity log
+            $activity_log = array(
+                'user' => $user,
+                'activity' => 'Updated product: ' . $product_name,
+            );
+            $this->db->insert('activity_logs', $activity_log);
+
             return $product_id;
         } else {
             return FALSE;
@@ -193,14 +237,39 @@ class Product_model extends CI_Model
 
     function delete_product($product_id)
     {
-        $data = array(
-            'isDelete' => 'yes'
-        );
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
+        // Fetch product information
+        $this->db->select('product_name');
         $this->db->where('product_id', $product_id);
-        $response = $this->db->update('product', $data);
-        if ($response) {
-            return $product_id;
+        $query = $this->db->get('product');
+        $product = $query->row();
+
+        if ($product) {
+            $product_name = $product->product_name;
+
+            // Mark the product as deleted
+            $data = array(
+                'isDelete' => 'yes'
+            );
+            $this->db->where('product_id', $product_id);
+            $response = $this->db->update('product', $data);
+
+            if ($response) {
+                // Insert activity log
+                $activity_log = array(
+                    'user' => $user,
+                    'activity' => 'Deleted product: ' . $product_name,
+                );
+                $this->db->insert('activity_logs', $activity_log);
+
+                return $product_id;
+            } else {
+                return false;
+            }
         } else {
+            // Product not found
             return false;
         }
     }

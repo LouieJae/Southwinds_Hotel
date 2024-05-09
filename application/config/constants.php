@@ -86,3 +86,4 @@ defined('EXIT__AUTO_MAX')      or define('EXIT__AUTO_MAX', 125); // highest auto
 
 define('USER_ROLE_ADMIN', 'admin');
 define('USER_ROLE_MANAGER', 'manager');
+define('USER_ROLE_FRONT_DESK', 'front_desk');

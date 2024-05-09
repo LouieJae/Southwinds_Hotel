@@ -18,7 +18,7 @@ class Bookings extends CI_Controller
         // Check if the 'UserLoginSession' session data exists
         if (!$this->session->userdata('UserLoginSession')) {
             // If session data doesn't exist, redirect to login page
-            redirect(base_url('bookings'));
+            redirect(base_url('Bookings'));
         }
     }
 
@@ -26,7 +26,7 @@ class Bookings extends CI_Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->userdata('UserLoginSession')) {
-            redirect(base_url('bookings/dashboard'));
+            redirect(base_url('Bookings/dashboard'));
         } else {
             // Load the login page
             $this->load->view('Bookings/login');
@@ -53,14 +53,14 @@ class Bookings extends CI_Controller
 
                     $this->session->set_userdata('UserLoginSession', $session_data);
 
-                    redirect(base_url('bookings/dashboard'));
+                    redirect(base_url('Bookings/dashboard'));
                 } else {
                     $this->session->set_flashdata('error', 'Username or Password is Wrong');
-                    redirect(base_url('bookings/'));
+                    redirect(base_url('Bookings/'));
                 }
             } else {
                 $this->session->set_flashdata('error', 'Fill all the required fields');
-                redirect(base_url('bookings/'));
+                redirect(base_url('Bookings/'));
             }
         }
     }
@@ -69,22 +69,25 @@ class Bookings extends CI_Controller
     {
         // Destroy session and redirect to login page
         $this->session->sess_destroy();
-        redirect(base_url('bookings'));
+        redirect(base_url('Bookings'));
     }
 
     public function dashboard()
     {
+        // Load necessary models
         $this->load->model('room_model');
+        $this->load->model('report_model');
+
+        // Retrieve existing data
         $this->data['get_total_rooms'] = $this->room_model->get_total_rooms();
         $this->data['get_total_available_rooms'] = $this->room_model->get_total_available_rooms();
         $this->data['get_total_occupied_rooms'] = $this->room_model->get_total_occupied_rooms();
         $this->data['get_total_housekeeping_rooms'] = $this->room_model->get_total_housekeeping_rooms();
 
-        $this->load->model('report_model');
-
-
+        // Retrieve last seven days sales data
         $last_seven_days_sales = $this->report_model->get_last_seven_days_sales();
 
+        // Process sales data for chart
         $chart_labels = array();
         $sales_data = array();
         $current_date = date('Y-m-d');
@@ -106,18 +109,24 @@ class Bookings extends CI_Controller
             $sales_data[] = $sales_for_date;
         }
 
+        $this->data['rooms_needing_attention'] = $this->room_model->getRoomsNeedAttention();
+
+        // Load views
         $this->load->view('Bookings/header');
         $this->load->view('Bookings/dashboard', array(
             'chart_labels' => $chart_labels,
             'sales_data' => $sales_data,
-            'data' => $this->data
+            'data' => $this->data,
+            'rooms_needing_attention' => $this->data['rooms_needing_attention']
         ));
         $this->load->view('Bookings/footer');
     }
 
-
     public function room_accommodations()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('room_model');
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->model('product_model');
@@ -125,12 +134,15 @@ class Bookings extends CI_Controller
         $this->load->model('checkin_model');
         $this->data['add_ons_no'] = $this->checkin_model->add_ons_no();
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/room_accommodations', $this->data);
+        $this->load->view('Bookings/room_accommodations', $this->data);
         $this->load->view('Bookings/footer');
     }
 
     public function product()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $this->data['products'] = $this->product_model->get_all_product_table();
         $this->data['product_code'] = $this->product_model->product_code();
@@ -138,12 +150,15 @@ class Bookings extends CI_Controller
         $this->load->model('uom_model');
         $this->data['uom'] = $this->uom_model->get_all_uom();
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/product', $this->data);
+        $this->load->view('Bookings/product', $this->data);
         $this->load->view('Bookings/footer');
     }
 
     function add_product_submit()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $this->data['product_code'] = $this->product_model->product_code();
         $this->data['procat'] = $this->product_model->get_all_product_category();
@@ -174,22 +189,25 @@ class Bookings extends CI_Controller
                     $error_message = 'Product was not added.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('bookings/product');
+                redirect('Bookings/product');
             } else {
                 $error_message = 'The Product Name already exists.';
                 $this->session->set_flashdata('error', $error_message);
-                redirect('bookings/product');
+                redirect('Bookings/product');
             }
         }
     }
 
     function checkin_submit()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('room_model');
         $this->data['get_all_room'] = $this->room_model->get_all_room();
         $this->load->model('product_model');
         $this->data['products'] = $this->product_model->get_all_product();
-        $this->load->view('bookings/roomModals', $this->data);
+        $this->load->view('Bookings/roomModals', $this->data);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -206,23 +224,29 @@ class Bookings extends CI_Controller
                 $success_message = 'Checkin added successfully.';
                 $this->session->set_flashdata('success', $success_message);
             }
-            redirect('bookings/room_accommodations');
+            redirect('Bookings/room_accommodations');
         }
     }
 
     function add_on()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('checkin_model');
         $this->load->model('room_model');
         $this->data['checkins'] = $this->checkin_model->get_all_checkin();
         $this->data['get_all_room'] = $this->room_model->get_all_room();
-        $this->load->view('bookings/header');
-        $this->load->view('bookings/add_on', $this->data);
-        $this->load->view('bookings/footer');
+        $this->load->view('Bookings/header');
+        $this->load->view('Bookings/add_on', $this->data);
+        $this->load->view('Bookings/footer');
     }
 
     public function add_ons($check_in_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $this->load->model('room_model');
         $this->load->model('checkin_model');
@@ -236,6 +260,9 @@ class Bookings extends CI_Controller
 
     function add_ons_submit($check_in_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->load->model('checkin_model');
             $response = $this->checkin_model->update_checkin($check_in_id);
@@ -250,12 +277,15 @@ class Bookings extends CI_Controller
                 $success_message = 'Add ons added successfully.';
                 $this->session->set_flashdata('success', $success_message);
             }
-            redirect('bookings/add_on');
+            redirect('Bookings/add_on');
         }
     }
 
     public function check_out($check_in_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $this->load->model('room_model');
         $this->load->model('checkin_model');
@@ -271,6 +301,9 @@ class Bookings extends CI_Controller
 
     function check_out_submit($check_in_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $this->load->model('checkin_model');
@@ -283,12 +316,15 @@ class Bookings extends CI_Controller
                 $error_message = 'Add ons added was not added.';
                 $this->session->set_flashdata('error', $error_message);
             }
-            redirect('bookings/add_on');
+            redirect('Bookings/add_on');
         }
     }
 
     function update_available($check_in_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('checkin_model');
         $response = $this->checkin_model->update_available($check_in_id);
 
@@ -300,11 +336,14 @@ class Bookings extends CI_Controller
             $this->session->set_flashdata('error', $error_message);
         }
 
-        redirect('bookings/room_accommodations');
+        redirect('Bookings/room_accommodations');
     }
 
     function add_product_category_submit()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->view('Bookings/add_product_category');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -320,11 +359,11 @@ class Bookings extends CI_Controller
                     $error_message = 'Product category was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('bookings/product');
+                redirect('Bookings/product');
             } else {
                 $error_message = 'This Product Category already exists.';
                 $this->session->set_flashdata('error', $error_message);
-                redirect('bookings/product');
+                redirect('Bookings/product');
             }
         }
     }
@@ -332,7 +371,9 @@ class Bookings extends CI_Controller
 
     function add_uom_submit()
     {
-
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->view('Bookings/add_uom');
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('uom', 'Unit of Measure', 'trim|required|is_unique[uom.uom]', array('is_unique' => 'The Unit of Measure is already taken.'));
@@ -347,26 +388,31 @@ class Bookings extends CI_Controller
                     $error_message = 'Unit of Measure was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('bookings/product');
+                redirect('Bookings/product');
             } else {
                 $error_message = 'This Unit of Measure already exists.';
                 $this->session->set_flashdata('error', $error_message);
-                redirect('bookings/product');
+                redirect('Bookings/product');
             }
         }
     }
 
     function receive_quantity($product_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->receive_quantity_submit();
         $this->load->model('product_model');
         $this->data['product'] = $this->product_model->get_product($product_id);
-        $this->load->view('bookings/receiving', $this->data);
+        $this->load->view('Bookings/receiving', $this->data);
     }
 
     function receive_quantity_submit()
     {
-
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('product_quantity', 'Product Quantity', 'trim|required');
 
@@ -380,13 +426,16 @@ class Bookings extends CI_Controller
                     $error_message = 'Quantity was not added successfully.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('bookings/product');
+                redirect('Bookings/product');
             }
         }
     }
 
     function edit_product($product_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK) {
+            redirect('bookings/dashboard');
+        }
         $this->edit_product_submit($product_id);
         $this->load->model('product_model');
         $this->data['product'] = $this->product_model->get_product($product_id);
@@ -399,6 +448,9 @@ class Bookings extends CI_Controller
 
     function edit_product_submit($product_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK) {
+            redirect('bookings/dashboard');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->form_validation->set_rules('product_code', 'Product Code', 'trim|required');
             // Modify the validation rule for product name
@@ -422,17 +474,20 @@ class Bookings extends CI_Controller
                     $error_message = 'Product was not updated.';
                     $this->session->set_flashdata('error', $error_message);
                 }
-                redirect('bookings/product');
+                redirect('Bookings/product');
             } else {
                 $error_message = 'The form contains errors.';
                 $this->session->set_flashdata('error', $error_message);
-                redirect('bookings/product');
+                redirect('Bookings/product');
             }
         }
     }
 
     function unique_product_name($product_name, $product_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $existing_product = $this->product_model->get_product($product_id, $product_name);
 
@@ -448,6 +503,9 @@ class Bookings extends CI_Controller
 
     function delete_product($product_id)
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK) {
+            redirect('bookings/dashboard');
+        }
         $this->load->model('product_model');
         $response = $this->product_model->delete_product($product_id);
 
@@ -459,7 +517,7 @@ class Bookings extends CI_Controller
             $this->session->set_flashdata('error', $error_message);
         }
 
-        redirect('bookings/product');
+        redirect('Bookings/product');
     }
 
     public function reports()
@@ -489,7 +547,7 @@ class Bookings extends CI_Controller
 
         // Load the view with the necessary data
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/reports', $this->data);
+        $this->load->view('Bookings/reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -538,7 +596,7 @@ class Bookings extends CI_Controller
         $this->data['daily_sales'] = $daily_sales;
 
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/daily_reports', $this->data);
+        $this->load->view('Bookings/daily_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -550,7 +608,7 @@ class Bookings extends CI_Controller
         $this->data['daily_room'] = $this->report_model->get_daily_sales_per_room($date);
         $this->data['date'] = $date;
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/room_daily_reports', $this->data);
+        $this->load->view('Bookings/room_daily_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -562,7 +620,7 @@ class Bookings extends CI_Controller
         $this->data['monthly_room'] = $this->report_model->get_monthly_sales_per_room($year_month);
         $this->data['date'] = $year_month;
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/room_monthly_reports', $this->data);
+        $this->load->view('Bookings/room_monthly_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -573,7 +631,7 @@ class Bookings extends CI_Controller
         $this->data['date'] = $date;
         $this->data['room_no'] = $room_no;
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/room_breakdown', $this->data);
+        $this->load->view('Bookings/room_breakdown', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -599,7 +657,7 @@ class Bookings extends CI_Controller
         }
 
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/per_room_reports', $this->data);
+        $this->load->view('Bookings/per_room_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
@@ -631,12 +689,16 @@ class Bookings extends CI_Controller
         $this->data['monthly_sales'] = $monthly_sales;
 
         $this->load->view('Bookings/header');
-        $this->load->view('bookings/monthly_reports', $this->data);
+        $this->load->view('Bookings/monthly_reports', $this->data);
         $this->load->view('Bookings/footer');
     }
 
     function check_in_submit()
     {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
+
         $this->load->model('room_model');
         $this->data['get_all_room'] = $this->room_model->get_all_room();
 
@@ -646,11 +708,22 @@ class Bookings extends CI_Controller
         if ($response) {
             $success_message = 'CheckIn updated successfully.';
             $this->session->set_flashdata('success', $success_message);
-            redirect('bookings/room_accommodations');
+            redirect('Bookings/room_accommodations');
         } else {
             $error_message = 'Product was not updated.';
             $this->session->set_flashdata('error', $error_message);
-            redirect('bookings/product');
+            redirect('Bookings/product');
         }
+    }
+    public function activity_logs()
+    {
+        if ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) {
+            redirect('bookings/dashboard');
+        }
+        $this->load->model('user_model');
+        $this->data['activity'] = $this->user_model->get_activity();
+        $this->load->view('Bookings/header');
+        $this->load->view('Bookings/activity_logs', $this->data);
+        $this->load->view('Bookings/footer');
     }
 }

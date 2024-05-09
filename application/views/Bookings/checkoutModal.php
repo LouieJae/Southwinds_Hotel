@@ -1,18 +1,21 @@
 <style>
+    #checkOutDateTime {
+        font-weight: bolder;
+    }
+
     .modal-header {
-        background-color: #7D0A0A;
+        background-color: #89CBEE;
     }
 
     .modal-title {
-        color: white;
+        color: black;
+        font-weight: bold;
     }
 
     .bold-label {
         font-weight: bolder;
     }
 </style>
-
-
 
 <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="addOnsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -31,10 +34,12 @@
                         <?php echo $checkout->room_no; ?>
                         <input type="hidden" name="room_sales_no" value="<?= $room_sales_no ?>">
                         <input type="hidden" name="checkout_no" value="<?= $checkout_no ?>">
+                        <input type="hidden" name="prepared_by" value="<?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>">
                         <input type="hidden" name="room_no" value="<?php echo $checkout->room_no; ?>">
                         <input type="hidden" name="room_price" value="<?php echo $checkout->room_price; ?>">
                         <input type="hidden" name="room_hour" value="<?php echo $checkout->room_hour; ?>">
-                        <input type="hidden" name="date" value="<?php echo date('Y-m-d'); ?>">
+                        <input type="hidden" name="date" value="<?php echo date('Y-m-d'); ?>" s>
+                        <input type="hidden" name="actual_checkout_time" value="<?php echo date('Y-m-d H:i:s'); ?>">
 
                         <br>
                         Status:

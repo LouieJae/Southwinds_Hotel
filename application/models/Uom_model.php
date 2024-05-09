@@ -5,9 +5,12 @@ class Uom_model extends CI_Model
 
     public function insert_added_uom()
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
 
         $uom = (string) $this->input->post('uom');
-        var_dump($uom);
+        // Debugging statement to check the data being received
+        // var_dump($uom);
         $data = array(
             'uom' => $uom,
         );
@@ -15,7 +18,17 @@ class Uom_model extends CI_Model
         $response = $this->db->insert('uom', $data);
 
         if ($response) {
-            return $this->db->insert_id();
+            // Insert activity log
+            $activity_log = array(
+                'user' => $user,
+                'activity' => 'Inserted new Unit of Measurement (UOM): ' . $uom,
+            );
+            $this->db->insert('activity_logs', $activity_log);
+
+            return array(
+                'uom_id' => $this->db->insert_id(),
+                'uom_name' => $uom
+            );
         } else {
             return FALSE;
         }

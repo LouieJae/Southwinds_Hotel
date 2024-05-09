@@ -29,7 +29,7 @@
         text-align: center;
         /* Add some margin */
         position: relative;
-        font-size: x-large;
+        font-size: 22px;
         font-weight: bolder;
         color: #BF3131;
         cursor: pointer;
@@ -296,19 +296,28 @@
         display: block;
     }
 </style>
+
 <div class="card-container">
-    <?php foreach ($get_all_room as $room) : ?>
-        <div class="card" id="roomCard_<?php echo $room->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $room->room_id; ?>" onclick="selectRoom(this.id)">
-            Room <?php echo $room->room_no; ?>
+    <?php
+    $roomCount = count($get_all_room);
+    $vipRoomCount = 15; // Number of VIP rooms
+
+    for ($i = 0; $i < $roomCount; $i++) {
+        $roomType = ($i < $vipRoomCount) ? 'VIP Room' : 'Deluxe Room';
+        $roomNumber = ($i < $vipRoomCount) ? $i + 101 : $i - $vipRoomCount + $vipRoomCount + 101;
+    ?>
+        <div class="card" id="roomCard_<?php echo $get_all_room[$i]->room_id; ?>" data-toggle="modal" data-target="#roomModal_<?php echo $get_all_room[$i]->room_id; ?>" onclick="selectRoom(this.id)">
+            <?php echo $roomType . ' ' . $roomNumber; ?>
             <img src="<?php echo base_url('assets/images/hotel_beach.jpg'); ?>" alt="">
             <div class="card-footer"></div>
-            <div class="status" style="background-color: <?php echo ($room->status == 'occupied') ? 'blue' : (($room->status == 'housekeeping') ? 'orange' : 'green'); ?>;
-                <?php echo ($room->status == 'housekeeping') ? 'color: black;' : ''; ?>">
-                <?php echo ucfirst($room->status); ?>
+            <div class="status" style="background-color: <?php echo ($get_all_room[$i]->status == 'occupied') ? 'blue' : (($get_all_room[$i]->status == 'housekeeping') ? 'orange' : 'green'); ?>;
+                <?php echo ($get_all_room[$i]->status == 'housekeeping') ? 'color: black;' : ''; ?>">
+                <?php echo ucfirst($get_all_room[$i]->status); ?>
             </div>
         </div>
-    <?php endforeach; ?>
+    <?php } ?>
 </div>
+
 
 <?php include('roomModals.php') ?>
 

@@ -21,6 +21,7 @@ $dayName = $dateObj->format('l');
                                 <th>No.</th>
                                 <th>Check In</th>
                                 <th>Check Out</th>
+                                <th>Actual Check Out Time</th>
                                 <th>Rate</th>
                                 <th>Total Hours</th>
                                 <th>Products Ordered</th>
@@ -38,6 +39,8 @@ $dayName = $dateObj->format('l');
                                         <td><?= $breakdown->checkout_no ?></td>
                                         <td><?= $breakdown->checkin_date ?></td>
                                         <td><?= $breakdown->checkout_date ?></td>
+                                        <td><?= date('h:i A m/d/Y', strtotime($breakdown->actual_checkout_time)) ?></td>
+
                                         <td>₱ <?= isset($breakdown->room_price) ? number_format($breakdown->room_price, 2) : '' ?></td>
                                         <td><?= $breakdown->room_hour ?></td>
                                         <td>
@@ -55,6 +58,7 @@ $dayName = $dateObj->format('l');
                                 } else {
                                 ?>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

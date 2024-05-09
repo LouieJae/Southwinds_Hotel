@@ -7,7 +7,7 @@
 
     <title>Southwinds Hotel</title>
 
-    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/southwinds_logo.png" />
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/logo1.png" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
-    <link href="<?= base_url('assets/css/styles.css'); ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/css/styles3.css'); ?>" rel="stylesheet" />
 
 </head>
 
@@ -47,7 +47,7 @@
 
     /* Active sidebar item style */
     .nav-link.active {
-        background-color: #BF3131;
+        background-color: #95BE56;
         /* Change the background color to red */
         color: white;
         /* Optionally change text color */
@@ -83,7 +83,7 @@
     <nav class="sb-topnav navbar navbar-expand navbar-dark navings">
         <!-- Navbar Brand-->
         <a href="<?= base_url('bookings/dashboard') ?>" class="brand-link d-flex align-items-center exclude-from-highlight">
-            <img src="<?= base_url('assets/images/southwinds2.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 10.0; max-width: 90%; max-height: 65px" />
+            <img src="<?= base_url('assets/images/logonew.png'); ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 mb-1 ml-1" style="opacity: 10.0; max-width: 85%; max-height: 65px" />
         </a>
 
         <!-- Sidebar Toggle-->
@@ -112,23 +112,23 @@
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">General</div>
-                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER)) : ?>
-                            <a id="nav-link" class="nav-link" href="<?= base_url('bookings/dashboard') ?>">
+                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && ($_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK)) : ?>
+                            <a id="nav-link" class="nav-link text-dark" href="<?= base_url('bookings/dashboard') ?>">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fas fa-tachometer-alt"></i>
+                                    <i class="fas fa-tachometer-alt text-dark"></i>
                                 </div>
                                 Dashboard
                             </a>
                         <?php endif; ?>
 
-                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN) : ?>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <?php if (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_ADMIN || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK) : ?>
+                            <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fas fa-bed"></i>
+                                    <i class="fas fa-bed text-dark"></i>
                                 </div>
                                 Room Accommodations
                                 <div class="sb-sidenav-collapse-arrow">
@@ -137,19 +137,19 @@
                             </a>
                             <div class="collapse bg-secondary" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
-                                    <a class="nav-link" href="<?= base_url('bookings/add_on') ?>">Check In</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/room_accommodations') ?>">Rooms</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/add_on') ?>">Check In</a>
                                 </nav>
                             </div>
-                            <a class="nav-link" href="<?= base_url('bookings/product') ?>">
+                            <a class="nav-link text-dark" href="<?= base_url('bookings/product') ?>">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fas fa-archive"></i>
+                                    <i class="fas fa-archive text-dark"></i>
                                 </div>
                                 Inventory
                             </a>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                            <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fas fa-chart-line"></i>
+                                    <i class="fas fa-chart-line text-dark"></i>
                                 </div>
                                 Reports
                                 <div class="sb-sidenav-collapse-arrow">
@@ -158,15 +158,21 @@
                             </a>
                             <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                                    <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                                    <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
                                 </nav>
                             </div>
-                        <?php elseif (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER) : ?>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                            <a class="nav-link text-dark" href="<?= base_url('bookings/activity_logs') ?>">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fas fa-chart-line"></i>
+                                    <i class="fas fa-clock text-dark"></i>
+                                </div>
+                                Activity Logs
+                            </a>
+                        <?php elseif (isset($_SESSION['UserLoginSession']['roles']) && $_SESSION['UserLoginSession']['roles'] == USER_ROLE_MANAGER || $_SESSION['UserLoginSession']['roles'] == USER_ROLE_FRONT_DESK) : ?>
+                            <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#reports" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-chart-line text-dark"></i>
                                 </div>
                                 Reports
                                 <div class="sb-sidenav-collapse-arrow">
@@ -175,9 +181,9 @@
                             </a>
                             <div class="collapse bg-secondary" id="reports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
-                                    <a class="nav-link" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
-                                    <a class="nav-link" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/daily_reports') ?>">Daily Report</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/monthly_reports') ?>">Monthly Report</a>
+                                    <a class="nav-link text-white" href="<?= base_url('bookings/per_room_reports') ?>">Per Room</a>
                                 </nav>
                             </div>
                         <?php endif; ?>
