@@ -4,11 +4,12 @@
     }
 
     .modal-header {
-        background-color: #7D0A0A;
+        background-color: #89CBEE;
     }
 
     .modal-title {
-        color: white;
+        color: black;
+        font-weight: bold;
     }
 
     .bold-label {
@@ -149,6 +150,7 @@
                 </div>
                 <input type="hidden" name="total_amount" value="<?php echo isset($checkin->total_amount) ? $checkin->total_amount : ''; ?>">
                 <input type="hidden" name="room_price" value="<?php echo isset($checkin->room_price) ? $checkin->room_price : ''; ?>">
+                <input type="hidden" name="room_no" value="<?php echo isset($checkin->room_no) ? $checkin->room_no : ''; ?>">
                 <input type="hidden" name="check_in_id" value="<?php echo $checkin->check_in_id; ?>">
             </div>
         </form>

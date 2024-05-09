@@ -98,12 +98,52 @@
     .chart-card.collapsed .chart-card-body {
         display: none;
     }
+
+    .colorings {
+        background-color: #94BF4D;
+    }
+
+    /* Room card styles */
+    .room-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .room-card {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+
+    .room-details {
+        font-size: 16px;
+    }
+
+    .room-number {
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .room-status {
+        margin: 0;
+        color: #dc3545;
+        /* Use a different color for attention-grabbing status */
+        font-style: italic;
+    }
+
+    .chart-cards {
+        height: 503px;
+        overflow-y: auto;
+        /* This will add a vertical scrollbar if needed */
+    }
 </style>
 <h3 class="mt-2">Dashboard</h3>
 
 <div class="row">
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
+        <div class="small-box colorings">
             <div class="inner">
                 <h3>
                     <?php if (isset($data['get_total_rooms'])) : ?>
@@ -119,7 +159,7 @@
     </div>
 
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
+        <div class="small-box colorings">
             <div class="inner">
                 <h3>
                     <?php if (isset($data['get_total_available_rooms'])) : ?>
@@ -135,7 +175,7 @@
     </div>
 
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
+        <div class="small-box colorings">
             <div class="inner">
                 <h3>
                     <?php if (isset($data['get_total_occupied_rooms'])) : ?>
@@ -151,7 +191,7 @@
     </div>
 
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
+        <div class="small-box colorings">
             <div class="inner">
                 <h3>
                     <?php if (isset($data['get_total_housekeeping_rooms'])) : ?>
@@ -167,16 +207,42 @@
     </div>
 </div>
 
-<div class="card chart-card">
-    <div class="chart-card-header">
-        <h3 class="chart-card-title">Sales Chart</h3>
-        <div class="chart-card-tools">
-            <button class="btn btn-tool minimize-chart" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-            <button class="btn btn-tool close-chart" data-card-widget="remove"><i class="fas fa-times"></i></button>
+<div class="row">
+    <div class="col-7">
+        <div class="card chart-card">
+            <div class="chart-card-header bg-primary">
+                <h3 class="chart-card-title text-white">Sales Chart</h3>
+            </div>
+            <div class="chart-card-body">
+                <canvas id="salesChart" width="500" height="420"></canvas>
+            </div>
         </div>
     </div>
-    <div class="chart-card-body">
-        <canvas id="salesChart" width="500" height="420"></canvas>
+    <!-- Display rooms needing attention -->
+    <div class="col-5">
+        <div class="card chart-cards">
+            <div class="chart-card-header bg-danger">
+                <h3 class="chart-card-title">Overtime</h3>
+            </div>
+
+            <div class="chart-card-body">
+                <?php if (!empty($rooms_needing_attention)) : ?>
+                    <div class="room-list">
+                        <?php foreach ($rooms_needing_attention as $room) : ?>
+                            <div class="room-card">
+                                <div class="room-details">
+                                    <h4 class="room-number">Room Number: <?php echo $room['room_no']; ?></h4>
+                                    <p class="room-status">Status: <?php echo $room['status']; ?></p>
+                                    <!-- Display other relevant room details here -->
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else : ?>
+                    <p>No rooms need attention at the moment.</p>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -214,5 +280,19 @@
     closeButton.addEventListener('click', function() {
         const chartCard = document.querySelector('.chart-card');
         chartCard.remove();
+    });
+
+    // Function to handle click on room card
+    function handleRoomCardClick(event) {
+        event.preventDefault();
+        // Extract room number from the clicked room card
+        const roomNumber = this.querySelector('.room-number').textContent.split(': ')[1];
+        // Redirect to the add-ons page with room number as a parameter
+        window.location.href = `add_on`;
+    }
+
+    // Add event listeners to all room cards
+    document.querySelectorAll('.room-card').forEach(function(card) {
+        card.addEventListener('click', handleRoomCardClick);
     });
 </script>

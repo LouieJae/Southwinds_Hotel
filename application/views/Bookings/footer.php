@@ -159,3 +159,25 @@
         createChart();
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        // Get the current page URL
+        var currentPageUrl = window.location.href;
+
+        // Loop through each sidebar link
+        $("#layoutSidenav_nav a.nav-link").each(function() {
+            var linkUrl = $(this).attr("href");
+
+            // Check if the current page URL matches the link's URL
+            if (currentPageUrl.includes(linkUrl)) {
+                // Add the "active" class to the link
+                $(this).addClass("active");
+
+                // Find the parent <li> element and add the "show" class to its collapse
+                $(this).closest(".collapse").addClass("show");
+                $(this).closest("li.nav-item").addClass("show");
+            }
+        });
+    });
+</script>

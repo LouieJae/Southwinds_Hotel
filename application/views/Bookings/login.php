@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Southwinds Hotel</title>
-    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/southwinds_logo.png" />
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/images/logo1.png" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <style>
@@ -19,7 +19,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url(<?php echo base_url('assets/images/HOTEL.jpeg'); ?>);
+            background-image: url(<?php echo base_url('assets/images/swbg.jpg'); ?>);
             background-color: rgba(0, 0, 0, 0.5);
             /* White color with 50% opacity */
             background-blend-mode: overlay;
@@ -42,14 +42,14 @@
             border-radius: 10px;
             margin: 250px auto;
             padding: 30px 40px;
-            background-color: #F3EDC8;
+            background-color: #fff;
         }
 
         .h2 {
             font-family: 'Kaushan Script', cursive;
-            font-size: 3rem;
+            font-size: 40px;
             font-weight: bolder;
-            color: #7D0A0A;
+            color: #575153;
             font-style: italic;
             text-align: center;
             margin-bottom: 20px;
@@ -67,14 +67,14 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-            border: 1px solid #7D0A0A;
+            border: 1px solid #95BE56;
             background-color: #fff;
-            color: #BF3131;
+            color: #89CBEE;
         }
 
         .input-field:hover {
-            color: #7D0A0A;
-            border: 1px solid #7D0A0A;
+            color: #5FA0C3;
+            border: 1px solid #95BE56;
         }
 
         input {
@@ -152,7 +152,7 @@
         .option input[type="radio"]:checked~.checkmark {
             background: #fff;
             transition: 300ms ease-in-out 0s;
-            border: 1px solid #400485;
+            border: 1px solid #95BE56;
         }
 
         .option input[type="radio"]:checked~.checkmark:after {
@@ -161,12 +161,13 @@
 
         .btn.btn-block {
             border-radius: 20px;
-            background-color: #BF3131;
-            color: #fff;
+            background-color: #95BE56;
+            color: #000;
+            font-weight: bolder;
         }
 
         .btn.btn-block:hover {
-            background-color: #7D0A0A;
+            background-color: #6D9233;
         }
 
         @media(max-width: 575px) {
@@ -199,7 +200,7 @@
         }
 
         .logo {
-            width: 60px;
+            width: 120px;
             /* Adjust size as needed */
             height: auto;
             /* Maintain aspect ratio */
@@ -211,8 +212,7 @@
 <body>
     <div class="wrapper">
         <div class="h2">
-            <img src="<?php echo base_url('assets/images/southwinds_logo.png'); ?>" alt="Southwinds Hotel Logo"
-                class="logo">
+            <img src="<?php echo base_url('assets/images/logo1.png'); ?>" alt="Southwinds Hotel Logo" class="logo">
             Southwinds Hotel
         </div>
         <form method="post" autocomplete="on" action="<?= base_url('bookings/login_submit') ?>">
@@ -224,8 +224,7 @@
             <div class="form-group py-1 pb-2">
                 <div class="input-field"> <span class="fas fa-lock p-2"></span>
                     <input id="passwordInput" type="password" placeholder="Password" name="password" required class="">
-                    <button type="button" id="togglePassword" class="btn bg-white text-muted"> <span id="eyeIcon"
-                            class="far fa-eye-slash"></span> </button>
+                    <button type="button" id="togglePassword" class="btn bg-white text-muted"> <span id="eyeIcon" class="far fa-eye-slash"></span> </button>
                 </div>
             </div>
             <div class="d-flex align-items-start">
@@ -242,7 +241,7 @@
     </div>
 
     <script>
-        document.getElementById('togglePassword').addEventListener('click', function () {
+        document.getElementById('togglePassword').addEventListener('click', function() {
             var passwordInput = document.getElementById('passwordInput');
             var eyeIcon = document.getElementById('eyeIcon');
 

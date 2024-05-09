@@ -37,4 +37,12 @@ class Room_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+    public function getRoomsNeedAttention()
+    {
+        $currentDateTime = date('Y-m-d H:i:s');
+        $this->db->where('STR_TO_DATE(check_out_time, "%Y-%m-%d %H:%i:%s") <', $currentDateTime);
+        $this->db->where('status', 'occupied'); // Assuming 'occupied' status indicates the room is occupied
+        $query = $this->db->get('check_in');
+        return $query->result_array();
+    }
 }

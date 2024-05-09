@@ -1,10 +1,11 @@
 <style>
     .modal-header {
-        background-color: #7D0A0A;
+        background-color: #89CBEE;
     }
 
     .modal-title {
-        color: white;
+        color: black;
+        font-weight: bold;
     }
 
     .bold-label {

@@ -57,6 +57,9 @@ class Checkin_model extends CI_Model
 
     function checkin_room()
     {
+        // Get the logged-in user's information from the session
+        $prepared_by = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         // Get the product names, quantities, and prices from the form
         $product_names = $this->input->post('product_names');
         $product_quantities = $this->input->post('product_quantities');
@@ -93,7 +96,7 @@ class Checkin_model extends CI_Model
             'room_no' => $this->input->post('room_no'),
             'room_hour' => $this->input->post('room_hour'),
             'room_price' => $room_price,
-            'prepared_by' => $this->input->post('prepared_by'),
+            'prepared_by' => $prepared_by, // Set the prepared_by field with the logged-in user's information
             'date' => $this->input->post('date'),
             'check_in_time' => $this->input->post('check_in_time'),
             'check_out_time' => $this->input->post('check_out_time'),
@@ -103,6 +106,13 @@ class Checkin_model extends CI_Model
 
         $this->db->insert('check_in', $check_in_data);
         $check_in_id = $this->db->insert_id();
+
+        // Insert activity log
+        $activity_log = [
+            'user' => $prepared_by,
+            'activity' => 'Checked in to room ' . $this->input->post('room_no'), // You can adjust the activity message as needed
+        ];
+        $this->db->insert('activity_logs', $activity_log);
 
         // Update room status to 'occupied'
         $room_no = $this->input->post('room_no');
@@ -122,6 +132,7 @@ class Checkin_model extends CI_Model
         return $check_in_id;
     }
 
+
     // In your product_model
     function get_available_quantity($product_name)
     {
@@ -134,6 +145,9 @@ class Checkin_model extends CI_Model
 
     public function update_checkin()
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         $check_in_id = (int) $this->input->post('check_in_id');
         $product_names = $this->input->post('product_names');
         $check_out_time = $this->input->post('check_out_time');
@@ -218,11 +232,22 @@ class Checkin_model extends CI_Model
         $this->db->where('check_in_id', $check_in_id);
         $this->db->update('check_in', $checkin);
 
+        // Insert activity log
+        $activity_log = [
+            'user' => $user,
+            'activity' => 'Updated check-in information ' . $this->input->post('room_no'),
+        ];
+        $this->db->insert('activity_logs', $activity_log);
+
         return $check_in_id;
     }
 
+
     public function check_out()
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         // Retrieving necessary data from the form
         $check_in_id = (int) $this->input->post('check_in_id');
         $room_sales_no = $this->input->post('room_sales_no');
@@ -233,9 +258,12 @@ class Checkin_model extends CI_Model
         $room_price = $this->input->post('room_price');
         $room_hour = (int) $this->input->post('room_hour');
         $date = $this->input->post('date');
+        $actual_checkout_time = $this->input->post('actual_checkout_time');
+        $prepared_by = $this->input->post('prepared_by');
         $product_names = $this->input->post('product_names');
         $product_quantities = $this->input->post('product_quantities');
         $product_prices = $this->input->post('product_prices');
+
 
         // Check if the first row is empty
         if (empty($product_names[0]) || empty($product_prices[0])) {
@@ -257,6 +285,8 @@ class Checkin_model extends CI_Model
             $this->db->where('product_name', $product_name);
             $this->db->update('product', ['product_quantity' => $new_quantity]);
         }
+
+        // Retrieve existing total amount from the database
         $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
 
         // Insert data into the check_out table
@@ -267,8 +297,10 @@ class Checkin_model extends CI_Model
             'checkout_date' => $checkout_date,
             'room_price' => $room_price,
             'room_hour' => $room_hour,
+            'prepared_by' => $prepared_by,
             'total_amount' => $existing_total_amount, // You need to calculate the total amount based on room price and duration
             'date' => $date,
+            'actual_checkout_time' => $actual_checkout_time,
         );
         $this->db->insert('check_out', $check_out_data);
 
@@ -285,9 +317,6 @@ class Checkin_model extends CI_Model
             );
             $this->db->insert('add_ons_check_out', $add_ons_check_out_data);
         }
-
-        // Retrieve existing total amount from the database
-        $existing_total_amount = $this->db->select('total_amount')->where('check_in_id', $check_in_id)->get('check_in')->row()->total_amount;
 
         // Insert data into room_sales table
         $room_sales_data = array(
@@ -310,8 +339,16 @@ class Checkin_model extends CI_Model
         $this->db->where('check_in_id', $check_in_id);
         $this->db->update('check_in', $checkin);
 
+        // Insert activity log
+        $activity_log = array(
+            'user' => $user,
+            'activity' => 'Checked out from room ' . $room_no,
+        );
+        $this->db->insert('activity_logs', $activity_log);
+
         return $check_in_id;
     }
+
 
     private function update_room_status($room_no)
     {
@@ -354,6 +391,9 @@ class Checkin_model extends CI_Model
 
     public function update_available($check_in_id)
     {
+        // Get the logged-in user's information from the session
+        $user = ucfirst($this->session->userdata('UserLoginSession')['username']);
+
         // Get the room number associated with the check-in
         $query = $this->db->select('room_no')->from('check_in')->where('check_in_id', $check_in_id)->get();
         $result = $query->row();
@@ -375,6 +415,13 @@ class Checkin_model extends CI_Model
             $this->db->where('check_in_id', $check_in_id);
             $this->db->update('check_in', $checkin_data);
 
+            // Insert activity log
+            $activity_log = array(
+                'user' => $user,
+                'activity' => 'Updated availability for room ' . $room_no,
+            );
+            $this->db->insert('activity_logs', $activity_log);
+
             // Check if the updates were successful
             return $this->db->affected_rows() > 0;
         } else {
@@ -382,6 +429,7 @@ class Checkin_model extends CI_Model
             return false;
         }
     }
+
 
 
 
