@@ -61,11 +61,11 @@
                         <br>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="vip">
-                            <label class="form-check-label" for="inlineRadio1">VIP</label>
+                            <label class="form-check-label" for="inlineRadio1" style="color: #FF0000"><strong>VIP</strong></label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="regular">
-                            <label class="form-check-label" for="inlineRadio2">Regular</label>
+                            <label class="form-check-label" for="inlineRadio2" style="color: #0077b6"><strong>Regular</strong></label>
                         </div>
 
                         <div class="product-cart-container">
@@ -148,7 +148,7 @@
 <script>
     $(document).ready(function() {
         // Calculate default checkout time on page load
-        var defaultHourValue = 2; // Default duration in hours
+        var defaultHourValue = 3; // Default duration in hours
         var now = new Date();
         var checkoutTime = new Date(now.getTime() + defaultHourValue * 60 * 60 * 1000);
         var checkoutYear = checkoutTime.getFullYear();
@@ -197,9 +197,9 @@
 <script>
     $(document).ready(function() {
         // Store original room price
-        var originalRoomPrice = <?php echo $room->twohr_price; ?>;
+        var originalRoomPrice = <?php echo $room->threehr_price; ?>;
         // Store current selected price
-        var currentPrice = <?php echo $room->twohr_price; ?>;
+        var currentPrice = <?php echo $room->threehr_price; ?>;
         // Store current selected duration
         var currentHourValue = 2;
         // Store VIP room price

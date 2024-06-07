@@ -60,9 +60,12 @@
 
                         <input type="hidden" name="check_out_time" id="checkOutTimeInput" value="<?php echo $checkOutDateTime->format('Y-m-d H:i:s'); ?>">
 
+                        <!-- Buttons for adding 12 and 24 hours -->
+                        <button type="button" class="btn btn-secondary" onclick="add12Hours()">12 Hours</button>
+                        <button type="button" class="btn btn-secondary" onclick="add24Hours()">24 Hours</button>
+
                         <!-- Input field to add hours -->
                         <input type="hidden" name="add_hour" value="0">
-
                         <!-- Input field to add hours -->
                         <input type="number" class="form-control col-md-3 d-inline-block" id="addHours" min="1" placeholder="Add Hours" name="addHours">
                         <!-- Button to add hours -->
@@ -183,6 +186,25 @@
         }
     }
 
+    // Function to add 12 hours to remaining time
+    function add12Hours() {
+        addHours(12);
+    }
+
+    // Function to add 24 hours to remaining time
+    function add24Hours() {
+        addHours(24);
+    }
+
+    // Function to add hours to remaining time
+    function addHours(hoursToAdd) {
+        // Set the value in the add hours input field
+        document.getElementById('addHours').value = hoursToAdd;
+
+        // Call the function to add hours to remaining time
+        addHoursToRemainingTime();
+    }
+
     // Call updateRemainingTime function every second
     var intervalId = setInterval(updateRemainingTime, 1000);
 
@@ -226,7 +248,7 @@
         var currentTotalAmount = parseFloat(totalAmountElement.textContent.replace('₱', ''));
 
         // Calculate the total amount for the added hours
-        var hourlyRate = 100; // Assuming the rate is 100 pesos per hour
+        var hourlyRate = 120; // Assuming the rate is 100 pesos per hour
         var totalAmountForHours = hourlyRate * hoursToAdd;
 
         // Calculate the new total amount
@@ -259,7 +281,7 @@
         // Update the room price element and input field
         var roomPriceElement = document.querySelector('.cart-selected-price .price-value');
         var currentRoomPrice = parseFloat(roomPriceElement.textContent.replace('₱', ''));
-        var newRoomPrice = currentRoomPrice + 100 * hoursToAdd; // Assuming the rate is 100 pesos per hour
+        var newRoomPrice = currentRoomPrice + 120 * hoursToAdd; // Assuming the rate is 100 pesos per hour
         roomPriceElement.textContent = `₱${newRoomPrice.toFixed(2)}`;
 
         // Update the room price input field value

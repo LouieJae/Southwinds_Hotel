@@ -138,9 +138,18 @@
         overflow-y: auto;
         /* This will add a vertical scrollbar if needed */
     }
+
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        /* Adjust as needed */
+    }
 </style>
 <h3 class="mt-2">Dashboard</h3>
-
+<audio id="alarmSound">
+    <source src="<?= base_url('assets/southwinds_alarm.mp3') ?>" type="audio/mpeg">
+</audio>
 <div class="row">
     <div class="col-lg-3 col-6">
         <div class="small-box colorings">
@@ -218,21 +227,23 @@
             </div>
         </div>
     </div>
-    <!-- Display rooms needing attention -->
+    <!-- Your existing HTML content -->
     <div class="col-5">
         <div class="card chart-cards">
-            <div class="chart-card-header bg-danger">
+            <div class="chart-card-header bg-danger sticky-header">
                 <h3 class="chart-card-title">Overtime</h3>
             </div>
 
-            <div class="chart-card-body">
+            <div class="chart-card-body" id="overtimeCard">
+                <!-- Room list content -->
                 <?php if (!empty($rooms_needing_attention)) : ?>
                     <div class="room-list">
                         <?php foreach ($rooms_needing_attention as $room) : ?>
-                            <div class="room-card">
+                            <div class="room-card" data-room-number="<?php echo $room['room_no']; ?>">
                                 <div class="room-details">
                                     <h4 class="room-number">Room Number: <?php echo $room['room_no']; ?></h4>
-                                    <p class="room-status">Status: <?php echo $room['status']; ?></p>
+                                    <!-- Change the status to "Overtime" -->
+                                    <p class="room-status">Status: Overtime</p>
                                     <!-- Display other relevant room details here -->
                                 </div>
                             </div>
@@ -295,4 +306,50 @@
     document.querySelectorAll('.room-card').forEach(function(card) {
         card.addEventListener('click', handleRoomCardClick);
     });
+</script>
+<script>
+    // Function to play the alarm sound
+    function playAlarm() {
+        const alarmSound = document.getElementById('alarmSound');
+        alarmSound.play();
+    }
+
+    // Function to check for overtime rooms and trigger alarm
+    function checkForOvertime() {
+        const roomCards = document.querySelectorAll('.room-card');
+        let overtimeFound = false;
+
+        roomCards.forEach(roomCard => {
+            const roomStatus = roomCard.querySelector('.room-status').textContent.trim();
+            if (roomStatus.toLowerCase().includes('overtime')) {
+                overtimeFound = true;
+            }
+        });
+
+        if (overtimeFound) {
+            playAlarm();
+        } else {
+            console.log("No rooms are in overtime.");
+        }
+    }
+
+    // Function to refresh the page every 10 seconds
+    function refreshPage() {
+        setInterval(function() {
+            location.reload();
+        }, 60000); // Refresh every 10 seconds
+    }
+
+    // Function to continuously check for overtime and trigger alarm
+    function continuousCheck() {
+        // Check for overtime every second
+        setInterval(function() {
+            checkForOvertime();
+        }, 1000);
+    }
+
+    // Call the functions to check for overtime, refresh the page, and start continuous check
+    checkForOvertime();
+    refreshPage();
+    continuousCheck();
 </script>

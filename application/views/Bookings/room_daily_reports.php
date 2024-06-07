@@ -21,7 +21,7 @@ $grand_total_sales = 0;
         <!--h5>Date: </h5-->
 
 
-        <a href="<?php echo site_url('bookings/daily_reports'); ?>" class="btn" style="background-color: #7D0A0A; color: white"> Back </a>
+        <a href="<?php echo site_url('bookings/daily_reports'); ?>" class="btn btn-primary"> Back </a>
 
 
         <div class="card-body" style="color: dark;">

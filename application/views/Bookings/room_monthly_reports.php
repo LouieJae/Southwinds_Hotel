@@ -5,7 +5,7 @@ $grand_total_sales = 0;
 ?>
 <div class="card card-outline card-danger">
     <div class="card-header">
-        <a href="<?php echo site_url('bookings/monthly_reports'); ?>" class="btn" style="background-color: #7D0A0A; color: white"> Back </a>
+        <a href="<?php echo site_url('bookings/monthly_reports'); ?>" class="btn btn-primary"> Back </a>
         <div class="card-body" style="color: dark;">
             <div class="table-responsive">
                 <table class="table display" id="per_room_monthly-datatables">
