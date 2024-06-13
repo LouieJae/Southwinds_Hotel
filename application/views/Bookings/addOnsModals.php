@@ -247,8 +247,15 @@
         // Get the current total amount
         var currentTotalAmount = parseFloat(totalAmountElement.textContent.replace('₱', ''));
 
+        // Determine the hourly rate based on room number
+        var hourlyRate = 120; // Default rate for rooms 116 and above
+        var roomNumber = parseInt(document.querySelector('input[name="room_no"]').value);
+
+        if (roomNumber >= 101 && roomNumber <= 115) {
+            hourlyRate = 140; // Hourly rate for rooms 101 to 115
+        }
+
         // Calculate the total amount for the added hours
-        var hourlyRate = 120; // Assuming the rate is 100 pesos per hour
         var totalAmountForHours = hourlyRate * hoursToAdd;
 
         // Calculate the new total amount
@@ -281,7 +288,7 @@
         // Update the room price element and input field
         var roomPriceElement = document.querySelector('.cart-selected-price .price-value');
         var currentRoomPrice = parseFloat(roomPriceElement.textContent.replace('₱', ''));
-        var newRoomPrice = currentRoomPrice + 120 * hoursToAdd; // Assuming the rate is 100 pesos per hour
+        var newRoomPrice = currentRoomPrice + hourlyRate * hoursToAdd; // Calculate room price
         roomPriceElement.textContent = `₱${newRoomPrice.toFixed(2)}`;
 
         // Update the room price input field value

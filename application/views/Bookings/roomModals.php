@@ -37,7 +37,7 @@
                         <input type="hidden" name="room_no" value="<?php echo $room->room_no; ?>">
                         <input type="hidden" name="room_hour" value="2">
                         <input type="hidden" name="status" value="<?php echo ucfirst($room->status); ?>">
-                        <input type="hidden" name="room_price" value="<?php echo $room->twohr_price; ?>">
+                        <input type="hidden" name="room_price" value="<?php echo $room->threehr_price; ?>">
                         <input type="hidden" name="prepared_by" value="<?= ucfirst($this->session->userdata('UserLoginSession')['username']) ?>">
                         <input type="hidden" name="date" value="<?= date('Y-d-m'); ?>">
                         <input type="hidden" name="check_in_time" value="<?php echo date('Y-m-d H:i:s'); ?>">
@@ -196,39 +196,86 @@
 
 <script>
     $(document).ready(function() {
-        // Store original room price
         var originalRoomPrice = <?php echo $room->threehr_price; ?>;
-        // Store current selected price
-        var currentPrice = <?php echo $room->threehr_price; ?>;
-        // Store current selected duration
-        var currentHourValue = 2;
-        // Store VIP room price
+        var currentPrice = originalRoomPrice;
+        var currentHourValue = 3;
         var vipRoomPrice = currentPrice;
 
-        // Function to update room price and total amount
-        function updateRoomPriceAndTotalAmount(discountPercent, roomPrice) {
-            // Calculate discounted price
-            var discountedPrice = roomPrice - (roomPrice * discountPercent / 100);
-            // Update room price
-            $('input[name="room_price"]').val(discountedPrice.toFixed(2));
-            $('.price-value').text('₱' + discountedPrice.toFixed(2));
-            // Update total amount
-            updateTotalAmount($('.cart-card'), discountedPrice);
+        // Function to check if a price button has been clicked
+        function isPriceButtonClicked() {
+            return $('.price-button').hasClass('active');
         }
+
+        // Function to check if a radio button has been selected
+        function isRadioButtonSelected() {
+            return $('input[name="inlineRadioOptions"]:checked').length > 0;
+        }
+
+        // Function to update room price and total amount
+        function updateRoomPriceAndTotalAmount(discountPercent) {
+            var roomPrice = currentPrice;
+            if (discountPercent) {
+                // Calculate discounted price for VIP
+                roomPrice = roomPrice - (roomPrice * discountPercent / 100);
+            }
+            // Update room price display
+            $('input[name="room_price"]').val(roomPrice.toFixed(2));
+            $('.price-value').text('₱' + roomPrice.toFixed(2));
+            // Update total amount
+            updateTotalAmount(roomPrice);
+        }
+
+        // Function to update total amount
+        function updateTotalAmount(roomPrice) {
+            var productTotal = 0;
+            // Calculate total amount based on room price and add-ons
+            $('input[name="product_prices[]"]').each(function() {
+                var price = parseFloat($(this).val());
+                if (!isNaN(price)) {
+                    productTotal += price;
+                }
+            });
+            // Calculate total amount
+            var totalAmount = roomPrice + productTotal;
+            $('.cart-total p').text('Total: ₱' + totalAmount.toFixed(2));
+        }
+
+        // Event listener for form submission
+        $('form').submit(function(event) {
+            // Check if no price button has been clicked
+            if (!isPriceButtonClicked()) {
+                // Prevent form submission
+                event.preventDefault();
+                // Show an error message
+                toastr.error('Please select a pricing option before checking in.');
+                return false;
+            }
+
+            // Check if no radio button has been selected
+            if (!isRadioButtonSelected()) {
+                // Prevent form submission
+                event.preventDefault();
+                // Show an error message
+                toastr.error('Please select VIP or Regular before checking in.');
+                return false;
+            }
+        });
 
         // Event listener for radio buttons
         $('input[name="inlineRadioOptions"]').change(function() {
-            if ($(this).val() === 'vip') {
-                // Apply 5% discount for VIP
-                updateRoomPriceAndTotalAmount(5, vipRoomPrice);
+            if (!isPriceButtonClicked()) {
+                // Show an error message and prevent selecting the radio option
+                toastr.error('Please select a pricing option before choosing VIP or Regular.');
+                // Uncheck the radio button
+                $(this).prop('checked', false);
             } else {
-                // Reset to VIP room price when switching back to Regular
-                currentPrice = vipRoomPrice;
-                // Update room price
-                $('input[name="room_price"]').val(currentPrice.toFixed(2));
-                $('.price-value').text('₱' + currentPrice.toFixed(2));
-                // Update total amount
-                updateTotalAmount($('.cart-card'), currentPrice);
+                if ($(this).val() === 'vip') {
+                    // Apply 5% discount for VIP
+                    updateRoomPriceAndTotalAmount(5);
+                } else {
+                    // Regular price
+                    updateRoomPriceAndTotalAmount(0);
+                }
             }
         });
 
@@ -238,39 +285,30 @@
             currentPrice = parseFloat($(this).data('price'));
             currentHourValue = parseInt($(this).data('hour'));
             $('input[name="room_hour"]').val(currentHourValue);
-            // Update room price
-            $('input[name="room_price"]').val(currentPrice.toFixed(2));
-            $('.price-value').text('₱' + currentPrice.toFixed(2));
-            // Update total amount
-            updateTotalAmount($('.cart-card'));
-            // Store current price as VIP room price
-            vipRoomPrice = currentPrice;
-            // Select "Regular" radio button
-            $('input[name="inlineRadioOptions"][value="regular"]').prop('checked', true);
-        });
+            // Mark the clicked button as active
+            $('.price-button').removeClass('active');
+            $(this).addClass('active');
+            // Uncheck the radio buttons
+            $('input[name="inlineRadioOptions"]').prop('checked', false);
+            // Calculate checkout time based on selected duration
+            var checkoutTime = new Date(Date.now() + currentHourValue * 60 * 60 * 1000);
+            var checkoutYear = checkoutTime.getFullYear();
+            var checkoutMonth = ('0' + (checkoutTime.getMonth() + 1)).slice(-2); // Months are zero-based
+            var checkoutDate = ('0' + checkoutTime.getDate()).slice(-2);
+            var checkoutHours = ('0' + checkoutTime.getHours()).slice(-2);
+            var checkoutMinutes = ('0' + checkoutTime.getMinutes()).slice(-2);
+            var checkoutSeconds = ('0' + checkoutTime.getSeconds()).slice(-2);
+            var checkoutDateTimeString = checkoutYear + '-' + checkoutMonth + '-' + checkoutDate + ' ' + checkoutHours + ':' + checkoutMinutes + ':' + checkoutSeconds;
 
-        // Function to update total amount
-        function updateTotalAmount($cartCard, roomPrice) {
-            var productTotal = 0;
-            // Calculate total amount based on room price and add-ons
-            $('input[name="product_prices[]"]').each(function() {
-                var price = parseFloat($(this).val());
-                if (!isNaN(price)) {
-                    productTotal += price;
-                }
-            });
-            // Check if room price is a valid number
-            if (!isNaN(roomPrice)) {
-                var totalAmount = roomPrice + productTotal;
-                $cartCard.find('.cart-total p').text('Total: ₱' + totalAmount.toFixed(2));
-            } else {
-                // Handle case where room price is not a valid number
-                console.error('Invalid room price');
-            }
-        }
+            // Update checkout time field value
+            $('input[name="check_out_time"]').val(checkoutDateTimeString);
+            // Update room price display
+            updateRoomPriceAndTotalAmount(0);
+        });
     });
 </script>
 
+<!-- Inside your existing script tags -->
 <script>
     $(document).ready(function() {
         // Function to check if a price button has been clicked
@@ -284,8 +322,22 @@
             if (!isPriceButtonClicked()) {
                 // Prevent form submission
                 event.preventDefault();
-                // Show an error message or take appropriate action
+                // Show an error message
                 toastr.error('Please select a pricing option before checking in.');
+            }
+        });
+
+        // Event listener for radio buttons
+        $('input[name="inlineRadioOptions"]').change(function() {
+            // Check if no price button has been clicked
+            if (!isPriceButtonClicked()) {
+                // Show an error message and prevent selecting the radio option
+                toastr.error('Please select a pricing option before choosing VIP or Regular.');
+                // Uncheck the radio button
+                $(this).prop('checked', false);
+            } else {
+                // Continue with selecting VIP or Regular option
+                // Your existing code for handling VIP and Regular selections
             }
         });
 
