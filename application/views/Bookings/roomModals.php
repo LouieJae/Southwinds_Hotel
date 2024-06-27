@@ -47,6 +47,11 @@
                             <?php echo $room->threehr_price; ?>
                         </button>
 
+                        <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->sixhr_price; ?>" data-hour="6">6 Hours:
+                            $
+                            <?php echo $room->sixhr_price; ?>
+                        </button>
+
                         <button class="btn btn-sm btn-price btn-block p-1 price-button" data-price="<?php echo $room->twelvehr_price; ?>" data-hour="12">12 Hours:
                             $
                             <?php echo $room->twelvehr_price; ?>
